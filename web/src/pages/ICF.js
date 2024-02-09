@@ -1,0 +1,121 @@
+import { useEffect, useState } from 'react'
+import { useParams, useNavigate, Navigate, useLocation } from 'react-router-dom'
+import { api } from '../config/axios'
+import { Typography, Container, Paper, Button, FormControlLabel, Checkbox, Link } from '@mui/material';
+
+const ICF = () => {
+
+  const { experimentId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [user] = useState(JSON.parse(localStorage.getItem('user')));
+  const [icf, setICF] = useState(null)
+  const [accepted, setAccepted] = useState(false);
+  const [userExperiment, setUserExperiment] = useState(location?.state?.data[0]);
+
+  const isAuthenticated = !!(user && user.expirationTime && new Date().getTime() < user.expirationTime);
+
+  if (!isAuthenticated) {
+    localStorage.removeItem('user');
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let experiment = (await api.get(`experiments/${experimentId}`, { 'headers': { Authorization: `Bearer ${user.accessToken}` } })).data;
+        if (experiment?.icfId) {
+          const icfResponse = (await api.get(`icf/${experiment.icfId}`, { 'headers': { Authorization: `Bearer ${user.accessToken}` } })).data;
+          setICF(icfResponse);
+          if (!userExperiment) {
+            let response = await api.get(`user-experiments?userId=${user.id}&experimentId=${experimentId}`, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
+            const userExperimentsData = response.data;
+            setUserExperiment(userExperimentsData);
+            if (userExperimentsData) {
+              if (userExperimentsData.stepsCompleted && userExperimentsData.stepsCompleted['icf']) {
+                navigate(`/experiments/${experiment._id}/surveys`)
+              }
+            }
+          }
+        } else {
+          navigate('/experiments');
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [user?.id, user?.accessToken, userExperiment, experimentId, isAuthenticated, navigate])
+
+  const handleChange = async (e) => {
+    try {
+      if (!userExperiment.stepsCompleted) {
+        userExperiment.stepsCompleted = {};
+      }
+      userExperiment.stepsCompleted["icf"] = true;
+      await api.patch(`user-experiments/${userExperiment._id}`, userExperiment, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
+      navigate(`/experiments/${experimentId}/surveys`)
+    } catch (error) {
+      /**
+       * TODO
+       */
+      console.log(error);
+    }
+  }
+
+  if (!icf) {
+    return (
+      <Container maxWidth="md">
+        <Paper elevation={3} style={{ padding: '16px' }}>
+          <Typography variant="body1">Carregando Termo de Consentimento e Livre Esclarecimento.</Typography>
+        </Paper>
+      </Container>
+    );
+  }
+  return isAuthenticated ? (
+    <Paper elevation={3} style={{ padding: '16px' }}>
+      <Container elevation={3} maxWidth="md">
+        <Paper elevation={3} style={{ padding: '16px' }}>
+          <Typography variant="h5" gutterBottom>
+            {icf.title}
+          </Typography>
+
+          <Typography variant="body1" paragraph>
+            {icf.description}
+          </Typography>
+
+          <Typography variant="h6" gutterBottom>
+            Pesquisadores:
+          </Typography>
+
+          {icf.researchers.map((r, index) => (
+            <Typography variant="body1" gutterBottom key={index}>
+              {r}
+            </Typography>
+          ))}
+
+          <Typography variant="body1" gutterBottom dangerouslySetInnerHTML={{ __html: icf.icfText }} />
+          <Typography variant="body1" paragraph>Para visualizar o documento na íntegra, assinado digitalmente pelo pesquisador, clique <Link target="_blank" href='https://drive.google.com/file/d/1_SdcAhNBvnLjamilScjOkHJAP4q5_-em/view?usp=sharing'>aqui</Link>.</Typography>
+          <Typography variant="body1" gutterBottom dangerouslySetInnerHTML={{ __html: icf.agreementStatement }} />
+          <FormControlLabel
+            control={<Checkbox checked={accepted} onChange={() => setAccepted(!accepted)} />}
+            label="Eu li e aceito os termos e condições."
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleChange}
+            disabled={!accepted} // Disable button until terms are accepted
+          >
+            Aceitar
+          </Button>
+        </Paper>
+      </Container>
+    </Paper>
+  ) : <Navigate to="/" />
+}
+
+export { ICF }
