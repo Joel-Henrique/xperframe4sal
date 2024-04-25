@@ -1,0 +1,519 @@
+@prefix : <urn:absolute:www.xper4sal.com.br#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <urn:absolute:www.xper4sal.com.br#> .
+
+<http://www.xper4sal.com.br/xper4sal.owl> rdf:type owl:Ontology ;
+                                           owl:versionIRI <http://www.xper4sal.com.br/xper4sal.owl> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.wikidata.org/prop/direct/P1344
+<http://www.wikidata.org/prop/direct/P1344> rdf:type owl:ObjectProperty ;
+                                            rdfs:label "participate_in" .
+
+
+###  http://www.wikidata.org/prop/direct/P1552
+<http://www.wikidata.org/prop/direct/P1552> rdf:type owl:ObjectProperty ;
+                                            rdfs:domain <http://www.wikidata.org/entity#Q101965> ;
+                                            rdfs:range <http://www.wikidata.org/entity#Q1438035> ;
+                                            rdfs:label "has_characteristic" .
+
+
+###  http://www.wikidata.org/prop/direct/P1840
+<http://www.wikidata.org/prop/direct/P1840> rdf:type owl:ObjectProperty ;
+                                            rdfs:domain <http://www.wikidata.org/entity#Q101965> ;
+                                            rdfs:range <http://www.wikidata.org/entity#Q1650915> ;
+                                            rdfs:label "investigated_by" .
+
+
+###  http://www.wikidata.org/prop/direct/P2283
+<http://www.wikidata.org/prop/direct/P2283> rdf:type owl:ObjectProperty ;
+                                            rdfs:label "uses" .
+
+
+###  http://www.wikidata.org/prop/direct/P279
+<http://www.wikidata.org/prop/direct/P279> rdf:type owl:ObjectProperty ;
+                                           rdfs:label "sub_class_of" .
+
+
+###  http://www.wikidata.org/prop/direct/P2868
+<http://www.wikidata.org/prop/direct/P2868> rdf:type owl:ObjectProperty ;
+                                            rdfs:domain <http://www.wikidata.org/entity#Q278368> ;
+                                            rdfs:range [ rdf:type owl:Class ;
+                                                         owl:unionOf ( <http://www.wikidata.org/entity#Q1650915>
+                                                                       <http://www.wikidata.org/entity#Q4204239>
+                                                                     )
+                                                       ] ;
+                                            rdfs:label "has_role" .
+
+
+###  http://www.wikidata.org/prop/direct/P31
+<http://www.wikidata.org/prop/direct/P31> rdf:type owl:ObjectProperty ;
+                                          rdfs:label "instance_of" .
+
+
+###  http://www.wikidata.org/prop/direct/P361
+<http://www.wikidata.org/prop/direct/P361> rdf:type owl:ObjectProperty ;
+                                           owl:inverseOf <http://www.wikidata.org/prop/direct/P527> ;
+                                           rdfs:label "part_of" .
+
+
+###  http://www.wikidata.org/prop/direct/P463
+<http://www.wikidata.org/prop/direct/P463> rdf:type owl:ObjectProperty ;
+                                           rdfs:label "member_of" .
+
+
+###  http://www.wikidata.org/prop/direct/P527
+<http://www.wikidata.org/prop/direct/P527> rdf:type owl:ObjectProperty ;
+                                           rdfs:label "has_part" .
+
+
+###  http://www.wikidata.org/prop/direct/P921
+<http://www.wikidata.org/prop/direct/P921> rdf:type owl:ObjectProperty ;
+                                           rdfs:label "about" ,
+                                                      "main_subject" .
+
+
+###  http://www.wikidata.org/prop/direct/P_answers
+<http://www.wikidata.org/prop/direct/P_answers> rdf:type owl:ObjectProperty ;
+                                                rdfs:label "answers" .
+
+
+###  http://www.wikidata.org/prop/direct/P_composto_por
+<http://www.wikidata.org/prop/direct/P_composto_por> rdf:type owl:ObjectProperty ;
+                                                     rdfs:label "compound_by" .
+
+
+###  http://www.wikidata.org/prop/direct/P_evaluated_by
+<http://www.wikidata.org/prop/direct/P_evaluated_by> rdf:type owl:ObjectProperty ;
+                                                     rdfs:label "evaluated_by" .
+
+
+###  http://www.wikidata.org/prop/direct/P_evaluates
+<http://www.wikidata.org/prop/direct/P_evaluates> rdf:type owl:ObjectProperty ;
+                                                  rdfs:domain <http://www.wikidata.org/entity#Q759676> ;
+                                                  rdfs:range <http://www.wikidata.org/entity#Q_Search_Stage> ;
+                                                  rdfs:label "evaluates" .
+
+
+###  http://www.wikidata.org/prop/direct/P_has_task
+<http://www.wikidata.org/prop/direct/P_has_task> rdf:type owl:ObjectProperty ;
+                                                 rdfs:label "has_task" .
+
+
+###  http://www.wikidata.org/prop/direct/P_has_task_condition
+<http://www.wikidata.org/prop/direct/P_has_task_condition> rdf:type owl:ObjectProperty ;
+                                                           rdfs:domain <http://www.wikidata.org/entity#Q759676> ;
+                                                           rdfs:range <http://www.wikidata.org/entity#Q_Task_Condition> ;
+                                                           rdfs:label "has_task_condition" .
+
+
+###  http://www.wikidata.org/prop/direct/P_influences
+<http://www.wikidata.org/prop/direct/P_influences> rdf:type owl:ObjectProperty ;
+                                                   rdfs:label "influences" .
+
+
+###  http://www.wikidata.org/prop/direct/P_related_to
+<http://www.wikidata.org/prop/direct/P_related_to> rdf:type owl:ObjectProperty ;
+                                                   rdfs:label "related_to" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.wikidata.org/entity#Q216353
+<http://www.wikidata.org/entity#Q216353> rdf:type owl:DatatypeProperty ;
+                                         rdfs:range xsd:string ;
+                                         rdfs:label "title"@en .
+
+
+###  http://www.wikidata.org/prop/direct/P_has_exploratory_level
+<http://www.wikidata.org/prop/direct/P_has_exploratory_level> rdf:type owl:DatatypeProperty ;
+                                                              rdfs:range xsd:int ;
+                                                              rdfs:label "has_exploratory_level" .
+
+
+###  http://www.wikidata.org/prop/direct/P_private
+<http://www.wikidata.org/prop/direct/P_private> rdf:type owl:DatatypeProperty ;
+                                                rdfs:range xsd:boolean ;
+                                                rdfs:label "private" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.wikidata.org/entity#Q101965
+<http://www.wikidata.org/entity#Q101965> rdf:type owl:Class ;
+                                         rdfs:subClassOf [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P1552> ;
+                                                                                  owl:someValuesFrom [ rdf:type owl:Class ;
+                                                                                                       owl:unionOf ( <http://www.wikidata.org/entity#Q125543531>
+                                                                                                                     <http://www.wikidata.org/entity#Q4899058>
+                                                                                                                   )
+                                                                                                     ]
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P1552> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass [ rdf:type owl:Class ;
+                                                                                                owl:unionOf ( <http://www.wikidata.org/entity#Q125543531>
+                                                                                                              <http://www.wikidata.org/entity#Q4899058>
+                                                                                                            )
+                                                                                              ]
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P2283> ;
+                                                           owl:someValuesFrom <http://www.wikidata.org/entity#Q747810>
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P921> ;
+                                                           owl:someValuesFrom <http://www.wikidata.org/entity/Q1127759>
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P_has_task> ;
+                                                           owl:someValuesFrom <http://www.wikidata.org/entity#Q759676>
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/entity#Q216353> ;
+                                                           owl:someValuesFrom xsd:string
+                                                         ] ;
+                                         rdfs:label "Experiment" .
+
+
+###  http://www.wikidata.org/entity#Q125543531
+<http://www.wikidata.org/entity#Q125543531> rdf:type owl:Class ;
+                                            rdfs:subClassOf <http://www.wikidata.org/entity#Q1438035> ,
+                                                            [ rdf:type owl:Restriction ;
+                                                              owl:onProperty <http://www.wikidata.org/prop/direct/P279> ;
+                                                              owl:someValuesFrom <http://www.wikidata.org/entity#Q1438035>
+                                                            ] ;
+                                            owl:disjointWith <http://www.wikidata.org/entity#Q4899058> ;
+                                            rdfs:label "Within_Subject_Design" .
+
+
+###  http://www.wikidata.org/entity#Q1438035
+<http://www.wikidata.org/entity#Q1438035> rdf:type owl:Class ;
+                                          rdfs:label "Research_Design" .
+
+
+###  http://www.wikidata.org/entity#Q1650915
+<http://www.wikidata.org/entity#Q1650915> rdf:type owl:Class ;
+                                          rdfs:subClassOf <http://www.wikidata.org/entity#Q278368> ;
+                                          rdfs:label "Researcher" .
+
+
+###  http://www.wikidata.org/entity#Q19541
+<http://www.wikidata.org/entity#Q19541> rdf:type owl:Class ;
+                                        rdfs:label "Search_Engine" .
+
+
+###  http://www.wikidata.org/entity#Q278368
+<http://www.wikidata.org/entity#Q278368> rdf:type owl:Class ;
+                                         rdfs:label "User" .
+
+
+###  http://www.wikidata.org/entity#Q4204239
+<http://www.wikidata.org/entity#Q4204239> rdf:type owl:Class ;
+                                          rdfs:subClassOf <http://www.wikidata.org/entity#Q278368> ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P1344> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q101965>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_answers> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q747810>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P463> ;
+                                                            owl:allValuesFrom <http://www.wikidata.org/entity#Q_Task_Condition>
+                                                          ] ;
+                                          rdfs:label "Research_Participant" .
+
+
+###  http://www.wikidata.org/entity#Q4353431
+<http://www.wikidata.org/entity#Q4353431> rdf:type owl:Class ;
+                                          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_composto_por> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluated_by> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Behavior_Metrics>
+                                                          ] ;
+                                          rdfs:label "Information_Seeking_Behavior" .
+
+
+###  http://www.wikidata.org/entity#Q4899058
+<http://www.wikidata.org/entity#Q4899058> rdf:type owl:Class ;
+                                          rdfs:subClassOf <http://www.wikidata.org/entity#Q1438035> ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P279> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q1438035>
+                                                          ] ;
+                                          rdfs:label "Between_Subject_Design" .
+
+
+###  http://www.wikidata.org/entity#Q747810
+<http://www.wikidata.org/entity#Q747810> rdf:type owl:Class ;
+                                         rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P_private> ;
+                                                           owl:someValuesFrom xsd:boolean
+                                                         ] ;
+                                         rdfs:label "Survey" .
+
+
+###  http://www.wikidata.org/entity#Q759676
+<http://www.wikidata.org/entity#Q759676> rdf:type owl:Class ;
+                                         rdfs:subClassOf [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Extracting>
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Extracting>
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Judging>
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Judging>
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Post_Interaction>
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Post_Interaction>
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Pre_Interaction>
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Pre_Interaction>
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Querying>
+                                                                                ]
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluates> ;
+                                                                                  owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                  owl:onClass <http://www.wikidata.org/entity#Q_Querying>
+                                                                                ]
+                                                                              ) ;
+                                                           rdf:type owl:Class
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P2283> ;
+                                                           owl:someValuesFrom <http://www.wikidata.org/entity#Q19541>
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P_has_task_condition> ;
+                                                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                           owl:onClass <http://www.wikidata.org/entity#Q_Task_Condition>
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/entity#Q216353> ;
+                                                           owl:someValuesFrom xsd:string
+                                                         ] ,
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty <http://www.wikidata.org/prop/direct/P_has_exploratory_level> ;
+                                                           owl:someValuesFrom xsd:boolean
+                                                         ] ;
+                                         rdfs:label "Task" .
+
+
+###  http://www.wikidata.org/entity#Q_Extracting
+<http://www.wikidata.org/entity#Q_Extracting> rdf:type owl:Class ;
+                                              rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                                owl:onProperty <http://www.wikidata.org/prop/direct/P361> ;
+                                                                owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Stage>
+                                                              ] ,
+                                                              [ rdf:type owl:Restriction ;
+                                                                owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                                owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                              ] ;
+                                              rdfs:label "Extracting_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Interection_Variables
+<http://www.wikidata.org/entity#Q_Interection_Variables> rdf:type owl:Class ;
+                                                         rdfs:label "Interaction_Variables" .
+
+
+###  http://www.wikidata.org/entity#Q_Judging
+<http://www.wikidata.org/entity#Q_Judging> rdf:type owl:Class ;
+                                           rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                             owl:onProperty <http://www.wikidata.org/prop/direct/P361> ;
+                                                             owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Stage>
+                                                           ] ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                             owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                           ] ;
+                                           rdfs:label "Judging_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Post_Interaction
+<http://www.wikidata.org/entity#Q_Post_Interaction> rdf:type owl:Class ;
+                                                    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty <http://www.wikidata.org/prop/direct/P361> ;
+                                                                      owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Stage>
+                                                                    ] ,
+                                                                    [ rdf:type owl:Restriction ;
+                                                                      owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                                      owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                                    ] ;
+                                                    rdfs:label "Post_Interaction_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Pre_Interaction
+<http://www.wikidata.org/entity#Q_Pre_Interaction> rdf:type owl:Class ;
+                                                   rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                                     owl:onProperty <http://www.wikidata.org/prop/direct/P361> ;
+                                                                     owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Stage>
+                                                                   ] ,
+                                                                   [ rdf:type owl:Restriction ;
+                                                                     owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                                     owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                                   ] ;
+                                                   rdfs:label "Pre_Interaction_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Querying
+<http://www.wikidata.org/entity#Q_Querying> rdf:type owl:Class ;
+                                            rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                              owl:onProperty <http://www.wikidata.org/prop/direct/P361> ;
+                                                              owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Stage>
+                                                            ] ,
+                                                            [ rdf:type owl:Restriction ;
+                                                              owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                              owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                            ] ;
+                                            rdfs:label "Querying_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Search_Behavior_Metrics
+<http://www.wikidata.org/entity#Q_Search_Behavior_Metrics> rdf:type owl:Class ;
+                                                           rdfs:label "Search_Behavior_Metrics" .
+
+
+###  http://www.wikidata.org/entity#Q_Search_Stage
+<http://www.wikidata.org/entity#Q_Search_Stage> rdf:type owl:Class ;
+                                                rdfs:label "Search_Stage" .
+
+
+###  http://www.wikidata.org/entity#Q_Task_Condition
+<http://www.wikidata.org/entity#Q_Task_Condition> rdf:type owl:Class ;
+                                                  rdfs:label "Task_Condition" .
+
+
+###  http://www.wikidata.org/entity/Q1127759
+<http://www.wikidata.org/entity/Q1127759> rdf:type owl:Class ;
+                                          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_evaluated_by> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Search_Behavior_Metrics>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q4204239>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q4353431>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Extracting>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Judging>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Post_Interaction>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Pre_Interaction>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_influences> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Querying>
+                                                          ] ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty <http://www.wikidata.org/prop/direct/P_related_to> ;
+                                                            owl:someValuesFrom <http://www.wikidata.org/entity#Q_Interection_Variables>
+                                                          ] ;
+                                          rdfs:label "Cognitive_Bias" .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.wikidata.org/entity#Q182496
+<http://www.wikidata.org/entity#Q182496> rdf:type owl:NamedIndividual ,
+                                                  <http://www.wikidata.org/entity#Q19541> ;
+                                         rdfs:label "Bing_Search" .
+
+
+###  http://www.wikidata.org/entity#Q9366
+<http://www.wikidata.org/entity#Q9366> rdf:type owl:NamedIndividual ,
+                                                <http://www.wikidata.org/entity#Q19541> ;
+                                       rdfs:label "Google_Search" .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( <http://www.wikidata.org/entity#Q_Extracting>
+                <http://www.wikidata.org/entity#Q_Judging>
+                <http://www.wikidata.org/entity#Q_Post_Interaction>
+                <http://www.wikidata.org/entity#Q_Pre_Interaction>
+                <http://www.wikidata.org/entity#Q_Querying>
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
