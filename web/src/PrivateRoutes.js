@@ -8,6 +8,7 @@ import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useTranslation } from 'react-i18next';
 
 import {
   Typography,
@@ -26,6 +27,7 @@ import { Home, Info, Mail } from "@material-ui/icons";
 const drawerWidth = "240";
 
 export function PrivateRoutes(props) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
@@ -80,7 +82,7 @@ export function PrivateRoutes(props) {
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Toolbar color="primary">
         <Typography variant="h6">
-          BUSCANDO E APRENDENDO
+          {t('system_name')}
         </Typography>
       </Toolbar>
 
@@ -95,13 +97,13 @@ export function PrivateRoutes(props) {
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoInstruction}>
             <Info />
-            <ListItemText primary="Instruções" />
+            <ListItemText primary={t('menu_instructions')} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoContact}>
             <Mail />
-            <ListItemText primary="Contato" />
+            <ListItemText primary={t('menu_contact')} />
           </ListItemButton>
         </ListItem>
       </List>
@@ -140,17 +142,17 @@ export function PrivateRoutes(props) {
               cursor: 'pointer'
             }}
           >
-            BUSCANDO E APRENDENDO
+            {t('system_name')}
           </Typography>
           <Box sx={{ minWidth: 270, textAlign: 'right', display: { xs: 'none', sm: 'block', md: 'block' } }}>
             <Button sx={{ color: '#fff' }} onClick={handleGoHome}>
               HOME
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoInstruction}>
-              INSTRUÇÕES
+              {t('menu_instructions')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
-              CONTATO
+              {t('menu_contact')}
             </Button>
           </Box>
 
@@ -163,7 +165,7 @@ export function PrivateRoutes(props) {
               aria-haspopup="true"
               size="large"
             >
-              <Typography noWrap style={{ marginRight: 4 }}>Olá, {`${user?.name.charAt(0).toUpperCase()}${user?.name.slice(1)} `}</Typography>
+              <Typography noWrap style={{ marginRight: 4 }}>{t('hello')}, {`${user?.name.charAt(0).toUpperCase()}${user?.name.slice(1)} `}</Typography>
               <AccountCircle />
             </IconButton>
             <Menu

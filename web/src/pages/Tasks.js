@@ -16,10 +16,15 @@ import { LoadingIndicator } from '../components/LoadIndicator';
 
 import { ExperimentTemplate, mountSteps } from './ExperimentTemplate';
 
+import { useTranslation } from 'react-i18next';
+
+
 
 const Tasks = () => {
   const navigate = useNavigate();
   const { experimentId } = useParams();
+
+  const { t } = useTranslation();
 
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [, setExperiment] = useState(null);
@@ -115,7 +120,7 @@ const Tasks = () => {
 
 
   return (
-    <ExperimentTemplate headerTitle="Veja a seguir a lista de tarefas disponíveis para você:" steps={steps}>
+    <ExperimentTemplate headerTitle={t('see_tasks_list_title')} steps={steps}>
 
       {!tasks && (<Typography variant="body1">Carregando tarefas...</Typography>)}
       {!tasks && isLoading && <LoadingIndicator size={70} />}
@@ -125,7 +130,8 @@ const Tasks = () => {
           sx={{ marginBottom: '5px' }}
           key={task._id}
           elevation={3}
-          expanded={expanded === `panel-${index}`}
+          expanded={true}
+          // expanded=true{expanded === `panel-${index}`}
           onChange={handleChange(`panel-${index}`)}
         >
           <AccordionSummary
@@ -161,7 +167,7 @@ const Tasks = () => {
                   style={{ margin: '16px' }}
                   onClick={() => handleStartTaskClick(task._id)}
                 >
-                  Iniciar <PlayArrow />
+                  Start <PlayArrow />
                 </Button>
               }
             </div>

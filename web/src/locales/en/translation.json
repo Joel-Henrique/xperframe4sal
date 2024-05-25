@@ -1,0 +1,20 @@
+{
+  "system_name": "SEARCHING AND LEARNING",
+  "menu_home": "HOME",
+  "menu_instructions": "INSTRUCTION",
+  "menu_contact": "CONTACT",
+  "hello": "Hi",
+  "see_experiment_list_title": "See the list of experiments available to you below:",
+  "see_tasks_list_title": "See the list of tasks available to you below:",
+  "password_label": "Password",
+  "name_label": "Name",
+  "last_name_label": "Last name",
+  "forgot_password": "FORGOT PASSWORD?",
+  "sign_in_title": "Sign In",
+  "sign_in_label": "Log in",
+  "enter_label": "Enter",
+  "sign_up_label": "Sign up",
+  "have_an_account_already": "Have an account?",
+  "progress_icf": "Accept informed consent",
+  "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers."
+}

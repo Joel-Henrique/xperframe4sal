@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
 import {
   Accordion,
@@ -13,11 +13,15 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { LoadingIndicator } from '../components/LoadIndicator';
 
+import { useTranslation } from 'react-i18next';
+
 const Experiments = () => {
   const navigate = useNavigate();
   const [experiments, setExperiments] = useState(null);
   const [expanded, setExpanded] = useState(`panel-0`);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [userExperiments, setUserExperiments] = useState(null);
@@ -68,7 +72,7 @@ const Experiments = () => {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        Veja a seguir a lista de experimentos disponíveis para você:
+        {t('see_experiment_list_title')}
       </Typography>
 
       {!experiments && (
@@ -113,7 +117,7 @@ const Experiments = () => {
                 style={{ margin: '16px' }}
                 onClick={() => handleClick(experiment._id)}
               >
-                Entrar
+                {t('enter_label')}
               </Button>
             </div>
           </AccordionDetails>

@@ -18,6 +18,8 @@ import { LoadingIndicator } from '../components/LoadIndicator';
 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+import { useTranslation } from 'react-i18next';
+
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
@@ -28,6 +30,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [messageType, setMessageType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const isAuthenticated = !!(user && user.expirationTime && new Date().getTime() < user.expirationTime);
 
@@ -116,7 +120,7 @@ const Login = () => {
               fontWeight: 500,
               color: 'rgb(103,99,99)'
             }}>
-            Entre com sua conta
+            {t('sign_in_title')}
           </Typography>
           {isLoading && <LoadingIndicator size={25} />}
           {alertMessage && (
@@ -141,7 +145,7 @@ const Login = () => {
             margin='normal'
           />
           <TextField
-            label="Senha"
+            label={t('password_label')}
             fullWidth
             type={showPassword ? 'text' : 'password'}
             variant="outlined"
@@ -172,7 +176,7 @@ const Login = () => {
               padding: '2px 3px',
               fontSize: 11,
             }}>
-              Esqueceu a senha?
+              {t('forgot_password')}
             </Button>
           </div>
 
@@ -193,7 +197,7 @@ const Login = () => {
               }}
               disabled={!isValidForm || isLoading}
             >
-              Entrar
+              {t('sign_in_label')}
             </Button>
             <Button
               onClick={handleRegister}
@@ -205,7 +209,7 @@ const Login = () => {
                 padding: '2px 3px',
                 display: 'inline-block'
               }}>
-              Criar conta
+              {t('sign_up_label')}
             </Button>
           </div>
         </Box>

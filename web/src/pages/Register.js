@@ -18,6 +18,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
 
+import { useTranslation } from 'react-i18next';
+
 const Register = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -32,6 +34,8 @@ const Register = () => {
   const [messageType, setMessageType] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { t } = useTranslation();
 
 
   const handleEmailChange = (e) => {
@@ -132,7 +136,7 @@ const Register = () => {
             }}
             sx={{ fontSize: { xs: '2.2rem', sm: '2.4rem' } }}
           >
-            Criar conta
+            {t('sign_up_label')}
           </Typography>
           {isLoading ? (
             <LoadingIndicator size={50} /> // Exibir o indicador de carregamento do Material-UI
@@ -140,7 +144,7 @@ const Register = () => {
           {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />} {/* Pass onClose callback */}
 
           <TextField
-            label="Nome"
+            label={t('name_label')}
             error={!isValidName}
             helperText={!isValidName ? 'Preencha o campo nome.' : ''}
             fullWidth
@@ -150,7 +154,7 @@ const Register = () => {
             onChange={handleNameChange}
           />
           <TextField
-            label="Sobrenome"
+            label={t('last_name_label')}
             error={!isValidLastName}
             helperText={!isValidLastName ? 'Preencha o campo sobrenome.' : ''}
             fullWidth
@@ -172,7 +176,7 @@ const Register = () => {
             onChange={handleEmailChange}
           />
           <TextField
-            label="Senha"
+            label={t('password_label')}
             error={!isValidPassword}
             helperText={!isValidPassword ? 'Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.' : ''}
             fullWidth
@@ -203,10 +207,11 @@ const Register = () => {
             style={{ margin: '16px 0' }}
             disabled={!isValidForm || isLoading}
           >
-            Cadastrar
+            {t('sign_up_label')}
           </Button>
           <Typography variant="body2" align="center" fontSize={15}>
-            Já possui uma conta?{' '}
+
+            {t('have_an_account_already')}{' '}
             <Button onClick={() => navigate('/')} style={{
               cursor: 'pointer',
               fontWeight: 700,
@@ -217,7 +222,7 @@ const Register = () => {
             }}
               sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
             >
-              Entre com sua conta aqui
+              {t('sign_in_title')}
             </Button>
 
           </Typography>

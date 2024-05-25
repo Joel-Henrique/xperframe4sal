@@ -1,0 +1,20 @@
+{
+  "system_name": "BUSCANDO E APRENDENDO",
+  "menu_home": "HOME",
+  "menu_instructions": "INSTRUÇÕES",
+  "menu_contact": "CONTATO",
+  "hello": "Olá",
+  "see_experiment_list_title": "Veja a seguir a lista de experimentos disponíveis para você:",
+  "see_tasks_list_title": "Veja a seguir a lista de tarefas disponíveis para você:",
+  "password_label": "Senha",
+  "name_label": "Nome",
+  "last_name_label": "Sobrenome",
+  "forgot_password": "ESQUECEU A SENHA?",
+  "sign_in_title": "ENTRE COM SUA CONTA",
+  "sign_in_label": "Entrar",
+  "enter_label": "Entrar",
+  "sign_up_label": "Criar conta",
+  "have_an_account_already": "Já possui uma conta?",
+  "progress_icf": "Aceitar termo de consentimento",
+  "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas."
+}

@@ -14,6 +14,8 @@ import { CustomSnackbar } from '../components/CustomSnackbar';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
 
+import { useTranslation } from 'react-i18next';
+
 function wasAllRequiredQuestionsAnswered(formData, survey) {
   const questionsNotAnswered = Object.keys(survey?.questions).filter(
     key => survey.questions[key].required && !Object.keys(formData).includes(key)
@@ -96,6 +98,8 @@ const Survey = () => {
   const { experimentId, surveyId } = useParams();
   const navigate = useNavigate()
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState({});
   const storedUser = localStorage.getItem('user');
@@ -278,7 +282,7 @@ const Survey = () => {
       {!survey && (isLoading && <LoadingIndicator size={70} />)}
       {survey && experiment?.surveysProps[survey._id]?.uniqueAnswer && <ErrorMessage style={{
         flex: 1, marginBottom: 10
-      }} message={"Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas."} messageType={'warning'} />}
+      }} message={t('unique_answer_survey_message')} messageType={'warning'} />}
       <CustomSnackbar open={showSnackBar} handleClose={handleCloseSuccessSnackbar} time={1500} message={message} severity={severity} slide={true} variant="filled" showLinear={true} />
       {survey && (<>
         <SurveyComponent survey={survey} callback={handleChange} params={{ user: user, experimentId: experimentId }} />
