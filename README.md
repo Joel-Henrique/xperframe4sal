@@ -17,6 +17,8 @@ Use the command **_pnpm run build_** to build the web site, then use the command
 
 
 ## Citation
+Marcelo Machado, Elias C. Assis, Jairo F, Souza, and Sean W. M. Siqueira. 2024. [A framework to support experimentation in the context of Cognitive Biases in Search as a Learning process](https://doi.org/10.1145/3658271.3658310). In Proceedings of the 20th Brazilian Symposium on Information Systems (SBSI '24). Association for Computing Machinery, New York, NY, USA, Article 39, 1–9.
+
 ```bibtex
 @inproceedings{10.1145/3658271.3658310,
   author = {Machado, Marcelo and Assis, Elias Cyrino and Souza, Jairo Francisco and Siqueira, Sean Wolfgand Matsui},
