@@ -35,6 +35,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         dbName: 'cbf',
       }
     ),
+
     MailerModule.forRoot({
       transport: {
         service: 'gmail',
