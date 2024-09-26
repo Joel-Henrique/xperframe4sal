@@ -1,6 +1,6 @@
 # A Framework to support empirical experimentation on Cognitive Biases in Search as Learning
 
-This repository contains the source code for the Xper4SAL. The Xper4SAL is the framework capable of instantiating experimentation on Cognitive Biases in Search as Learning.
+This repository contains the source code for the Xper4SAL, a framework for instantiating experiments on Cognitive Biases in Search as Learning.
 
 The `/server` folder contains the source code of the backend developed in NestJS. The `/web` folder contains the frontend developed in ReactJS.
 
