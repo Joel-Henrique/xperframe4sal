@@ -69,7 +69,10 @@ export function PrivateRoutes(props) {
     navigate('/instructions');
     setAnchorEl(null);
   }
-
+  const handleGoCreateTasks = () => {
+    navigate('/createtasks');
+    setAnchorEl(null);
+  }
   const handleAccountButtonEnter = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -88,6 +91,12 @@ export function PrivateRoutes(props) {
 
       <Divider />
       <List>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleGoCreateTasks}>
+            <Mail />
+            <ListItemText primary={t('menu_task')} />
+          </ListItemButton>
+        </ListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoHome}>
             <Home />
@@ -150,6 +159,9 @@ export function PrivateRoutes(props) {
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoInstruction}>
               {t('menu_instructions')}
+            </Button>
+            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateTasks}>
+              {t('menu_task')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}
