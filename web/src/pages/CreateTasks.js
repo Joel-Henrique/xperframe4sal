@@ -38,7 +38,7 @@ const CreateTasks = () => {
 
             setSnackbarSeverity('success');
             setSnackbarMessage('Tarefa criada com sucesso!');
-            navigate(`/experiments/${experimentId}/tasks`); // Redireciona para a lista de tarefas
+            navigate(`/experiments/${experimentId}/tasks`);
         } catch (error) {
             setSnackbarSeverity('error');
             setSnackbarMessage('Erro ao criar a tarefa. Tente novamente.');
@@ -84,7 +84,7 @@ const CreateTasks = () => {
                 disabled={isLoading}
                 fullWidth
             >
-                {isLoading ? 'Criando...' : t('create_task')}
+                {isLoading ? 'Criando...' : t('Criar')}
             </Button>
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
