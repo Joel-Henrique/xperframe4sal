@@ -1,102 +1,98 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
-import { Box, Button, TextField, Typography, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar } from '@mui/material';
-
-
-
+import {
+    TextField,
+    Button,
+    Typography,
+    Box,
+    Snackbar,
+    Alert,
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const CreateTasks = () => {
-        const [taskName, setTaskName] = useState('');
-        const [taskDescription, setTaskDescription] = useState('');
-        const [taskType, setTaskType] = useState('');
-        const [isSubmitting, setIsSubmitting] = useState(false);
-        const [openSnackbar, setOpenSnackbar] = useState(false);
-        const [snackbarMessage, setSnackbarMessage] = useState('');
-        const navigate = useNavigate();
+    const { experimentId } = useParams();
+    const navigate = useNavigate();
+    const { t } = useTranslation();
 
-        const handleSubmit = async (e) => {
-            e.preventDefault();
-            setIsSubmitting(true);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-            try {
-                const response = await api.post('/tasks', {
-                    name: taskName,
-                    description: taskDescription,
-                    type: taskType,
-                });
+    const handleCreateTask = async () => {
+        try {
+            setIsLoading(true);
+            const response = await api.post(
+                `/tasks`,
+                {
+                    title,
+                    description,
+                    experimentId,
+                },
+                { headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` } }
+            );
 
-                setSnackbarMessage('Tarefa criada com sucesso!');
-                setOpenSnackbar(true);
-                setTimeout(() => {
-                    navigate('/tasks');
-                }, 1500);
-            } catch (error) {
-                console.error('Erro ao criar tarefa:', error);
-                setSnackbarMessage('Erro ao criar tarefa. Tente novamente.');
-                setOpenSnackbar(true);
-            } finally {
-                setIsSubmitting(false);
-            }
-        };
-
-        return (
-            <Box sx={{ width: '60%', margin: '0 auto', marginTop: 5 }}>
-                <Typography variant="h4" gutterBottom>
-                    Criar Nova Tarefa
-                </Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        fullWidth
-                        label="Nome da Tarefa"
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        value={taskName}
-                        onChange={(e) => setTaskName(e.target.value)}
-                    />
-                    <TextField
-                        fullWidth
-                        label="Descrição da Tarefa"
-                        variant="outlined"
-                        margin="normal"
-                        multiline
-                        minRows={3}
-                        required
-                        value={taskDescription}
-                        onChange={(e) => setTaskDescription(e.target.value)}
-                    />
-                    <FormControl fullWidth margin="normal" required>
-                        <InputLabel>Tipo da Tarefa</InputLabel>
-                        <Select
-                            value={taskType}
-                            label="Tipo da Tarefa"
-                            onChange={(e) => setTaskType(e.target.value)}
-                        >
-                            <MenuItem value={'search'}>Busca</MenuItem>
-                            <MenuItem value={'questionnaire'}>Questionário</MenuItem>
-                            <MenuItem value={'assignment'}>Trabalho</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                            sx={{ width: 150 }}
-                        >
-                            {isSubmitting ? <CircularProgress size={24} /> : 'Criar Tarefa'}
-                        </Button>
-                    </Box>
-                </form>
-                <Snackbar
-                    open={openSnackbar}
-                    message={snackbarMessage}
-                    autoHideDuration={2000}
-                    onClose={() => setOpenSnackbar(false)}
-                />
-            </Box>
-        );
+            setSnackbarSeverity('success');
+            setSnackbarMessage('Tarefa criada com sucesso!');
+            navigate(`/experiments/${experimentId}/tasks`); // Redireciona para a lista de tarefas
+        } catch (error) {
+            setSnackbarSeverity('error');
+            setSnackbarMessage('Erro ao criar a tarefa. Tente novamente.');
+        } finally {
+            setIsLoading(false);
+            setSnackbarOpen(true);
+        }
     };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
+
+    return (
+        <Box sx={{ maxWidth: 400, margin: '0 auto', padding: 2 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                {t('Criação de Tarefas')}
+            </Typography>
+            <TextField
+                label={t('Titulo da Tarefa')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+            />
+            <TextField
+                label={t('Descrição da Tarefa')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreateTask}
+                disabled={isLoading}
+                fullWidth
+            >
+                {isLoading ? 'Criando...' : t('create_task')}
+            </Button>
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+        </Box>
+    );
+};
+
 export { CreateTasks };
