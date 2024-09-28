@@ -1,4 +1,4 @@
-import { Close } from '@material-ui/icons';
+import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Typography } from '@mui/material';
 
 const ResultModal = (props) => {
@@ -35,7 +35,7 @@ const ResultModal = (props) => {
               color: '#000',
             }}
           >
-            <Close size='large' />
+            <CloseIcon fontSize='large' />
           </IconButton>
         </Box>
         <Box sx={{
@@ -60,4 +60,4 @@ const ResultModal = (props) => {
   )
 }
 
-export { ResultModal } 
+export { ResultModal }

@@ -22,7 +22,9 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
-import { Home, Info, Mail } from "@material-ui/icons";
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import MailIcon from '@mui/icons-material/Mail';
 
 const drawerWidth = "240";
 
@@ -69,7 +71,10 @@ export function PrivateRoutes(props) {
     navigate('/instructions');
     setAnchorEl(null);
   }
-
+  const handleGoCreateTasks = () => {
+    navigate('/createtasks');
+    setAnchorEl(null);
+  }
   const handleAccountButtonEnter = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -90,19 +95,25 @@ export function PrivateRoutes(props) {
       <List>
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoHome}>
-            <Home />
+            <HomeIcon />
             <ListItemText primary="Home" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoInstruction}>
-            <Info />
+            <InfoIcon />
             <ListItemText primary={t('menu_instructions')} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
+          <ListItemButton onClick={handleGoCreateTasks}>
+            <MailIcon />
+            <ListItemText primary={t('menu_task')} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
           <ListItemButton onClick={handleGoContact}>
-            <Mail />
+            <HomeIcon />
             <ListItemText primary={t('menu_contact')} />
           </ListItemButton>
         </ListItem>
@@ -150,6 +161,9 @@ export function PrivateRoutes(props) {
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoInstruction}>
               {t('menu_instructions')}
+            </Button>
+            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateTasks}>
+              {t('menu_task')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}
