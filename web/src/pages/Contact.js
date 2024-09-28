@@ -9,7 +9,8 @@ import {
 } from '@mui/material';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { LocalPhone, Mail } from '@material-ui/icons';
+import MailIcon from '@mui/icons-material/Mail';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 
 
 const Contact = () => {
@@ -45,15 +46,15 @@ const Contact = () => {
         <Divider />
         <AccordionDetails>
           <Box sx={{ display: 'flex' }}>
-            <Mail />
+            <MailIcon />
             <Typography noWrap sx={{ marginLeft: 1 }}>Marcelo Machado - marcelo.machado@edu.unirio.br</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
-            <Mail />
+            <MailIcon />
             <Typography noWrap sx={{ marginLeft: 1 }}>Sean Wolfgand Matsui Siqueira - sean@uniriotec.br</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
-            <Mail />
+            <MailIcon />
             <Typography noWrap sx={{ marginLeft: 1 }}>Jairo Francisco de Souza - jairo.souza@ice.ufjf.br</Typography>
           </Box>
         </AccordionDetails>
@@ -81,11 +82,11 @@ const Contact = () => {
         <Divider />
         <AccordionDetails>
           <Box sx={{ display: 'flex' }}>
-            <Mail />
+            <MailIcon />
             <Typography noWrap sx={{ marginLeft: 1 }}>cep@unirio.br</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
-            <LocalPhone />
+            <LocalPhoneIcon />
             <Typography noWrap sx={{ marginLeft: 1 }}> +55 21 2542-7796 </Typography>
           </Box>
         </AccordionDetails>
