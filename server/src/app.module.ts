@@ -40,11 +40,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
         service: 'gmail',
         auth: {
           type: 'OAuth2',
-        //   user: process.env.MY_GMAIL_EMAIL,
-        //   clientId: process.env.MY_GMAIL_CLIENT_ID,
-        //   clientSecret: process.env.MY_GMAIL_CLIENT_SECRET,
-        //   refreshToken: process.env.MY_GMAIL_REFRESH_TOKEN,
-        //   accessToken: process.env.MY_GMAIL_TOKEN
         }
       }
     })

@@ -3,6 +3,7 @@ import { Login } from './Login';
 import { Account } from './Account';
 import { Contact } from './Contact';
 import { Instructions } from './Instructions';
+import { CreateTasks } from './CreateTasks';
 import { Surveys } from './Surveys';
 import { Survey } from './Survey';
 import { Task } from './Task';
@@ -27,5 +28,6 @@ export {
   Account,
   Contact,
   ResetPassword,
+  CreateTasks,
   Instructions
 }
