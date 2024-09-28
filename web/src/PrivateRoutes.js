@@ -22,7 +22,9 @@ import {
   Button,
   IconButton,
 } from '@mui/material';
-import { Home, Info, Mail } from "@material-ui/icons";
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import MailIcon from '@mui/icons-material/Mail';
 
 const drawerWidth = "240";
 
@@ -92,26 +94,26 @@ export function PrivateRoutes(props) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={handleGoCreateTasks}>
-            <Mail />
-            <ListItemText primary={t('menu_task')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
           <ListItemButton onClick={handleGoHome}>
-            <Home />
+            <HomeIcon />
             <ListItemText primary="Home" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoInstruction}>
-            <Info />
+            <InfoIcon />
             <ListItemText primary={t('menu_instructions')} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
+          <ListItemButton onClick={handleGoCreateTasks}>
+            <MailIcon />
+            <ListItemText primary={t('menu_task')} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
           <ListItemButton onClick={handleGoContact}>
-            <Mail />
+            <HomeIcon />
             <ListItemText primary={t('menu_contact')} />
           </ListItemButton>
         </ListItem>

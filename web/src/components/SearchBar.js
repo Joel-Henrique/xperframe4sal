@@ -1,5 +1,6 @@
-import { TextField, IconButton, InputAdornment, makeStyles } from '@material-ui/core';
-import { SearchOutlined } from '@material-ui/icons';
+import { TextField, IconButton, InputAdornment } from '@mui/material';
+import { makeStyles } from '@mui/styles'
+import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +49,7 @@ const SearchBar = (props) => {
         startAdornment: (
           <InputAdornment position="start">
             <IconButton onClick={handleClick}>
-              <SearchOutlined />
+              <SearchIcon />
             </IconButton>
           </InputAdornment>
         ),

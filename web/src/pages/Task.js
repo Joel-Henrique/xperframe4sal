@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../config/axios.js'
 import { ResultModal } from '../components/ResultModal.js';
-import { Tooltip, IconButton, Box, Pagination, Alert } from '@mui/material';
-import Pause from "@mui/icons-material/Pause.js";
-import Stop from "@mui/icons-material/Stop.js";
+import { Tooltip, IconButton, Box, Pagination } from '@mui/material';
+import Pause from "@mui/icons-material/Pause";
+import Stop from "@mui/icons-material/Stop";
 import PlayArrow from "@mui/icons-material/PlayArrow";
 import { LoadingIndicator } from '../components/LoadIndicator';
 import { useCookies } from 'react-cookie';
