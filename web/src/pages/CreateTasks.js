@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
 import {
@@ -8,6 +8,13 @@ import {
     Box,
     Snackbar,
     Alert,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Checkbox,
+    ListItemText,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
@@ -18,10 +25,29 @@ const CreateTasks = () => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [summary, setSummary] = useState('');
+    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]); // Campo para os questionários obrigatórios
+    const [surveys, setSurveys] = useState([]); // Lista de questionários disponíveis
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+
+    useEffect(() => {
+        const fetchSurveys = async () => {
+            try {
+                const response = await api.get('/surveys', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` }
+                });
+                setSurveys(response.data);
+            } catch (error) {
+                console.error('Erro ao buscar os questionários', error);
+            }
+        };
+
+        fetchSurveys();
+    }, []);
 
     const handleCreateTask = async () => {
         try {
@@ -30,8 +56,10 @@ const CreateTasks = () => {
                 `/tasks`,
                 {
                     title,
+                    summary,
                     description,
                     experimentId,
+                    requiredSurveysIds,
                 },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` } }
             );
@@ -52,11 +80,16 @@ const CreateTasks = () => {
         setSnackbarOpen(false);
     };
 
+    const handleSurveyChange = (event) => {
+        setRequiredSurveysIds(event.target.value);
+    };
+
     return (
-        <Box sx={{ maxWidth: 400, margin: '0 auto', padding: 2 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
+        <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
+            <Typography variant="h4" component="h1" gutterBottom align="center">
                 {t('Criação de Tarefas')}
             </Typography>
+
             <TextField
                 label={t('Titulo da Tarefa')}
                 variant="outlined"
@@ -67,16 +100,54 @@ const CreateTasks = () => {
                 required
             />
             <TextField
-                label={t('Descrição da Tarefa')}
+                label={t('Sumário da Tarefa')}
                 variant="outlined"
                 fullWidth
                 margin="normal"
                 multiline
                 rows={4}
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                required
+                placeholder={t('Forneça informações sobre o Sumário da tarefa')}
+            />
+            <TextField
+                label={t('Descrição da Tarefa')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                multiline
+                rows={6}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
+                placeholder={t('Forneça instruções detalhadas para a tarefa')}
             />
+            <FormControl fullWidth margin="normal">
+                <InputLabel id="surveys-label" shrink>{t('Questionários Obrigatórios')}</InputLabel>
+                <Select
+                    labelId="surveys-label"
+                    label={t('Questionários Obrigatórios')}
+                    multiple
+                    value={requiredSurveysIds}
+                    onChange={handleSurveyChange}
+                    renderValue={(selected) => selected.length > 0 ? selected.join(', ') : t('Nenhum questionário selecionado')}
+                    displayEmpty
+                >
+                    {surveys.length === 0 ? (
+                        <MenuItem disabled>{isLoading ? <CircularProgress size={24} /> : t('Nenhum questionário disponível')}</MenuItem>
+                    ) : (
+                        surveys.map((survey) => (
+                            <MenuItem key={survey.id} value={survey.id}>
+                                <Checkbox checked={requiredSurveysIds.indexOf(survey.id) > -1} />
+                                <ListItemText primary={survey.title} />
+                            </MenuItem>
+                        ))
+                    )}
+                </Select>
+            </FormControl>
+
+
             <Button
                 variant="contained"
                 color="primary"
