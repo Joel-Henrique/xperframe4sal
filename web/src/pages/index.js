@@ -4,6 +4,7 @@ import { Account } from './Account';
 import { Contact } from './Contact';
 import { Instructions } from './Instructions';
 import { CreateTasks } from './CreateTasks';
+import { CreateSurveys } from './CreateSurveys';
 import { Surveys } from './Surveys';
 import { Survey } from './Survey';
 import { Task } from './Task';
@@ -29,5 +30,6 @@ export {
   Contact,
   ResetPassword,
   CreateTasks,
+  CreateSurveys,
   Instructions
 }

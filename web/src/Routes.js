@@ -14,6 +14,7 @@ import {
   NotFoundPage,
   Account,
   CreateTasks,
+  CreateSurveys,
   ResetPassword,
   Instructions
 } from './pages';
@@ -39,6 +40,10 @@ const Router = () => {
 
       <Route path='/createtasks' element={<PrivateRoutes />}>
          <Route index element={<CreateTasks />} />
+      </Route>
+
+      <Route path='/CreateSurveys' element={<PrivateRoutes />}>
+         <Route index element={<CreateSurveys />} />
       </Route>
 
       <Route path='/experiments' element={<PrivateRoutes />}>

@@ -75,6 +75,10 @@ export function PrivateRoutes(props) {
     navigate('/createtasks');
     setAnchorEl(null);
   }
+  const handleGoCreateSurveys = () => {
+    navigate('/CreateSurveys');
+    setAnchorEl(null);
+  }
   const handleAccountButtonEnter = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -109,6 +113,12 @@ export function PrivateRoutes(props) {
           <ListItemButton onClick={handleGoCreateTasks}>
             <MailIcon />
             <ListItemText primary={t('menu_task')} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleGoCreateSurveys}>
+            <MailIcon />
+            <ListItemText primary={t('menu_surveys')} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -156,7 +166,7 @@ export function PrivateRoutes(props) {
             {t('system_name')}
           </Typography>
           <Box sx={{ minWidth: 270, textAlign: 'right', display: { xs: 'none', sm: 'block', md: 'block' } }}>
-            <Button sx={{ color: '#fff' }} onClick={handleGoHome}>
+            <Button sx={{ color: '#fff', width: '85px'}} onClick={handleGoHome}>
               HOME
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoInstruction}>
@@ -164,6 +174,9 @@ export function PrivateRoutes(props) {
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateTasks}>
               {t('menu_task')}
+            </Button>
+            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateSurveys}>
+              {t('menu_surveys')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}
