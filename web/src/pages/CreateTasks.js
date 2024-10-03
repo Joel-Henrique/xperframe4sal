@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
     TextField,
     Button,
@@ -15,8 +17,30 @@ import {
     MenuItem,
     Checkbox,
     ListItemText,
+    styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+
+
+const CustomContainer = styled('div')(({ theme }) => ({
+    backgroundColor: '#fafafa',
+    borderRadius: '8px',
+    padding: '0px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    '& .ql-toolbar': {
+        backgroundColor: '#f5f5f5',
+        borderRadius: '8px 8px 0 0',
+    },
+    '& .ql-container': {
+        minHeight: '200px',
+        borderRadius: '0 0 8px 8px',
+    },
+    '& .ql-editor': {
+        fontFamily: theme.typography.fontFamily,
+        lineHeight: 1.6,
+        color: '#444',
+    },
+}));
 
 const CreateTasks = () => {
     const { experimentId } = useParams();
@@ -85,7 +109,7 @@ const CreateTasks = () => {
     };
 
     return (
-        <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
+        <Box sx={{maxWidth: 500, margin: '0 auto', padding: 2}}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
                 {t('Criação de Tarefas')}
             </Typography>
@@ -111,18 +135,19 @@ const CreateTasks = () => {
                 required
                 placeholder={t('Forneça informações sobre o Sumário da tarefa')}
             />
-            <TextField
-                label={t('Descrição da Tarefa')}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                multiline
-                rows={6}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                placeholder={t('Forneça instruções detalhadas para a tarefa')}
-            />
+
+            <div>
+                <CustomContainer>
+                    <ReactQuill
+                        theme="snow"
+                        value={description}
+                        onChange={setDescription}
+                        placeholder={t('Descrição da Tarefa *')}
+                        required
+                    />
+                </CustomContainer>
+            </div>
+
             <FormControl fullWidth margin="normal">
                 <InputLabel id="surveys-label" shrink>{t('Questionários Obrigatórios')}</InputLabel>
                 <Select
@@ -135,12 +160,13 @@ const CreateTasks = () => {
                     displayEmpty
                 >
                     {surveys.length === 0 ? (
-                        <MenuItem disabled>{isLoading ? <CircularProgress size={24} /> : t('Nenhum questionário disponível')}</MenuItem>
+                        <MenuItem disabled>{isLoading ?
+                            <CircularProgress size={24}/> : t('Nenhum questionário disponível')}</MenuItem>
                     ) : (
                         surveys.map((survey) => (
                             <MenuItem key={survey.id} value={survey.id}>
-                                <Checkbox checked={requiredSurveysIds.indexOf(survey.id) > -1} />
-                                <ListItemText primary={survey.title} />
+                                <Checkbox checked={requiredSurveysIds.indexOf(survey.id) > -1}/>
+                                <ListItemText primary={survey.title}/>
                             </MenuItem>
                         ))
                     )}
@@ -158,7 +184,7 @@ const CreateTasks = () => {
                 {isLoading ? 'Criando...' : t('Criar')}
             </Button>
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{width: '100%'}}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
@@ -166,4 +192,4 @@ const CreateTasks = () => {
     );
 };
 
-export { CreateTasks };
+export {CreateTasks};

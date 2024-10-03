@@ -1,21 +1,32 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { api } from '../config/axios';
 import {
-    Box,
+    TextField,
+    Button,
     Typography,
+    Box,
+    Snackbar,
+    Alert,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Checkbox,
+    ListItemText,
 } from '@mui/material';
-
+import { useTranslation } from 'react-i18next';
 
 const CreateSurveys = () => {
+    const { t } = useTranslation();
 
     return (
-        <>
-            <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1.0rem', sm: '1.2rem', marginBottom: 30 } }}>
-                Assista a seguir um vídeo com instruções de utilização deste sistema:
+        <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
+            <Typography variant="h4" component="h1" gutterBottom align="center">
+                {t('Criação de Questionarios')}
             </Typography>
-            <Box component='div' sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Box sx={{ width: { sm: 654, xs: 360 }, height: { sm: 375, xs: 205 } }} component='iframe' src="https://www.youtube.com/embed/Q4C4ees0VLQ?rel=0&si=6_lCAUI5nbnHa_yJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;" allowFullScreen />
-            </Box>
-        </>
+        </Box>
     );
 };
 
