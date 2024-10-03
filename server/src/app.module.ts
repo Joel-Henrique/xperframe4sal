@@ -14,10 +14,14 @@ import { GoogleModule } from './modules/search-engines/google/google.module';
 import { PuppeteerModule } from './modules/puppeteer/puppeteer.module';
 import { UserTaskSessionModule } from './modules/user-task-session/user-task-session.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
     ExperimentsModule,
+    ConfigModule.forRoot({   //isso é para o funcionamento do set SECRET no .env
+      isGlobal: true,
+    }),
     IcfModule,
     TasksModule,
     UserModule,
