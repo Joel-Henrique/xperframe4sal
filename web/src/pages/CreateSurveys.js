@@ -383,11 +383,11 @@ const CreateSurveys = () => {
                                 {q.options.map(
                                     (opt) =>
                                         opt.subQuestion && (
-                                            <Grid item xs={12} key={`sub-${opt.id}`} sx={{ pl: 4, mt: 2 }}>
+                                            <Grid2 item xs={12} key={`sub-${opt.id}`} sx={{ pl: 4, mt: 2 }}>
                                                 <Paper sx={{ padding: 2, backgroundColor: '#f9f9f9' }}>
                                                     <Typography variant="subtitle1">Subquestão para "{opt.statement}"</Typography>
-                                                    <Grid container spacing={2} alignItems="center">
-                                                        <Grid item xs={11}>
+                                                    <Grid2 container spacing={2} alignItems="center">
+                                                        <Grid2 item xs={11}>
                                                             <TextField
                                                                 label="Enunciado da Subquestão"
                                                                 value={opt.subQuestion.statement}
@@ -402,16 +402,16 @@ const CreateSurveys = () => {
                                                                 fullWidth
                                                                 required
                                                             />
-                                                        </Grid>
-                                                        <Grid item xs={1}>
+                                                        </Grid2>
+                                                        <Grid2 item xs={1}>
                                                             <IconButton
                                                                 color="error"
                                                                 onClick={() => handleRemoveSubQuestion(q.id, opt.id)}
                                                             >
                                                                 <Remove />
                                                             </IconButton>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
+                                                        </Grid2>
+                                                        <Grid2 item xs={6}>
                                                             <FormControl fullWidth>
                                                                 <InputLabel>Tipo</InputLabel>
                                                                 <Select
@@ -433,8 +433,8 @@ const CreateSurveys = () => {
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
+                                                        </Grid2>
+                                                        <Grid2 item xs={6}>
                                                             <FormControl fullWidth>
                                                                 <InputLabel>Obrigatória</InputLabel>
                                                                 <Select
@@ -453,7 +453,7 @@ const CreateSurveys = () => {
                                                                     <MenuItem value={true}>Sim</MenuItem>
                                                                 </Select>
                                                             </FormControl>
-                                                        </Grid>
+                                                        </Grid2>
 
                                                         {/* Opções para subquestão */}
                                                         {(opt.subQuestion.type === 'multiple-selection' ||
@@ -614,9 +614,9 @@ const CreateSurveys = () => {
                                                                 </Button>
                                                             </Grid>
                                                         )}
-                                                    </Grid>
+                                                    </Grid2>
                                                 </Paper>
-                                            </Grid>
+                                            </Grid2>
                                         )
                                 )}
                             </Grid>
