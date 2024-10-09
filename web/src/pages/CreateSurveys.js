@@ -13,7 +13,6 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Checkbox,
     IconButton,
     Grid,
     Grid2,
@@ -124,7 +123,7 @@ const CreateSurveys = () => {
             )
         );
     };
-
+/*
     const handleAddSubQuestion = (questionId, optionId) => {
         setQuestions(
             questions.map((q) =>
@@ -150,6 +149,7 @@ const CreateSurveys = () => {
             )
         );
     };
+    */
 
     const handleRemoveSubQuestion = (questionId, optionId) => {
         setQuestions(
@@ -193,7 +193,7 @@ const CreateSurveys = () => {
             )
         );
     };
-
+//submeter questionario
     const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -610,7 +610,7 @@ const CreateSurveys = () => {
                                                                         );
                                                                     }}
                                                                 >
-                                                                    Adicionar Opção na Subquestão
+                                                                    
                                                                 </Button>
                                                             </Grid>
                                                         )}
