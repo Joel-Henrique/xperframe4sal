@@ -1,4 +1,11 @@
 {
+  "sign_up_label": "Cadastrar",
+  "name_label": "Nome",
+  "last_name_label": "Sobrenome",
+  "password_label": "Senha",
+  "have_an_account_already": "Já possui uma conta?",
+  "sign_in_title": "Entrar",
+
   "system_name": "BUSCANDO E APRENDENDO",
   "menu_home": "HOME",
   "menu_instructions": "INSTRUÇÕES",
@@ -6,10 +13,7 @@
   "menu_surveys": "QUESTIONARIO",
   "menu_contact": "CONTATO",
   "hello": "Olá",
-  "name_label": "Nome",
-  "last_name_label": "Sobrenome",
   "enter_label": "Entrar",
-  "have_an_account_already": "Já possui uma conta?",
   "progress_icf": "Aceitar termo de consentimento",
   "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
 
@@ -77,10 +81,6 @@
   "instructions_video_text": "Assista a seguir um vídeo com instruções de utilização deste sistema:",
   "youtube_video_title": "Player de vídeo do YouTube",
 
-  "sign_in_title": "Entrar",
-  "sign_in_label": "Entrar",
-  "password_label": "Senha",
-  "sign_up_label": "Cadastrar",
   "forgot_password": "Esqueceu a senha?",
   "login_error": "Dados incorretos ou não existentes. Verifique o e-mail e a senha e tente novamente.",
   "data_retrieval_error": "Não foi possível recuperar os seus dados. Por favor, entre em contato com o administrador do serviço.",
@@ -88,8 +88,30 @@
   
   "not_found_title": "404 - Página não encontrada",
   "not_found_message": "Oops, a página que você está procurando não existe.",
-  "back_home_button": "Volte para página inicial"
+  "back_home_button": "Volte para página inicial",
 
+  "repeat_password": "Repita a senha",
+  "password_helper": "Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.",
+  "different_passwords": "Insira a mesma senha digitada no campo anterior.",
+  "change_password": "Alterar Senha",
+  "login_with_account": "Entre com sua conta aqui",
+  "loading_message": "Sua senha foi alterada com sucesso!",
+  "passwords_dont_match": "Senhas diferentes. Por favor, assegure-se de que os campos a seguir tenham a mesma senha.",
+  "invalid_password_message": "Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.",
+  "error_message": "Não foi possível alterar o cadastro",
 
   
+  "unique_answer_survey_message2": "Este questionário permite apenas uma resposta.",
+  "loading_survey_message": "Carregando questionário...",
+  "please_answer_all_required_questions": "Por favor, responda todas as perguntas obrigatórias.",
+  "submit_button": "Enviar",
+
+
+  "unique_answer_survey_message": "Este questionário permite apenas uma resposta.",
+  "loading_survey_message": "Carregando questionário...",
+  "please_answer_all_required_questions": "Por favor, responda todas as perguntas obrigatórias.",
+  "submit_button": "Enviar"
+
+
+
 }

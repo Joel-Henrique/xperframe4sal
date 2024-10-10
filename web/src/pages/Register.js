@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { api } from "../config/axios.js";
 import { useNavigate } from 'react-router-dom';
-
 import {
   Container,
   Paper,
@@ -12,16 +11,15 @@ import {
   IconButton,
   Box,
 } from '@mui/material';
-
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
-
 import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); 
+
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -35,9 +33,6 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { t } = useTranslation();
-
-
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
     setEmail(inputEmail);
@@ -50,18 +45,18 @@ const Register = () => {
     setPassword(inputPassword);
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\]*@#$%^<>'";|}{:,./?~()`&\-_+=![]).{6,}$/;
     setIsValidPassword(passwordRegex.test(inputPassword));
-  }
+  };
 
   const handleNameChange = (e) => {
     const inputName = e.target.value;
     setName(inputName);
-    setIsValidName(inputName ? true : false)
+    setIsValidName(inputName ? true : false);
   };
 
   const handleLastNameChange = (e) => {
     const inputName = e.target.value;
     setLastName(inputName);
-    setIsValidLastName(inputName ? true : false)
+    setIsValidLastName(inputName ? true : false);
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -70,26 +65,22 @@ const Register = () => {
 
   const handleRegister = async () => {
     if (!isValidEmail) {
-      setAlertMessage("E-mail inválido. Verifique e tente novamente.")
+      setAlertMessage(t("invalid_email_message"));
       setMessageType('fail');
       return;
     }
     if (!isValidName) {
-      setAlertMessage("Preecha seu nome.")
+      setAlertMessage(t("invalid_name_message"));
       setMessageType('fail');
       return;
     }
     if (!isValidLastName) {
-      setAlertMessage("Preecha seu sobrenome.")
+      setAlertMessage(t("invalid_last_name_message"));
       setMessageType('fail');
       return;
     }
     if (!isValidPassword) {
-      setAlertMessage(`Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua:
-       - letras maiúsculas
-       - letras minúsculas
-       - números e 
-       - caracteres especiais.`)
+      setAlertMessage(t("invalid_password_message"));
       setMessageType('fail');
       return;
     }
@@ -103,16 +94,15 @@ const Register = () => {
     try {
       let response = await api.post("/users", userData);
       if (response.data) {
-        setAlertMessage("Seu cadastro foi realizado com sucesso! Por favor, retorne à página inicial para realizar o login.")
+        setAlertMessage(t("success_message"));
         setMessageType('success');
       }
     } catch (e) {
-      setAlertMessage('Não foi possível efetuar o cadastro. Por favor, verifique todos os campos e tente novamente. Caso o erro persista entre em contato com o administrador deste serviço em "marcelo.oc.machado@gmail.com"');
+      setAlertMessage(t("register_fail_message"));
       setMessageType('fail');
     } finally {
       setIsLoading(false);
     }
-
   };
 
   const isValidForm = isValidEmail && email && isValidPassword && password && isValidName && name && isValidLastName && lastName;
@@ -138,15 +128,13 @@ const Register = () => {
           >
             {t('sign_up_label')}
           </Typography>
-          {isLoading ? (
-            <LoadingIndicator size={50} /> // Exibir o indicador de carregamento do Material-UI
-          ) : ""}
-          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />} {/* Pass onClose callback */}
-
+          {isLoading ? <LoadingIndicator size={50} /> : ""}
+          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />}
+          
           <TextField
             label={t('name_label')}
             error={!isValidName}
-            helperText={!isValidName ? 'Preencha o campo nome.' : ''}
+            helperText={!isValidName ? t('invalid_name_message') : ''}
             fullWidth
             margin="normal"
             variant="outlined"
@@ -156,7 +144,7 @@ const Register = () => {
           <TextField
             label={t('last_name_label')}
             error={!isValidLastName}
-            helperText={!isValidLastName ? 'Preencha o campo sobrenome.' : ''}
+            helperText={!isValidLastName ? t('invalid_last_name_message') : ''}
             fullWidth
             margin="normal"
             variant="outlined"
@@ -167,7 +155,7 @@ const Register = () => {
             label="E-mail"
             type="email"
             error={!isValidEmail}
-            helperText={!isValidEmail ? 'E-mail inválido.' : ''}
+            helperText={!isValidEmail ? t('invalid_email_message') : ''}
             fullWidth
             autoComplete="email"
             margin="normal"
@@ -178,7 +166,7 @@ const Register = () => {
           <TextField
             label={t('password_label')}
             error={!isValidPassword}
-            helperText={!isValidPassword ? 'Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.' : ''}
+            helperText={!isValidPassword ? t('invalid_password_message') : ''}
             fullWidth
             autoComplete="current-password"
             margin="normal"
@@ -191,7 +179,7 @@ const Register = () => {
                   <IconButton
                     onClick={handleTogglePasswordVisibility}
                     edge="end"
-                    title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                    title={showPassword ? t('hide_password') : t('show_password')}
                   >
                     {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
@@ -210,7 +198,6 @@ const Register = () => {
             {t('sign_up_label')}
           </Button>
           <Typography variant="body2" align="center" fontSize={15}>
-
             {t('have_an_account_already')}{' '}
             <Button onClick={() => navigate('/')} style={{
               cursor: 'pointer',
@@ -218,13 +205,11 @@ const Register = () => {
               backgroundColor: 'transparent',
               textAlign: 'right',
               padding: '2px 3px',
-
             }}
               sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
             >
               {t('sign_in_title')}
             </Button>
-
           </Typography>
         </Box>
       </Paper>

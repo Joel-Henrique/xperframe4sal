@@ -6,14 +6,10 @@ import {
   Typography,
 
 } from '@mui/material';
-
 import { Survey as SurveyComponent } from '../components/Survey/Survey';
 import { CustomSnackbar } from '../components/CustomSnackbar';
-
-
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
-
 import { useTranslation } from 'react-i18next';
 
 function wasAllRequiredQuestionsAnswered(formData, survey) {
@@ -22,7 +18,6 @@ function wasAllRequiredQuestionsAnswered(formData, survey) {
   );
   return questionsNotAnswered.length === 0;
 }
-
 async function updateUserExperimentStatus(userSurveysApiCalls, stepName, userExperiment, user, api) {
   try {
     if (userSurveysApiCalls.length > 0) {
@@ -200,7 +195,7 @@ const Survey = () => {
         setShowSnackBar(true);
         setIsSuccess(false);
         setSeverity('error');
-        setMessage('Por favor, responda todas as perguntas obrigatórias.');
+        setMessage(t('please_answer_all_required_questions'));
         return;
       }
 
@@ -277,7 +272,7 @@ const Survey = () => {
   return (
     <>
       {!survey && (
-        <Typography variant="body1">Carregando questionário...</Typography>
+        <Typography variant="body1">{t('loading_survey_message')}</Typography>
       )}
       {!survey && (isLoading && <LoadingIndicator size={70} />)}
       {survey && experiment?.surveysProps[survey._id]?.uniqueAnswer && <ErrorMessage style={{
@@ -293,7 +288,7 @@ const Survey = () => {
             onClick={() => handleSubmit(surveyAnswer, experiment?.surveysProps)}
             disabled={!allRequiredQuestionsAnswered || surveySent}
           >
-            Enviar
+          {t('submit_button')}
           </Button>
         </div>
       </>

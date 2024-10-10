@@ -1,4 +1,11 @@
 {
+  "sign_up_label": "Sign Up",
+  "name_label": "First Name",
+  "last_name_label": "Last Name",
+  "password_label": "Password",
+  "have_an_account_already": "Already have an account?",
+  "sign_in_title": "Sign In",
+
   "system_name": "SEARCHING AND LEARNING",
   "menu_home": "HOME",
   "menu_instructions": "INSTRUCTION",
@@ -6,10 +13,7 @@
   "menu_surveys": "Survey",
   "menu_contact": "CONTACT",
   "hello": "Hi",
-  "name_label": "Name",
-  "last_name_label": "Last name",
   "enter_label": "Enter",
-  "have_an_account_already": "Have an account?",
   "progress_icf": "Accept informed consent",
   "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers.",
 
@@ -75,17 +79,30 @@
   "instructions_video_text": "Watch the following video for instructions on how to use this system:",
   "youtube_video_title": "YouTube video player",
 
-  "sign_in_title": "Sign In",
-  "sign_in_label": "Sign In",
-  "password_label": "Password",
-  "sign_up_label": "Sign Up",
   "forgot_password": "Forgot Password?",
   "login_error": "Incorrect or non-existing data. Check the email and password and try again.",
   "data_retrieval_error": "Unable to retrieve your data. Please contact the service administrator.",
 
   "not_found_title": "404 - Page Not Found",
   "not_found_message": "Oops, the page you are looking for does not exist.",
-  "back_home_button": "Go back to homepage"
+  "back_home_button": "Go back to homepage",
+
+  "repeat_password": "Repeat Password",
+  "password_helper": "Please ensure your password is at least 6 characters long and includes uppercase letters, lowercase letters, numbers, and special characters.",
+  "different_passwords": "Please enter the same password as in the previous field.",
+  "change_password": "Change Password",
+  "login_with_account": "Login with your account here",
+  "loading_message": "Your password has been successfully changed!",
+  "passwords_dont_match": "Passwords do not match. Please ensure both fields have the same password.",
+  "invalid_password_message": "Please ensure your password is at least 6 characters long and includes uppercase letters, lowercase letters, numbers, and special characters.",
+  "error_message": "Unable to update registration",
+
+  "unique_answer_survey_message2": "This survey allows only one response.",
+  "loading_survey_message": "Loading survey...",
+  "please_answer_all_required_questions": "Please answer all required questions.",
+  "submit_button": "Submit"
+
+
 
 
 }
