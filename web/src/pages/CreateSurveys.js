@@ -15,7 +15,6 @@ import {
     MenuItem,
     IconButton,
     Grid,
-    Grid2,
     Paper,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -135,29 +134,6 @@ const CreateSurveys = () => {
                                 ? {
                                     ...opt,
                                     subQuestion: null,
-                                }
-                                : opt
-                        ),
-                    }
-                    : q
-            )
-        );
-    };
-
-    const handleSubQuestionChange = (questionId, optionId, field, value) => {
-        setQuestions(
-            questions.map((q) =>
-                q.id === questionId
-                    ? {
-                        ...q,
-                        options: q.options.map((opt) =>
-                            opt.id === optionId
-                                ? {
-                                    ...opt,
-                                    subQuestion: {
-                                        ...opt.subQuestion,
-                                        [field]: value,
-                                    },
                                 }
                                 : opt
                         ),
