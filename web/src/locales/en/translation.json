@@ -100,9 +100,14 @@
   "unique_answer_survey_message2": "This survey allows only one response.",
   "loading_survey_message": "Loading survey...",
   "please_answer_all_required_questions": "Please answer all required questions.",
-  "submit_button": "Submit"
+  "submit_button": "Submit",
 
-
+  "questionnaire_list_header": "Here is the list of available surveys for you:",
+  "attention_message": "Attention: complete all the surveys before moving to the tasks.",
+  "go_to_tasks": "Go to tasks",
+  "loading_surveys": "Loading surveys...",
+  "no_surveys": "At the moment you have not been enrolled in any surveys. Thank you!",
+  "already_answered": "You have already answered this survey."
 
 
 }

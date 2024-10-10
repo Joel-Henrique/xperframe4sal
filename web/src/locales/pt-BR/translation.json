@@ -100,18 +100,16 @@
   "invalid_password_message": "Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.",
   "error_message": "Não foi possível alterar o cadastro",
 
-  
-  "unique_answer_survey_message2": "Este questionário permite apenas uma resposta.",
   "loading_survey_message": "Carregando questionário...",
   "please_answer_all_required_questions": "Por favor, responda todas as perguntas obrigatórias.",
   "submit_button": "Enviar",
-
-
-  "unique_answer_survey_message": "Este questionário permite apenas uma resposta.",
-  "loading_survey_message": "Carregando questionário...",
-  "please_answer_all_required_questions": "Por favor, responda todas as perguntas obrigatórias.",
-  "submit_button": "Enviar"
-
+  
+  "questionnaire_list_header": "Veja a seguir a lista de questionários disponíveis para você:",
+  "attention_message": "Atenção: responda todos os questionários antes de ir para as tarefas.",
+  "go_to_tasks": "Ir para tarefas",
+  "loading_surveys": "Carregando questionários...",
+  "no_surveys": "No momento você não foi inscrito em nenhum questionário. Obrigad@!",
+  "already_answered": "Você já respondeu este questionário."
 
 
 }

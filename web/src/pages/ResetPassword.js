@@ -120,7 +120,7 @@ const ResetPassword = () => {
               style={{ margin: '16px 0' }}
               disabled={isLoading || !isValidPassword || differentPasswords || (password.length === 0 && repeatPassword.length === 0)}
             >
-              {t('change_password')}  // Chave de tradução
+              {t('change_password')}
             </Button>
             <Button onClick={() => navigate('/')} style={{
               cursor: 'pointer',
@@ -131,7 +131,7 @@ const ResetPassword = () => {
             }}
               sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
             >
-              {t('login_with_account')}  // Chave de tradução
+              {t('login_with_account')}  
             </Button>
           </Box>
         </Paper>
