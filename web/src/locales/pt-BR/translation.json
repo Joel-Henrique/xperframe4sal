@@ -6,8 +6,6 @@
   "menu_surveys": "QUESTIONARIO",
   "menu_contact": "CONTATO",
   "hello": "Olá",
-  "see_experiment_list_title": "Veja a seguir a lista de experimentos disponíveis para você:",
-  "see_tasks_list_title": "Veja a seguir a lista de tarefas disponíveis para você:",
   "password_label": "Senha",
   "name_label": "Nome",
   "last_name_label": "Sobrenome",
@@ -18,5 +16,56 @@
   "sign_up_label": "Criar conta",
   "have_an_account_already": "Já possui uma conta?",
   "progress_icf": "Aceitar termo de consentimento",
-  "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas."
+  "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
+
+  "Criação de Tarefas": "Criação de Tarefas",
+  "Título da Tarefa": "Título da Tarefa",
+  "Sumário da Tarefa": "Sumário da Tarefa",
+  "Forneça informações sobre o sumário da tarefa": "Forneça informações sobre o sumário da tarefa",
+  "Descrição da Tarefa *": "Descrição da Tarefa *",
+  "Questionários Obrigatórios": "Questionários Obrigatórios",
+  "Nenhum questionário selecionado": "Nenhum questionário selecionado",
+  "Nenhum questionário disponível": "Nenhum questionário disponível",
+  "Criando...": "Criando...",
+  "Criar": "Criar",
+  "Tarefa criada com sucesso!": "Tarefa criada com sucesso!",
+  "Erro ao criar a tarefa. Tente novamente.": "Erro ao criar a tarefa. Tente novamente.",
+
+  "Nome": "Nome",
+  "Sobrenome": "Sobrenome",
+  "E-mail": "E-mail",
+  "Senha": "Senha",
+  "Preencha o campo nome.": "Preencha o campo nome.",
+  "Preencha o campo sobrenome.": "Preencha o campo sobrenome.",
+  "E-mail inválido.": "E-mail inválido.",
+  "Preencha seu nome.": "Preencha seu nome.",
+  "Preencha seu sobrenome.": "Preencha seu sobrenome.",
+  "isValidPassword": "Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.",
+  "E-mail inválido. Verifique e tente novamente.": "E-mail inválido. Verifique e tente novamente.",
+  "Seu cadastro foi atualizado com sucesso!": "Seu cadastro foi atualizado com sucesso!",
+  "Não foi possível atualizar o cadastro. Verifique todos os campos e tente novamente.": "Não foi possível atualizar o cadastro. Verifique todos os campos e tente novamente.",
+  "Tem certeza?": "Tem certeza?",
+  "Você terá todos os seus dados de experimentos apagados.": "Você terá todos os seus dados de experimentos apagados.",
+  "Apagar todos meus dados": "Apagar todos meus dados",
+
+  "researchers": "Pesquisadores:",
+  "ethicsCommittee": "Comitê de Ética em Pesquisa, CEP-UNIRIO:",
+  "marcelo": "Marcelo Machado - marcelo.machado@edu.unirio.br",
+  "sean": "Sean Wolfgand Matsui Siqueira - sean@uniriotec.br",
+  "jairo": "Jairo Francisco de Souza - jairo.souza@ice.ufjf.br",
+  "cepEmail": "cep@unirio.br",
+  "cepPhone": "+55 21 2542-7796",
+
+  
+  
+  "carregando_experimentos": "Carregando experimentos...",
+  "no_experiments_message": "No momento você não foi inscrito em nenhum experimento.",
+
+  "see_experiment_list_title": "See the list of experiments available to you below:",
+  "see_tasks_list_title": "See the list of tasks available to you below:",
+  "loading_experiments": "Carregando experimentos...",
+  "no_experiments": "No momento você não foi inscrito em nenhum experimento.",
+  "error_fetching_experiments": "Erro ao buscar experimentos.",
+  "accordion_summary_hover": "Passe o mouse para expandir"
+  
 }

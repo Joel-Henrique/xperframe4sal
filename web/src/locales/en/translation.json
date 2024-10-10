@@ -6,8 +6,6 @@
   "menu_surveys": "Survey",
   "menu_contact": "CONTACT",
   "hello": "Hi",
-  "see_experiment_list_title": "See the list of experiments available to you below:",
-  "see_tasks_list_title": "See the list of tasks available to you below:",
   "password_label": "Password",
   "name_label": "Name",
   "last_name_label": "Last name",
@@ -18,5 +16,56 @@
   "sign_up_label": "Sign up",
   "have_an_account_already": "Have an account?",
   "progress_icf": "Accept informed consent",
-  "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers."
+  "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers.",
+
+  "Criação de Tarefas": "Task Creation",
+  "Título da Tarefa": "Task Title",
+  "Sumário da Tarefa": "Task Summary",
+  "Forneça informações sobre o sumário da tarefa": "Provide information about the task summary",
+  "Descrição da Tarefa *": "Task Description *",
+  "Questionários Obrigatórios": "Required Surveys",
+  "Nenhum questionário selecionado": "No survey selected",
+  "Nenhum questionário disponível": "No survey available",
+  "Criando...": "Creating...",
+  "Criar": "Create",
+  "Tarefa criada com sucesso!": "Task successfully created!",
+  "Erro ao criar a tarefa. Tente novamente.": "Error creating task. Please try again.",
+
+  "Nome": "First Name",
+  "Sobrenome": "Last Name",
+  "E-mail": "Email",
+  "Senha": "Password",
+  "Preencha o campo nome.": "Please fill in the first name field.",
+  "Preencha o campo sobrenome.": "Please fill in the last name field.",
+  "E-mail inválido.": "Invalid email.",
+  "Preencha seu nome.": "Please fill in your first name.",
+  "Preencha seu sobrenome.": "Please fill in your last name.",
+  "isValidPassword": "Please ensure your password is at least 6 characters long and includes uppercase letters, lowercase letters, numbers, and special characters.",
+  "E-mail inválido. Verifique e tente novamente.": "Invalid email. Please check and try again.",
+  "Seu cadastro foi atualizado com sucesso!": "Your profile has been successfully updated!",
+  "Não foi possível atualizar o cadastro. Verifique todos os campos e tente novamente.": "Could not update profile. Please check all fields and try again.",
+  "Tem certeza?": "Are you sure?",
+  "Você terá todos os seus dados de experimentos apagados.": "All your experiment data will be deleted.",
+  "Apagar todos meus dados": "Delete all my data",
+
+  
+  "researchers": "Researchers:",
+  "ethicsCommittee": "Research Ethics Committee, CEP-UNIRIO:",
+  "marcelo": "Marcelo Machado - marcelo.machado@edu.unirio.br",
+  "sean": "Sean Wolfgand Matsui Siqueira - sean@uniriotec.br",
+  "jairo": "Jairo Francisco de Souza - jairo.souza@ice.ufjf.br",
+  "cepEmail": "cep@unirio.br",
+  "cepPhone": "+55 21 2542-7796",
+
+  "see_experiment_list_title": "See the list of experiments available to you below:",
+  "see_tasks_list_title": "See the list of tasks available to you below:",
+  "loading_experiments": "Loading experiments...",
+  "no_experiments": "You are not currently enrolled in any experiments.",
+  "error_fetching_experiments": "Error fetching experiments.",
+  "accordion_summary_hover": "Hover to expand"
+  
+  
+  
+
+
 }

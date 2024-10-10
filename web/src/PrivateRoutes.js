@@ -165,17 +165,24 @@ export function PrivateRoutes(props) {
           >
             {t('system_name')}
           </Typography>
-          <Box sx={{ minWidth: 270, textAlign: 'right', display: { xs: 'none', sm: 'block', md: 'block' } }}>
-            <Button sx={{ color: '#fff', width: '85px'}} onClick={handleGoHome}>
-              HOME
+          <Box 
+            sx={{ 
+              display: { xs: 'none', sm: 'flex' },  
+              gap: 1,  
+              justifyContent: 'flex-start',
+              alignItems: 'center',  
+            }}
+          >
+            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoHome}>
+              {t('menu_home')}
             </Button>
-            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoInstruction}>
+            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoInstruction}>
               {t('menu_instructions')}
             </Button>
-            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateTasks}>
+            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateTasks}>
               {t('menu_task')}
             </Button>
-            <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoCreateSurveys}>
+            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateSurveys}>
               {t('menu_surveys')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>

@@ -72,17 +72,17 @@ const Experiments = () => {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        {t('see_experiment_list_title')}
+        {t('see_experiment_list_title')} 
       </Typography>
 
       {!experiments && (
-        <Typography variant="body1">Carregando experimentos...</Typography>
-
+        <Typography variant="body1">{t('loading_experiments')}</Typography> 
       )}
+
       {!experiments && (isLoading && <LoadingIndicator size={70} />)}
 
       {experiments?.length === 0 && (
-        <Typography variant="body1">No momento você não foi inscrito em nenhum experimento.</Typography>
+        <Typography variant="body1">{t('no_experiments')}</Typography>
       )}
 
       {experiments && experiments.map((experiment, index) => (
@@ -102,6 +102,7 @@ const Experiments = () => {
                 backgroundColor: 'lightgray',
               },
             }}
+            title={t('accordion_summary_hover')}
           >
             <Typography>
               {experiment.name}
@@ -117,11 +118,12 @@ const Experiments = () => {
                 style={{ margin: '16px' }}
                 onClick={() => handleClick(experiment._id)}
               >
-                {t('enter_label')}
+                {t('enter_label')} 
               </Button>
             </div>
           </AccordionDetails>
         </Accordion>
+
       ))}
     </>
   )

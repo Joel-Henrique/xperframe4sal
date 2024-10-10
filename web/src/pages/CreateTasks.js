@@ -50,13 +50,12 @@ const CreateTasks = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState('');
-    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]); // Campo para os questionários obrigatórios
-    const [surveys, setSurveys] = useState([]); // Lista de questionários disponíveis
+    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]); 
+    const [surveys, setSurveys] = useState([]); 
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
 
     useEffect(() => {
         const fetchSurveys = async () => {
@@ -66,12 +65,12 @@ const CreateTasks = () => {
                 });
                 setSurveys(response.data);
             } catch (error) {
-                console.error('Erro ao buscar os questionários', error);
+                console.error(t('Erro ao buscar os questionários'), error);
             }
         };
 
         fetchSurveys();
-    }, []);
+    }, [t]);
 
     const handleCreateTask = async () => {
         try {
@@ -89,11 +88,11 @@ const CreateTasks = () => {
             );
 
             setSnackbarSeverity('success');
-            setSnackbarMessage('Tarefa criada com sucesso!');
+            setSnackbarMessage(t('Tarefa criada com sucesso!'));
             navigate(`/experiments/${experimentId}/tasks`);
         } catch (error) {
             setSnackbarSeverity('error');
-            setSnackbarMessage('Erro ao criar a tarefa. Tente novamente.');
+            setSnackbarMessage(t('Erro ao criar a tarefa. Tente novamente.'));
         } finally {
             setIsLoading(false);
             setSnackbarOpen(true);
@@ -109,13 +108,13 @@ const CreateTasks = () => {
     };
 
     return (
-        <Box sx={{maxWidth: 500, margin: '0 auto', padding: 2}}>
+        <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
                 {t('Criação de Tarefas')}
             </Typography>
 
             <TextField
-                label={t('Titulo da Tarefa')}
+                label={t('Título da Tarefa')}
                 variant="outlined"
                 fullWidth
                 margin="normal"
@@ -133,7 +132,7 @@ const CreateTasks = () => {
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 required
-                placeholder={t('Forneça informações sobre o Sumário da tarefa')}
+                placeholder={t('Forneça informações sobre o sumário da tarefa')}
             />
 
             <div>
@@ -173,7 +172,6 @@ const CreateTasks = () => {
                 </Select>
             </FormControl>
 
-
             <Button
                 variant="contained"
                 color="primary"
@@ -181,10 +179,10 @@ const CreateTasks = () => {
                 disabled={isLoading}
                 fullWidth
             >
-                {isLoading ? 'Criando...' : t('Criar')}
+                {isLoading ? t('Criando...') : t('Criar')}
             </Button>
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{width: '100%'}}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
@@ -192,4 +190,4 @@ const CreateTasks = () => {
     );
 };
 
-export {CreateTasks};
+export { CreateTasks };

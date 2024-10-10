@@ -11,22 +11,22 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MailIcon from '@mui/icons-material/Mail';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-
+import { useTranslation } from 'react-i18next'; 
 
 const Contact = () => {
-
+  const { t } = useTranslation(); 
   const [expanded, setExpanded] = useState(`panel-0`);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-  }
+  };
 
   return (
     <>
       <Accordion
         sx={{ marginBottom: '5px' }}
         elevation={3}
-        expanded={(expanded === `panel-0`)}
+        expanded={expanded === `panel-0`}
         onChange={handleChange(`panel-0`)}
       >
         <AccordionSummary
@@ -40,29 +40,29 @@ const Contact = () => {
           }}
         >
           <Typography component="div">
-            Pesquisadores:
+            {t('researchers')}
           </Typography>
         </AccordionSummary>
         <Divider />
         <AccordionDetails>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>Marcelo Machado - marcelo.machado@edu.unirio.br</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>{t('marcelo')}</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>Sean Wolfgand Matsui Siqueira - sean@uniriotec.br</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>{t('sean')}</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>Jairo Francisco de Souza - jairo.souza@ice.ufjf.br</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>{t('jairo')}</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
       <Accordion
         sx={{ marginBottom: '5px' }}
         elevation={3}
-        expanded={(expanded === `panel-1`)}
+        expanded={expanded === `panel-1`}
         onChange={handleChange(`panel-1`)}
       >
         <AccordionSummary
@@ -76,22 +76,21 @@ const Contact = () => {
           }}
         >
           <Typography component="div">
-            Comitê de Ética em Pesquisa, CEP-UNIRIO:
+            {t('ethicsCommittee')}
           </Typography>
         </AccordionSummary>
         <Divider />
         <AccordionDetails>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>cep@unirio.br</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>{t('cepEmail')}</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <LocalPhoneIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}> +55 21 2542-7796 </Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>{t('cepPhone')}</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>
-
     </>
   );
 };
