@@ -180,10 +180,10 @@ const CreateSurveys = () => {
                 return question;
             }),
         };
-
+        //post
         try {
             setLoading(true);
-            await api.post('/searching-as-learning/surveys', payload);
+            await api.post('/surveys', payload);
             setLoading(false);
             setSnackbar({ open: true, message: 'Questionário criado com sucesso!', severity: 'success' });
             navigate('/surveys');
