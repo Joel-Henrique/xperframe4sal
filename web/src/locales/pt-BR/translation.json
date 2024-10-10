@@ -6,14 +6,9 @@
   "menu_surveys": "QUESTIONARIO",
   "menu_contact": "CONTATO",
   "hello": "Olá",
-  "password_label": "Senha",
   "name_label": "Nome",
   "last_name_label": "Sobrenome",
-  "forgot_password": "ESQUECEU A SENHA?",
-  "sign_in_title": "ENTRE COM SUA CONTA",
-  "sign_in_label": "Entrar",
   "enter_label": "Entrar",
-  "sign_up_label": "Criar conta",
   "have_an_account_already": "Já possui uma conta?",
   "progress_icf": "Aceitar termo de consentimento",
   "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
@@ -55,17 +50,46 @@
   "jairo": "Jairo Francisco de Souza - jairo.souza@ice.ufjf.br",
   "cepEmail": "cep@unirio.br",
   "cepPhone": "+55 21 2542-7796",
-
-  
   
   "carregando_experimentos": "Carregando experimentos...",
   "no_experiments_message": "No momento você não foi inscrito em nenhum experimento.",
-
-  "see_experiment_list_title": "See the list of experiments available to you below:",
-  "see_tasks_list_title": "See the list of tasks available to you below:",
+  "see_experiment_list_title": "Veja a lista de experimentos disponíveis abaixo:",
+  "see_tasks_list_title": "Veja a lista de tarefas disponíveis para você abaixo:",
   "loading_experiments": "Carregando experimentos...",
   "no_experiments": "No momento você não foi inscrito em nenhum experimento.",
   "error_fetching_experiments": "Erro ao buscar experimentos.",
-  "accordion_summary_hover": "Passe o mouse para expandir"
+  "accordion_summary_hover": "Passe o mouse para expandir",
+
+  "forgot_password_title": "Esqueceu a senha?",
+  "email_label": "E-mail cadastrado",
+  "invalid_email": "E-mail inválido.",
+  "recover_button": "Recuperar",
+  "reset_success_message": "Acesse seu e-mail e siga as instruções para definir uma nova senha.",
+  "login_link": "Entre com sua conta aqui",
+
+  "loading_icf": "Carregando Termo de Consentimento e Livre Esclarecimento.",
+  "researchers_title": "Pesquisadores:",
+  "view_signed_document": "Para visualizar o documento na íntegra, assinado digitalmente pelo pesquisador, clique",
+  "click_here": "aqui",
+  "accept_terms": "Eu li e aceito os termos e condições.",
+  "accept_button": "Aceitar",
+
+  "instructions_video_text": "Assista a seguir um vídeo com instruções de utilização deste sistema:",
+  "youtube_video_title": "Player de vídeo do YouTube",
+
+  "sign_in_title": "Entrar",
+  "sign_in_label": "Entrar",
+  "password_label": "Senha",
+  "sign_up_label": "Cadastrar",
+  "forgot_password": "Esqueceu a senha?",
+  "login_error": "Dados incorretos ou não existentes. Verifique o e-mail e a senha e tente novamente.",
+  "data_retrieval_error": "Não foi possível recuperar os seus dados. Por favor, entre em contato com o administrador do serviço.",
+
+  
+  "not_found_title": "404 - Página não encontrada",
+  "not_found_message": "Oops, a página que você está procurando não existe.",
+  "back_home_button": "Volte para página inicial"
+
+
   
 }

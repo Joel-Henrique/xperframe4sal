@@ -6,14 +6,9 @@
   "menu_surveys": "Survey",
   "menu_contact": "CONTACT",
   "hello": "Hi",
-  "password_label": "Password",
   "name_label": "Name",
   "last_name_label": "Last name",
-  "forgot_password": "FORGOT PASSWORD?",
-  "sign_in_title": "Sign In",
-  "sign_in_label": "Log in",
   "enter_label": "Enter",
-  "sign_up_label": "Sign up",
   "have_an_account_already": "Have an account?",
   "progress_icf": "Accept informed consent",
   "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers.",
@@ -48,7 +43,6 @@
   "Você terá todos os seus dados de experimentos apagados.": "All your experiment data will be deleted.",
   "Apagar todos meus dados": "Delete all my data",
 
-  
   "researchers": "Researchers:",
   "ethicsCommittee": "Research Ethics Committee, CEP-UNIRIO:",
   "marcelo": "Marcelo Machado - marcelo.machado@edu.unirio.br",
@@ -62,10 +56,36 @@
   "loading_experiments": "Loading experiments...",
   "no_experiments": "You are not currently enrolled in any experiments.",
   "error_fetching_experiments": "Error fetching experiments.",
-  "accordion_summary_hover": "Hover to expand"
+  "accordion_summary_hover": "Hover to expand",
   
+  "forgot_password_title": "Forgot your password?",
+  "email_label": "Registered email",
+  "invalid_email": "Invalid email.",
+  "recover_button": "Recover",
+  "reset_success_message": "Check your email and follow the instructions to reset your password.",
+  "login_link": "Log in with your account here",
+
+  "loading_icf": "Loading Informed Consent Form.",
+  "researchers_title": "Researchers:",
+  "view_signed_document": "To view the full document, digitally signed by the researcher, click",
+  "click_here": "here",
+  "accept_terms": "I have read and accept the terms and conditions.",
+  "accept_button": "Accept",
   
-  
+  "instructions_video_text": "Watch the following video for instructions on how to use this system:",
+  "youtube_video_title": "YouTube video player",
+
+  "sign_in_title": "Sign In",
+  "sign_in_label": "Sign In",
+  "password_label": "Password",
+  "sign_up_label": "Sign Up",
+  "forgot_password": "Forgot Password?",
+  "login_error": "Incorrect or non-existing data. Check the email and password and try again.",
+  "data_retrieval_error": "Unable to retrieve your data. Please contact the service administrator.",
+
+  "not_found_title": "404 - Page Not Found",
+  "not_found_message": "Oops, the page you are looking for does not exist.",
+  "back_home_button": "Go back to homepage"
 
 
 }
