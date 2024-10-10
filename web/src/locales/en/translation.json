@@ -107,7 +107,27 @@
   "go_to_tasks": "Go to tasks",
   "loading_surveys": "Loading surveys...",
   "no_surveys": "At the moment you have not been enrolled in any surveys. Thank you!",
-  "already_answered": "You have already answered this survey."
+  "already_answered": "You have already answered this survey.",
+
+  "title": "Create Survey",
+  "surveyTitle": "Title",
+  "surveyDescription": "Description",
+  "surveyType": "Survey Type",
+  "questions": "Questions",
+  "addQuestion": "Add Question",
+  "questionStatement": "Question {{index}} Statement",
+  "questionType": "Type",
+  "required": "Required",
+  "yes": "Yes",
+  "no": "No",
+  "options": "Options",
+  "addOption": "Add Option",
+  "createSurvey": "Create Survey",
+  "option": "Option {{index}}",
+  "weight": "Weight",
+  "loading": "Loading...",
+  "confirm": "Are you sure?",
+  "content": "Once you submit, you cannot modify the survey."
 
 
 }

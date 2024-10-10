@@ -109,7 +109,27 @@
   "go_to_tasks": "Ir para tarefas",
   "loading_surveys": "Carregando questionários...",
   "no_surveys": "No momento você não foi inscrito em nenhum questionário. Obrigad@!",
-  "already_answered": "Você já respondeu este questionário."
+  "already_answered": "Você já respondeu este questionário.",
+
+  "title": "Criação de Questionários",
+  "surveyTitle": "Título",
+  "surveyDescription": "Descrição",
+  "surveyType": "Tipo do Questionário",
+  "questions": "Questões",
+  "addQuestion": "Adicionar Questão",
+  "questionStatement": "Enunciado da Questão {{index}}",
+  "questionType": "Tipo",
+  "required": "Obrigatória",
+  "yes": "Sim",
+  "no": "Não",
+  "options": "Opções",
+  "addOption": "Adicionar Opção",
+  "createSurvey": "Criar Questionário",
+  "option": "Opção {{index}}",
+  "weight": "Peso",
+  "confirm": "Tem certeza?",
+  "content": "Ao enviar, você não poderá modificar o questionário.",
+  "loading": "Carregando..."
 
 
 }

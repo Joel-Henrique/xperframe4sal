@@ -180,10 +180,10 @@ const CreateSurveys = () => {
                 return question;
             }),
         };
-        //post
+
         try {
             setLoading(true);
-            await api.post('/surveys', payload);
+            await api.post('/searching-as-learning/surveys', payload);
             setLoading(false);
             setSnackbar({ open: true, message: 'Questionário criado com sucesso!', severity: 'success' });
             navigate('/surveys');
@@ -200,11 +200,11 @@ const CreateSurveys = () => {
     return (
         <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
             <Typography variant="h4" component="h1" gutterBottom align="center">
-                {t('Criação de Questionários')}
+                {t('title')}
             </Typography>
             <form onSubmit={handleSubmit}>
                 <TextField
-                    label="Título"
+                    label={t('surveyTitle')}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     fullWidth
@@ -212,7 +212,7 @@ const CreateSurveys = () => {
                     margin="normal"
                 />
                 <TextField
-                    label="Descrição"
+                    label={t('surveyDescription')}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     fullWidth
@@ -221,8 +221,8 @@ const CreateSurveys = () => {
                     margin="normal"
                 />
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>Tipo do Questionário</InputLabel>
-                    <Select value={type} onChange={(e) => setType(e.target.value)} label="Tipo do Questionário">
+                    <InputLabel>label={t('surveyType')}</InputLabel>
+                    <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
                         {surveyTypes.map((stype) => (
                             <MenuItem key={stype.value} value={stype.value}>
                                 {stype.label}
@@ -233,7 +233,7 @@ const CreateSurveys = () => {
 
                 <Box sx={{ mt: 4 }}>
                     <Typography variant="h5" gutterBottom>
-                        Questões
+                        {t('questions')}
                     </Typography>
                     {questions.map((q, index) => (
                         <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
@@ -241,6 +241,8 @@ const CreateSurveys = () => {
                                 <Grid item xs={11}>
                                     <TextField
                                         label={`Enunciado da Questão ${index + 1}`}
+                                        //label={t('form.questionStatement',{ index: index + 1 })}
+                                        //label={t('questionStatement')} {` ${index + 1}`}
                                         value={q.statement}
                                         onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
                                         fullWidth
@@ -254,35 +256,38 @@ const CreateSurveys = () => {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <FormControl fullWidth>
-                                        <InputLabel>Tipo</InputLabel>
+                                    <InputLabel>{t('questionType')}</InputLabel>
                                         <Select
                                             value={q.type}
                                             onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
-                                            label="Tipo"
+                                            label={t('form.questionType')}
                                         >
                                             {questionTypes.map((qt) => (
                                                 <MenuItem key={qt.value} value={qt.value}>
                                                     {qt.label}
                                                 </MenuItem>
+
+                                                //<MenuItem value="multiple-choice">{t('form.multipleChoice')}</MenuItem>
+                                                //<MenuItem value="open-ended">{t('form.openEnded')}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <FormControl fullWidth>
-                                        <InputLabel>Obrigatória</InputLabel>
+                                        <InputLabel>{t('required')}</InputLabel>
                                         <Select
                                             value={q.required}
                                             onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
-                                            label="Obrigatória"
+                                            label={t('required')}
                                         >
-                                            <MenuItem value={false}>Não</MenuItem>
-                                            <MenuItem value={true}>Sim</MenuItem>
+                                            <MenuItem value={false}>{t('no')}</MenuItem>
+                                            <MenuItem value={true}>{t('yes')}</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>
 
-                                {/* Opções para tipos de questão que possuem opções */}
+
                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                     <Grid item xs={12}>
                                         <Typography variant="subtitle1">Opções</Typography>
@@ -290,6 +295,7 @@ const CreateSurveys = () => {
                                             <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                 <TextField
                                                     label={`Opção ${optIndex + 1}`}
+                                                    //label={t('form.option', { index: optIndex + 1 })}
                                                     value={opt.statement}
                                                     onChange={(e) =>
                                                         handleOptionChange(q.id, opt.id, 'statement', e.target.value)
@@ -299,7 +305,7 @@ const CreateSurveys = () => {
                                                 />
                                                 {q.type === 'multiple-choices' && (
                                                     <TextField
-                                                        label="Peso"
+                                                        label={t('weight')}
                                                         type="number"
                                                         value={opt.score}
                                                         onChange={(e) =>
@@ -323,7 +329,7 @@ const CreateSurveys = () => {
                                             startIcon={<Add />}
                                             onClick={() => handleAddOption(q.id)}
                                         >
-                                            Adicionar Opção
+                                           {t('addOption')}
                                         </Button>
                                     </Grid>
                                 )}
@@ -331,13 +337,13 @@ const CreateSurveys = () => {
                         </Paper>
                     ))}
                     <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
-                        Adicionar Questão
+                        {t('addQuestion')}
                     </Button>
                 </Box>
 
                 <Box sx={{ mt: 4, textAlign: 'center' }}>
                     <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                        {loading ? <CircularProgress size={24} /> : 'Criar Questionário'}
+                        {loading ? <CircularProgress size={24} /> :  t('createSurvey')}
                     </Button>
                 </Box>
             </form>
