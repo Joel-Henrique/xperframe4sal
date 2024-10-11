@@ -143,7 +143,7 @@ const CreateSurveys = () => {
             )
         );
     };
-//submeter questionario
+    //submeter questionario
     const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -156,7 +156,7 @@ const CreateSurveys = () => {
                     type: q.type,
                     required: q.required,
                 };
-
+    
                 if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
                     question.options = q.options.map((opt) => {
                         const option = { statement: opt.statement };
@@ -177,16 +177,24 @@ const CreateSurveys = () => {
                         return option;
                     });
                 }
-
+    
                 return question;
             }),
         };
-
+    
         try {
             setLoading(true);
-            await api.post('/searching-as-learning/surveys', payload);
+            //autorização
+            await api.post(`/surveys`, payload, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` }
+            });
+    
             setLoading(false);
-            setSnackbar({ open: true, message: 'Questionário criado com sucesso!', severity: 'success' });
+            setSnackbar({
+                open: true,
+                message: 'Questionário criado com sucesso!',
+                severity: 'success',
+            });
             navigate('/surveys');
         } catch (error) {
             setLoading(false);
@@ -197,6 +205,7 @@ const CreateSurveys = () => {
             });
         }
     };
+
 
     return (
         <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
