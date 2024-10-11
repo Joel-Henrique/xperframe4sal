@@ -129,7 +129,13 @@
   "weight": "Peso",
   "confirm": "Tem certeza?",
   "content": "Ao enviar, você não poderá modificar o questionário.",
-  "loading": "Carregando..."
+  "loading": "Carregando...",
 
+  "pre": "Pré",
+  "demo": "Demo",
+  "post": "Pós",
 
+  "open": "Questão Aberta",
+  "multiple_selection"  : "Seleção Múltipla",
+  "multiple_choices" : "Múltipla Escolha"
 }

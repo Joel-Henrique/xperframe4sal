@@ -127,7 +127,13 @@
   "weight": "Weight",
   "loading": "Loading...",
   "confirm": "Are you sure?",
-  "content": "Once you submit, you cannot modify the survey."
+  "content": "Once you submit, you cannot modify the survey.",
 
+   "pre": "Pre",
+   "demo": "Demo",
+   "post": "Post",
 
+   "open": "Open question",
+   "multiple_selection"  : "Multiple selection",
+   "multiple_choices" : "Multiple choices" 
 }

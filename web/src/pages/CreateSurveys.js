@@ -32,16 +32,17 @@ const CreateSurveys = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     const questionTypes = [
-        { value: 'open', label: 'Questão Aberta' },
-        { value: 'multiple-selection', label: 'Seleção Múltipla' },
-        { value: 'multiple-choices', label: 'Múltipla Escolha' },
+        { value: 'open', label: t('open') },
+        { value: 'multiple-selection', label: t('multiple_selection') },
+        { value: 'multiple-choices', label: t('multiple_choices') },
     ];
 
     const surveyTypes = [
-        { value: 'pre', label: 'Pré' },
-        { value: 'demo', label: 'Demo' },
-        { value: 'post', label: 'Pós' },
+        { value: 'pre', label: t('pre') },
+        { value: 'demo', label: t('demo') },
+        { value: 'post', label: t('post') }
     ];
+    
 
     const handleAddQuestion = () => {
         setQuestions([
@@ -221,7 +222,7 @@ const CreateSurveys = () => {
                     margin="normal"
                 />
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>label={t('surveyType')}</InputLabel>
+                    <InputLabel>{t('surveyType')}</InputLabel>
                     <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
                         {surveyTypes.map((stype) => (
                             <MenuItem key={stype.value} value={stype.value}>
@@ -240,9 +241,8 @@ const CreateSurveys = () => {
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item xs={11}>
                                     <TextField
-                                        label={`Enunciado da Questão ${index + 1}`}
-                                        //label={t('form.questionStatement',{ index: index + 1 })}
-                                        //label={t('questionStatement')} {` ${index + 1}`}
+                                        //label={`Enunciado da Questão ${index + 1}`}
+                                        label={t('questionStatement',{ index: index + 1 })}
                                         value={q.statement}
                                         onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
                                         fullWidth
@@ -266,9 +266,6 @@ const CreateSurveys = () => {
                                                 <MenuItem key={qt.value} value={qt.value}>
                                                     {qt.label}
                                                 </MenuItem>
-
-                                                //<MenuItem value="multiple-choice">{t('form.multipleChoice')}</MenuItem>
-                                                //<MenuItem value="open-ended">{t('form.openEnded')}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -294,8 +291,8 @@ const CreateSurveys = () => {
                                         {q.options.map((opt, optIndex) => (
                                             <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                 <TextField
-                                                    label={`Opção ${optIndex + 1}`}
-                                                    //label={t('form.option', { index: optIndex + 1 })}
+                                                    //label={`Opção ${optIndex + 1}`}
+                                                    label={t('option', { index: optIndex + 1 })}
                                                     value={opt.statement}
                                                     onChange={(e) =>
                                                         handleOptionChange(q.id, opt.id, 'statement', e.target.value)
