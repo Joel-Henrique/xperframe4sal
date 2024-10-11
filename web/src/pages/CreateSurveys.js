@@ -185,9 +185,10 @@ const CreateSurveys = () => {
         try {
             setLoading(true);
             //autorização
-            await api.post(`/surveys`, payload, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` }
-            });
+            const response = await api.post(`/surveys`,
+                             payload, 
+                             { headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` } }
+            );
     
             setLoading(false);
             setSnackbar({
