@@ -135,5 +135,8 @@
 
    "open": "Open question",
    "multiple_selection"  : "Multiple selection",
-   "multiple_choices" : "Multiple choices" 
+   "multiple_choices" : "Multiple choices",
+   
+  "Logout": "Logout",
+  "My_profile": "My profile"
 }

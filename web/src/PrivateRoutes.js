@@ -217,8 +217,8 @@ export function PrivateRoutes(props) {
               open={Boolean(anchorEl)}
               onClose={handleAccountButtonLeave}
             >
-              <MenuItem onClick={handleEditProfile}><AccountCircle />Meu perfil</MenuItem>
-              <MenuItem onClick={handleLogout}><ExitToAppIcon />Sair</MenuItem>
+              <MenuItem onClick={handleEditProfile}><AccountCircle />{t('My_profile')}</MenuItem>
+              <MenuItem onClick={handleLogout}><ExitToAppIcon />{t('Logout')}</MenuItem>
             </Menu>
           </Box>
         </Toolbar>

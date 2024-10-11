@@ -137,5 +137,9 @@
 
   "open": "Questão Aberta",
   "multiple_selection"  : "Seleção Múltipla",
-  "multiple_choices" : "Múltipla Escolha"
+  "multiple_choices" : "Múltipla Escolha",
+
+  "Logout": "Sair",
+  "My_profile": "Meu perfil"
+
 }
