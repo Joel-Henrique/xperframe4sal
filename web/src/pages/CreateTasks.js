@@ -44,6 +44,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 const CreateTasks = () => {
+    const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const { experimentId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -61,8 +62,8 @@ const CreateTasks = () => {
     useEffect(() => {
         const fetchSurveys = async () => {
             try {
-                const response = await api.get('/surveys', {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` }
+                const response = await api.get(`surveys`, {
+                    headers: { Authorization: `Bearer ${user.accessToken} }` }
                 });
                 setSurveys(response.data);
             } catch (error) {
@@ -159,17 +160,15 @@ const CreateTasks = () => {
                     renderValue={(selected) => selected.length > 0 ? selected.join(', ') : t('Nenhum questionário selecionado')}
                     displayEmpty
                 >
-                    {surveys.length === 0 ? (
-                        <MenuItem disabled>{isLoading ?
-                            <CircularProgress size={24}/> : t('Nenhum questionário disponível')}</MenuItem>
-                    ) : (
-                        surveys.map((survey) => (
-                            <MenuItem key={survey.id} value={survey.id}>
-                                <Checkbox checked={requiredSurveysIds.indexOf(survey.id) > -1}/>
-                                <ListItemText primary={survey.title}/>
-                            </MenuItem>
-                        ))
-                    )}
+                <MenuItem disabled>{isLoading ? <CircularProgress size={24}/> : t('Nenhum questionário disponível')}</MenuItem>
+                    {surveys && surveys.map((survey, index) => (
+                        <MenuItem key={index} value={survey.title}>
+                            <Checkbox checked={requiredSurveysIds.indexOf(index) > -1}/>
+                            <ListItemText primary={survey.title}/>
+                        </MenuItem>
+                    ))}
+            
+
                 </Select>
             </FormControl>
 

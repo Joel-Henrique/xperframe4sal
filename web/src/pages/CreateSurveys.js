@@ -43,6 +43,8 @@ const CreateSurveys = () => {
         { value: 'post', label: t('post') }
     ];
     
+    const [user] = useState(JSON.parse(localStorage.getItem('user')));
+    
 
     const handleAddQuestion = () => {
         setQuestions([
@@ -146,7 +148,9 @@ const CreateSurveys = () => {
     //submeter questionario
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const name = title;
         const payload = {
+            name,
             title,
             description,
             type,
@@ -185,11 +189,13 @@ const CreateSurveys = () => {
         try {
             setLoading(true);
             //autorização
-            const response = await api.post(`/surveys`,
+            
+            const response = await api.post(`surveys`,
                              payload, 
-                             { headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` } }
+                             { 'headers': { Authorization: `Bearer ${user.accessToken}` } }
             );
-    
+            
+            //let response = await api.get(`user-experiments?userId=${user.id}`, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
             setLoading(false);
             setSnackbar({
                 open: true,

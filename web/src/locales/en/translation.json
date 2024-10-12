@@ -5,7 +5,8 @@
   "last_name_label": "Last Name",
   "password_label": "Password",
   "have_an_account_already": "Already have an account?",
-
+  "sign_in_title": "Sign In",
+  
   "system_name": "SEARCHING AND LEARNING",
   "menu_home": "HOME",
   "menu_instructions": "INSTRUCTION",
