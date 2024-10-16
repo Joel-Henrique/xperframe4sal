@@ -126,25 +126,6 @@ const CreateSurveys = () => {
         );
     };
 
-    const handleRemoveSubQuestion = (questionId, optionId) => {
-        setQuestions(
-            questions.map((q) =>
-                q.id === questionId
-                    ? {
-                        ...q,
-                        options: q.options.map((opt) =>
-                            opt.id === optionId
-                                ? {
-                                    ...opt,
-                                    subQuestion: null,
-                                }
-                                : opt
-                        ),
-                    }
-                    : q
-            )
-        );
-    };
     //submeter questionario
     const handleSubmit = async (e) => {
         e.preventDefault();

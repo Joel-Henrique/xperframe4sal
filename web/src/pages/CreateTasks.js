@@ -140,14 +140,14 @@ const CreateTasks = () => {
             alignItems: 'flex-start',
             margin: '0 auto',
         }}>
-            <Box sx={{ 
+           <Box sx={{ 
                 width: '20%', 
                 margin: 0, 
                 display: 'flex',
                 padding: 2, 
                 flexDirection: 'column', 
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: 'flex-start', 
                 '& > *': {  
                     marginBottom: 0, 
                 }
@@ -161,21 +161,16 @@ const CreateTasks = () => {
                     >
                         {t('Itens_task')}
                     </Typography>
-                    
+
                     <Box sx={{ padding: 0 }}>
                         <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'left' }}>
-
                             <li style={{ marginBottom: '10px', color: title ? 'green' : 'red' }}>
                                 {title ? t('title_task') : t('title_task_uncheck')}   
                             </li>
-
                             <li style={{ marginBottom: '10px', color: summary ? 'green' : 'red' }}>
                                 {summary ? t('sum_task') : t('sum_task_uncheck')}
                             </li>
-                            <li style={{ 
-                                marginBottom: '10px', 
-                                color: description && description.replace(/<[^>]+>/g, '').trim() !== '' ? 'green' : 'red' 
-                            }}>
+                            <li style={{ marginBottom: '10px', color: description && description.replace(/<[^>]+>/g, '').trim() !== '' ? 'green' : 'red' }}>
                                 {description && description.replace(/<[^>]+>/g, '').trim() !== '' 
                                     ? t('desc_task') 
                                     : t('desc_task_uncheck')}
@@ -186,27 +181,27 @@ const CreateTasks = () => {
                         </ul>
                     </Box>
                 </Box>                    
-                    <Box sx={{ padding: 0 }}>
-                        <Typography variant="h5" gutterBottom align="left" sx={{ paddingLeft: 0, textAlign: 'left' }}>
-                            {t('selected_taks')}
-                        </Typography>
-                    
-                        {requiredSurveysIds.length > 0 ? (
-                        <ul style={{ paddingLeft: 20 }}> 
-                            {requiredSurveysIds.map((survey, index) => (
-                                <li key={index}>
-                                    {survey}
-                                </li>
-                            ))}
-                        </ul>
-                        ) : (
-                        
-                        <Typography variant="body1" gutterBottom align="left" color="textSecondary" sx={{ paddingLeft: 0, textAlign: 'left' }} >
-                            {t('non_selected_taks')}
-                        </Typography>
-                        )}
+                <Box sx={{ padding: 0 }}>
+                    <Typography variant="h5" gutterBottom align="left" sx={{ paddingLeft: 0, textAlign: 'left' }}>
+                        {t('selected_taks')}
+                    </Typography>
+
+                    {requiredSurveysIds.length > 0 ? (
+                    <ul style={{ paddingLeft: 20 }}> 
+                        {requiredSurveysIds.map((survey, index) => (
+                            <li key={index}>
+                                {survey}
+                            </li>
+                        ))}
+                    </ul>
+                    ) : (
+                    <Typography variant="body1" gutterBottom align="left" color="textSecondary" sx={{ paddingLeft: 0, textAlign: 'left' }}>
+                        {t('non_selected_taks')}
+                    </Typography>
+                    )}
                 </Box> 
             </Box>
+
     
             <Box sx={{ 
                 maxWidth: 800,
@@ -270,7 +265,7 @@ const CreateTasks = () => {
                 </div>
                 <Dialog open={openSurveyDialog} onClose={handleCloseSurveyDialog} fullWidth maxWidth="sm">
                     <DialogTitle>
-                        {t('Selecionar Questionários')}
+                        {t('Selecionar_Questionários')}
                         <IconButton
                             aria-label="close"
                             onClick={handleCloseSurveyDialog}
@@ -316,7 +311,7 @@ const CreateTasks = () => {
                         align="center" 
                         onClick={handleOpenSurveyDialog}
                     >
-                        {t('Selecionar Questionários')}
+                        {t('Selecionar_Questionários')}
                     </Button>
                 </Box>
                 
