@@ -18,10 +18,15 @@ import {
     MenuItem,
     Checkbox,
     ListItemText,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    IconButton,
     styled,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
-
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -52,18 +57,19 @@ const CreateTasks = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState('');
-    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]); 
-    const [surveys, setSurveys] = useState([]); 
+    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]);
+    const [surveys, setSurveys] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [openSurveyDialog, setOpenSurveyDialog] = useState(false); 
 
     useEffect(() => {
         const fetchSurveys = async () => {
             try {
                 const response = await api.get(`surveys`, {
-                    headers: { Authorization: `Bearer ${user.accessToken} }` }
+                    headers: { Authorization: `Bearer ${user.accessToken} }` },
                 });
                 setSurveys(response.data);
             } catch (error) {
@@ -74,10 +80,11 @@ const CreateTasks = () => {
         fetchSurveys();
     }, [t]);
 
+    //post
     const handleCreateTask = async () => {
         try {
             setIsLoading(true);
-            const response = await api.post(
+            await api.post(
                 `/tasks`,
                 {
                     title,
@@ -100,94 +107,246 @@ const CreateTasks = () => {
             setSnackbarOpen(true);
         }
     };
+    
 
+    //abrir janela de dialogo
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
 
-    const handleSurveyChange = (event) => {
-        setRequiredSurveysIds(event.target.value);
+    const handleSelectSurvey = (surveyTitle) => {
+        setRequiredSurveysIds((prev) => {
+            if (prev.includes(surveyTitle)) {
+                return prev.filter(id => id !== surveyTitle);
+            } else {
+                return [...prev, surveyTitle];
+            }
+        });
+    };
+
+    const handleOpenSurveyDialog = () => {
+        setOpenSurveyDialog(true);
+    };
+
+    const handleCloseSurveyDialog = () => {
+        setOpenSurveyDialog(false);
     };
 
     return (
-        <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
-            <Typography variant="h4" component="h1" gutterBottom align="center">
-                {t('Criação de Tarefas')}
-            </Typography>
+        <Box sx={{ 
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start',
+            margin: '0 auto',
+        }}>
+            <Box sx={{ 
+                width: '20%', 
+                margin: 0, 
+                display: 'flex',
+                padding: 2, 
+                flexDirection: 'column', 
+                justifyContent: 'center',
+                alignItems: 'center',
+                '& > *': {  
+                    marginBottom: 0, 
+                }
+            }}>
+                <Box sx={{ padding: 0 }}>
+                    <Typography 
+                        variant="h5" 
+                        gutterBottom 
+                        align="left" 
+                        sx={{ paddingLeft: 0, textAlign: 'left' }} 
+                    >
+                        {t('Itens_task')}
+                    </Typography>
+                    
+                    <Box sx={{ padding: 0 }}>
+                        <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'left' }}>
 
-            <TextField
-                label={t('Título da Tarefa')}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-            />
-            <TextField
-                label={t('Sumário da Tarefa')}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                multiline
-                rows={4}
-                value={summary}
-                onChange={(e) => setSummary(e.target.value)}
-                required
-                placeholder={t('Forneça informações sobre o sumário da tarefa')}
-            />
+                            <li style={{ marginBottom: '10px', color: title ? 'green' : 'red' }}>
+                                {title ? t('title_task') : t('title_task_uncheck')}   
+                            </li>
 
-            <div>
-                <CustomContainer>
-                    <ReactQuill
-                        theme="snow"
-                        value={description}
-                        onChange={setDescription}
-                        placeholder={t('Descrição da Tarefa *')}
-                        required
-                    />
-                </CustomContainer>
-            </div>
-
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="surveys-label" shrink>{t('Questionários Obrigatórios')}</InputLabel>
-                <Select
-                    labelId="surveys-label"
-                    label={t('Questionários Obrigatórios')}
-                    multiple
-                    value={requiredSurveysIds}
-                    onChange={handleSurveyChange}
-                    renderValue={(selected) => selected.length > 0 ? selected.join(', ') : t('Nenhum questionário selecionado')}
-                    displayEmpty
-                >
-                <MenuItem disabled>{isLoading ? <CircularProgress size={24}/> : t('Nenhum questionário disponível')}</MenuItem>
-                    {surveys && surveys.map((survey, index) => (
-                        <MenuItem key={index} value={survey.title}>
-                            <Checkbox checked={requiredSurveysIds.indexOf(index) > -1}/>
-                            <ListItemText primary={survey.title}/>
-                        </MenuItem>
-                    ))}
-            
-
-                </Select>
-            </FormControl>
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleCreateTask}
-                disabled={isLoading}
-                fullWidth
-            >
-                {isLoading ? t('Criando...') : t('Criar')}
-            </Button>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
+                            <li style={{ marginBottom: '10px', color: summary ? 'green' : 'red' }}>
+                                {summary ? t('sum_task') : t('sum_task_uncheck')}
+                            </li>
+                            <li style={{ 
+                                marginBottom: '10px', 
+                                color: description && description.replace(/<[^>]+>/g, '').trim() !== '' ? 'green' : 'red' 
+                            }}>
+                                {description && description.replace(/<[^>]+>/g, '').trim() !== '' 
+                                    ? t('desc_task') 
+                                    : t('desc_task_uncheck')}
+                            </li>
+                            <li style={{ marginBottom: '10px', color: requiredSurveysIds.length > 0 ? 'green' : 'red' }}>
+                                {requiredSurveysIds.length > 0 ? t('selected_taks1') : t('non_selected_taks1')}
+                            </li>
+                        </ul>
+                    </Box>
+                </Box>                    
+                    <Box sx={{ padding: 0 }}>
+                        <Typography variant="h5" gutterBottom align="left" sx={{ paddingLeft: 0, textAlign: 'left' }}>
+                            {t('selected_taks')}
+                        </Typography>
+                    
+                        {requiredSurveysIds.length > 0 ? (
+                        <ul style={{ paddingLeft: 20 }}> 
+                            {requiredSurveysIds.map((survey, index) => (
+                                <li key={index}>
+                                    {survey}
+                                </li>
+                            ))}
+                        </ul>
+                        ) : (
+                        
+                        <Typography variant="body1" gutterBottom align="left" color="textSecondary" sx={{ paddingLeft: 0, textAlign: 'left' }} >
+                            {t('non_selected_taks')}
+                        </Typography>
+                        )}
+                </Box> 
+            </Box>
+    
+            <Box sx={{ 
+                maxWidth: 800,
+                width: '60%',
+                margin: 0, 
+                padding: 2, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center',
+                alignItems: 'center',
+                '& > *': {  
+                    marginBottom: 0, 
+                }
+            }}>
+                <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ padding: 4 }} >
+                    {t('Criação de Tarefas')}
+                </Typography>
+        
+                <TextField
+                    label={t('Título da Tarefa')}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            borderColor: title ? 'green' : 'red',
+                        },
+                    }}
+                />
+                <TextField
+                    label={t('Sumário da Tarefa')}
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    multiline
+                    rows={4}
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    required
+                    placeholder={t('Forneça informações sobre o sumário da tarefa')}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            borderColor: summary ? 'green' : 'red',
+                        },
+                    }}
+                />
+    
+                <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}> 
+                    <CustomContainer>
+                        <ReactQuill
+                            theme="snow"
+                            value={description}
+                            onChange={setDescription}
+                            placeholder={t('Descrição da Tarefa *')}
+                            required
+                        />
+                    </CustomContainer>
+                </div>
+                <Dialog open={openSurveyDialog} onClose={handleCloseSurveyDialog} fullWidth maxWidth="sm">
+                    <DialogTitle>
+                        {t('Selecionar Questionários')}
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleCloseSurveyDialog}
+                            sx={{ position: 'absolute', right: 8, top: 8 }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        {isLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            <FormControl fullWidth>
+                                {surveys.map((survey, index) => (
+                                    <MenuItem key={index} value={survey.title}>
+                                        <Checkbox
+                                            checked={requiredSurveysIds.indexOf(survey.title) > -1}
+                                            onChange={() => handleSelectSurvey(survey.title)}  
+                                        />
+                                        <ListItemText primary={survey.title} />
+                                    </MenuItem>
+                                ))}
+                            </FormControl>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseSurveyDialog} color="primary">
+                            {t('Fechar')}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                        {snackbarMessage}
+                    </Alert>
+                </Snackbar>
+    
+                <Box>
+                    <Button 
+                        variant="outlined" 
+                        color={requiredSurveysIds.length > 0 ? 'success' : 'error'} 
+                        gutterBottom 
+                        align="center" 
+                        onClick={handleOpenSurveyDialog}
+                    >
+                        {t('Selecionar Questionários')}
+                    </Button>
+                </Box>
+                
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'flex-end',
+                    marginTop: 'auto',
+                    width: '100%' 
+                }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleCreateTask}
+                        disabled={isLoading}
+                        fullWidth
+                        sx={{ maxWidth: '200px' }} 
+                    >
+                        {isLoading ? t('Criando...') : t('Criar')}
+                    </Button>
+                </Box>
+            </Box>
+            <Box sx={{ 
+                width: '20%', 
+                padding: 2,
+            }}>
+            </Box>
         </Box>
     );
-};
+    
+    
+}
 
 export { CreateTasks };

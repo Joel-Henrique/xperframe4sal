@@ -18,6 +18,22 @@
   "progress_icf": "Aceitar termo de consentimento",
   "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
 
+  "Itens_task": "Itens para criação da Tarefa",
+
+  "title_task": "Título da Tarefa ✅",
+  "title_task_uncheck": "Título da Tarefa ❌",
+  "sum_task": "Sumário da Tarefa ✅",
+  "sum_task_uncheck": "Sumário da Tarefa ❌",
+  "desc_task": "Descrição da Tarefa ✅",
+  "desc_task_uncheck": "Descrição da Tarefa ❌",
+  "selected_taks1": "Questionários ✅",
+  "non_selected_taks1": "Questionários ❌",
+  "selected_taks": "Questionários Selecionados",
+  "non_selected_taks": "Nenhum questionário selecionado",
+  "Criação_de_Tarefas": "Criação de Tarefas",
+
+ 
+  "item_sub": "Itens para criação da Tarefa",
   "Criação de Tarefas": "Criação de Tarefas",
   "Título da Tarefa": "Título da Tarefa",
   "Sumário da Tarefa": "Sumário da Tarefa",
