@@ -18,9 +18,17 @@
   "progress_icf": "Accept informed consent",
   "unique_answer_survey_message": "Attention: This is a single-fill form. Once you submit it, you will not be able to change your answers.",
   
-  
-  
-  
+  "title_task": "Task Title ✅",
+  "title_task_uncheck": "Task Title ❌",
+  "sum_task": "Task Summary ✅",
+  "sum_task_uncheck": "Task Summary ❌",
+  "desc_task": "Task Description ✅",
+  "desc_task_uncheck": "Task Description ❌",
+  "selected_taks1": "Surveys ✅",
+  "non_selected_taks1": "Surveys ❌",
+  "selected_taks": "Selected Surveys",
+  "non_selected_taks": "No surveys selected",
+  "Criação_de_Tarefas": "Task Creation",
 
   "Criação de Tarefas": "Task Creation",
   "Título da Tarefa": "Task Title",
