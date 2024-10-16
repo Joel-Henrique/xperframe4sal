@@ -13,8 +13,6 @@ import {
     Alert,
     CircularProgress,
     FormControl,
-    InputLabel,
-    Select,
     MenuItem,
     Checkbox,
     ListItemText,
@@ -53,7 +51,7 @@ const CreateTasks = () => {
     const { experimentId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-
+    const [searchTerm, setSearchTerm] = useState(''); 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState('');
@@ -263,39 +261,51 @@ const CreateTasks = () => {
                         />
                     </CustomContainer>
                 </div>
-                <Dialog open={openSurveyDialog} onClose={handleCloseSurveyDialog} fullWidth maxWidth="sm">
-                    <DialogTitle>
-                        {t('Selecionar_Questionários')}
-                        <IconButton
-                            aria-label="close"
-                            onClick={handleCloseSurveyDialog}
-                            sx={{ position: 'absolute', right: 8, top: 8 }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </DialogTitle>
-                    <DialogContent dividers>
-                        {isLoading ? (
-                            <CircularProgress />
-                        ) : (
-                            <FormControl fullWidth>
-                                {surveys.map((survey, index) => (
-                                    <MenuItem key={index} value={survey.title}>
-                                        <Checkbox
-                                            checked={requiredSurveysIds.indexOf(survey.title) > -1}
-                                            onChange={() => handleSelectSurvey(survey.title)}  
-                                        />
-                                        <ListItemText primary={survey.title} />
-                                    </MenuItem>
-                                ))}
-                            </FormControl>
-                        )}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseSurveyDialog} color="primary">
-                            {t('Fechar')}
-                        </Button>
-                    </DialogActions>
+                    <Dialog open={openSurveyDialog} onClose={handleCloseSurveyDialog} fullWidth maxWidth="sm">
+                        <DialogTitle>
+                            {t('Selecionar_Questionários')}
+                            <IconButton
+                                aria-label="close"
+                                onClick={handleCloseSurveyDialog}
+                                sx={{ position: 'absolute', right: 8, top: 8 }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <TextField
+                                label={t('Pesquisar Questionários')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            {isLoading ? (
+                                <CircularProgress />
+                            ) : (
+                                <FormControl fullWidth>
+                                    {surveys
+                                        .filter((survey) => 
+                                            survey.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                        )
+                                        .map((survey, index) => (
+                                            <MenuItem key={index} value={survey.title}>
+                                                <Checkbox
+                                                    checked={requiredSurveysIds.indexOf(survey.title) > -1}
+                                                    onChange={() => handleSelectSurvey(survey.title)}  
+                                                />
+                                                <ListItemText primary={survey.title} />
+                                            </MenuItem>
+                                        ))}
+                                </FormControl>
+                            )}
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseSurveyDialog} color="primary">
+                                {t('Fechar')}
+                            </Button>
+                        </DialogActions>
                 </Dialog>
                 <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                     <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
