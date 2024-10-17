@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import CloseIcon from '@mui/icons-material/Close';
+
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -60,6 +60,8 @@ const CreateTasks = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
 
+
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState('');
@@ -74,8 +76,11 @@ const CreateTasks = () => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+    };
 
-    // Fetch surveys on component mount
+
     useEffect(() => {
         const fetchSurveys = async () => {
             try {
@@ -96,6 +101,27 @@ const CreateTasks = () => {
     };
 
     const handleNextinfob = () => {
+        if (!title) {
+            setSnackbarOpen(true);
+            setSnackbarMessage('Por favor, preencha o título da tarefa.');
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        if (!summary) {
+            setSnackbarOpen(true);
+            setSnackbarMessage('Por favor, preencha o sumário da tarefa.');
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        if (!description || description.replace(/<[^>]+>/g, '').trim() === '') {
+            setSnackbarOpen(true);
+            setSnackbarMessage('Por favor, preencha a descrição da tarefa.');
+            setSnackbarSeverity('error');
+            return;
+        }
+
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
@@ -126,7 +152,9 @@ const CreateTasks = () => {
     };
 
     return (
+
         <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+
             <Typography variant="h4" component="h1" gutterBottom align="center">
                 {t('Criação de Tarefas')}
             </Typography>
@@ -236,17 +264,29 @@ const CreateTasks = () => {
                             >
                                 {t('Próximo')}
                             </Button>
+
+                            <Snackbar
+                                open={snackbarOpen}
+                                autoHideDuration={3000}
+                                onClose={handleCloseSnackbar}
+                                anchorOrigin={{ vertical: 'botton', horizontal: 'right' }}
+                            >
+                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                                    {snackbarMessage}
+                                </Alert>
+                            </Snackbar>
+
                         </Box>
                     </Box>
-
                     <Box sx={{ width: '20%', padding: 2 }}></Box>
+
                 </Box>
             )}
 
 
             {activeStep === 1 && (
                 <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
-        
+
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
                         <Button
@@ -274,7 +314,7 @@ const CreateTasks = () => {
                 <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
                     <Typography variant="h6">{t('Revisão e Conclusão')}</Typography>
                     <Typography>{t('Título da Tarefa')}: {title}</Typography>
-                    
+
                     <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography> {/* colocar interpretador html*/}
 
                     <Typography>
@@ -304,6 +344,7 @@ const CreateTasks = () => {
                     </Box>
                 </Box>
             )}
+
         </Box>
     );
 };
