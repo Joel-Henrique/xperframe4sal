@@ -59,9 +59,6 @@ const CreateTasks = () => {
     const { experimentId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
-
-
-
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState('');
@@ -69,18 +66,13 @@ const CreateTasks = () => {
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [activeStep, setActiveStep] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-
     const [requiredSurveysIds, setRequiredSurveysIds] = useState([]);
-
-
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
-
-
     useEffect(() => {
         const fetchSurveys = async () => {
             try {
