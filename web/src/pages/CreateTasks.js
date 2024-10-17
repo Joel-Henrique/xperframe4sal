@@ -95,6 +95,10 @@ const CreateTasks = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
+    const handleNextinfob = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
@@ -119,11 +123,6 @@ const CreateTasks = () => {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const handleSurveySelectChange = (event) => {
-        const { value } = event.target;
-        setSelectedSurveys(typeof value === 'string' ? value.split(',') : value);
     };
 
     return (
@@ -232,7 +231,7 @@ const CreateTasks = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={handleNext}
+                                onClick={handleNextinfob}
                                 sx={{ maxWidth: '150px' }}
                             >
                                 {t('Próximo')}
@@ -247,28 +246,13 @@ const CreateTasks = () => {
 
             {activeStep === 1 && (
                 <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
-                    <FormControl fullWidth margin="normal">
-                        <InputLabel>{t('Selecione os questionários')}</InputLabel>
-                        <Select
-                            multiple
-                            value={selectedSurveys}
-                            onChange={handleSurveySelectChange}
-                            renderValue={(selected) => selected.map(id => surveys.find(s => s.id === id)?.name).join(', ')}
-                        >
-                            {surveys.map((survey) => (
-                                <MenuItem key={survey.id} value={survey.id}>
-                                    <Checkbox checked={selectedSurveys.indexOf(survey.id) > -1} />
-                                    <ListItemText primary={survey.name} />
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+        
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
                         <Button
                             variant="contained"
                             color="secondary"
                             onClick={handleBack}
-                            disabled={activeStep === 0}
                             sx={{ maxWidth: '150px' }}
                         >
                             {t('Voltar')}
@@ -290,21 +274,22 @@ const CreateTasks = () => {
                 <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
                     <Typography variant="h6">{t('Revisão e Conclusão')}</Typography>
                     <Typography>{t('Título da Tarefa')}: {title}</Typography>
-                    <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography>
+                    
+                    <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography> {/* colocar interpretador html*/}
+
                     <Typography>
                         {t('Questionários selecionados')}: {selectedSurveys.map(id => surveys.find(s => s.id === id)?.name).join(', ')}
                     </Typography>
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
                         <Button
                             variant="contained"
                             color="secondary"
                             onClick={handleBack}
-                            disabled={activeStep === 0}
                             sx={{ maxWidth: '150px' }}
                         >
                             {t('Voltar')}
                         </Button>
-
 
                         <Button
                             variant="contained"
@@ -316,7 +301,6 @@ const CreateTasks = () => {
                         >
                             {isLoading ? t('Criando...') : t('Criar')}
                         </Button>
-
                     </Box>
                 </Box>
             )}
