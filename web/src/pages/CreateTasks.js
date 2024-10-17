@@ -14,8 +14,8 @@ import {
     Select,
     MenuItem,
     IconButton,
-    EditIcon,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
 import CreateExperiment from './CreateExperiment'
