@@ -1,0 +1,28 @@
+.instructions-text {
+    font-size: 1.0rem;
+    margin-bottom: 30px;
+  }
+  
+  @media(min-width: 600px) {
+    .instructions-text {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .instructions-box {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .instructions-iframe {
+    width: 360px;
+    height: 205px;
+  }
+  
+  @media(min-width: 600px) {
+    .instructions-iframe {
+      width: 654px;
+      height: 375px;
+    }
+  }
+  

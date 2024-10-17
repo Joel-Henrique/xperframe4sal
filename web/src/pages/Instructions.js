@@ -3,17 +3,24 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-
+import '../styles/Instructions.css'; 
 
 const Instructions = () => {
-
   return (
     <>
-      <Typography variant="h6" gutterBottom sx={{ fontSize: { xs: '1.0rem', sm: '1.2rem', marginBottom: 30 } }}>
+      <Typography variant="h6" gutterBottom className="instructions-text">
         Assista a seguir um vídeo com instruções de utilização deste sistema:
       </Typography>
-      <Box component='div' sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Box sx={{ width: { sm: 654, xs: 360 }, height: { sm: 375, xs: 205 } }} component='iframe' src="https://www.youtube.com/embed/Q4C4ees0VLQ?rel=0&si=6_lCAUI5nbnHa_yJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;" allowFullScreen />
+      <Box component='div' className="instructions-box">
+        <Box 
+          className="instructions-iframe"
+          component='iframe'
+          src="https://www.youtube.com/embed/Q4C4ees0VLQ?rel=0&si=6_lCAUI5nbnHa_yJ"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+          allowFullScreen
+        />
       </Box>
     </>
   );

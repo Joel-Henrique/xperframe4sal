@@ -1,0 +1,10 @@
+.create-tasks-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .create-tasks-snackbar {
+    width: 100%;
+  }
+  
