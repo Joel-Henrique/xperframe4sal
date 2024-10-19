@@ -4,10 +4,71 @@ This repository contains the source code for the Xper4SAL, a framework for insta
 
 The `/server` folder contains the source code of the backend developed in NestJS. The `/web` folder contains the frontend developed in ReactJS.
 
-## Dependences
+## Cloning the Repository
+
+### To get started, follow these steps:
+1. 
+    ```bash
+    git clone https://github.com/sal-research-group/xperframe4sal.git
+    cd xperframe4sal
+    code .
+    ```
+
+## Installing Dependences
 
 We recommend the version **_v18.9.0_** of **_node_** and the **_pnpm_** packager manager to execute the code. Before running the commands to start the API or the interface, run the command **_pnpm install_** inside the directories **_server_** and **_web_** to install the necessary dependences.
 
+### Backend (Server)
+1. Navigate to the server directory:
+   ```
+    cd server
+   ```
+
+2. Install backend dependencies:
+   ```
+   pnpm install
+   ```
+
+### Frontend (web)
+1. Go back to the root directory:
+   ```
+    cd ..
+   ```
+
+2. Enter the `web` directory:
+   ```
+   cd web
+   ```
+
+3. Install frontend dependencies:
+   ```
+    pnpm install
+   ```
+
+## Backend Configuration
+
+1. Create a `.env` file inside the server folder with the following variable:
+   ```
+    SECRET="anythingcanbeputhere"
+   ```
+
+2. In the file located at `/server/src/modules/auth/strategies/jwt.strategies.ts`, add the following lines after the last import:
+   ```
+    import dotenv from 'dotenv';
+    dotenv.config();
+   ```
+
+## Database Configuration
+
+1- Install MongoDB from the official site: Download MongoDB
+
+2- After installation, add a new connection:
+
+- Address: leave the default.
+- Name: cbf
+
+3- Click connect to connect to the database.
+   
 ## To run the API
 
 Use the command: **_pnpm start_** inside the **_server_** directory.
