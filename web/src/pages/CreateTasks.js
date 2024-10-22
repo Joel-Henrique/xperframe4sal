@@ -55,6 +55,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 const steps = ['Step 1: Informações Básicas', 'Step 2: Seleção de Questionários', 'Step 3: Revisão e Conclusão'];
 
 const CreateTasks = () => {
+    const [searchTerm, setSearchTerm] = useState('');  // Adiciona o estado de busca
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const { experimentId } = useParams();
     const navigate = useNavigate();
@@ -142,6 +143,33 @@ const CreateTasks = () => {
             setIsLoading(false);
         }
     };
+
+
+
+    const handleSelectSurvey = (id) => {
+        setSelectedSurveys((prevSelectedSurveys) => {
+            if (prevSelectedSurveys.includes(id)) {
+                return prevSelectedSurveys.filter((selectedId) => selectedId !== id); // Desmarcar se já estiver selecionado
+            } else {
+                return [...prevSelectedSurveys, id]; // Adicionar novo ID
+            }
+        });
+    };
+
+    useEffect(() => {
+        const fetchSurveys = async () => {
+            try {
+                const response = await api.get('surveys', {
+                    headers: { Authorization: `Bearer ${user.accessToken}` },
+                });
+                setSurveys(response.data);
+            } catch (error) {
+                console.error(t('Erro ao buscar os questionários'), error);
+            }
+        };
+
+        fetchSurveys();
+    }, [user, t]);
 
     return (
 
@@ -277,25 +305,72 @@ const CreateTasks = () => {
 
 
             {activeStep === 1 && (
-                <Box sx={{ maxWidth: 800, margin: '0 auto', mt: 4 }}>
+                <Box sx={{
+                    margin: 0,
+                    padding: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    '& > *': { marginBottom: 0 }
+                }}>
+                    <Box sx={{ margin: '0 auto', mt: 4 }}>
+                        <Typography variant="h6" gutterBottom>
+                            {t('Selecionar Questionários')}
+                        </Typography>
 
+                        {/* Campo de pesquisa */}
+                        <TextField
+                            label={t('Pesquisar Questionários')}
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleBack}
-                            sx={{ maxWidth: '150px' }}
-                        >
+                        {isLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            <FormControl fullWidth>
+                                {surveys
+                                    .filter((survey) =>
+                                        survey.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                    )
+
+                                    .map((survey) => (
+                                        <Box key={survey._id} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                            <Checkbox
+                                                checked={selectedSurveys.includes(survey._id)} // Verificar pelo ID
+                                                onChange={() => handleSelectSurvey(survey._id)} // Passar o ID
+                                            />
+                                            <ListItemText primary={survey.title} />
+                                        </Box>
+                                    ))}
+                            </FormControl>
+                        )}
+
+                        {/* Exibir os questionários obrigatórios já selecionados */}
+                        {selectedSurveys.length > 0 && (
+                            <Typography variant="h6" gutterBottom>
+                                {t('Questionários Selecionados')}
+                            </Typography>
+                        )}
+                        <ul style={{ paddingLeft: 20 }}>
+                            {selectedSurveys.map((id, index) => (
+                                <li key={index}>
+                                    {surveys.find((s) => s._id === id)?.title}
+                                </li>
+                            ))}
+                        </ul>
+                    </Box>
+
+                    {/* Botões de navegação */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', maxWidth: 800 }}>
+                        <Button variant="contained" color="secondary" onClick={handleBack} sx={{ maxWidth: '150px' }}>
                             {t('Voltar')}
                         </Button>
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleNext}
-                            sx={{ maxWidth: '150px' }}
-                        >
+                        <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '150px' }}>
                             {t('Próximo')}
                         </Button>
                     </Box>
@@ -307,10 +382,10 @@ const CreateTasks = () => {
                     <Typography variant="h6">{t('Revisão e Conclusão')}</Typography>
                     <Typography>{t('Título da Tarefa')}: {title}</Typography>
 
-                    <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography> {/* colocar interpretador html*/}
+                    <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography>
 
                     <Typography>
-                        {t('Questionários selecionados')}: {selectedSurveys.map(id => surveys.find(s => s.id === id)?.name).join(', ')}
+                        {t('Questionários selecionados')}: {selectedSurveys.map(id => surveys.find(s => s._id === id)?.title).join(', ')}
                     </Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
@@ -336,6 +411,7 @@ const CreateTasks = () => {
                     </Box>
                 </Box>
             )}
+
 
         </Box>
     );
