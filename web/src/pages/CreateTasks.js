@@ -14,21 +14,13 @@ import {
     Stepper,
     Step,
     StepLabel,
-    MenuItem,
     Checkbox,
     ListItemText,
     FormControl,
-    Select,
-    InputLabel,
     styled,
     Snackbar,
     Alert,
     CircularProgress,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    IconButton,
 } from '@mui/material';
 
 
@@ -55,9 +47,8 @@ const CustomContainer = styled('div')(({ theme }) => ({
 const steps = ['Step 1: Informações Básicas', 'Step 2: Seleção de Questionários', 'Step 3: Revisão e Conclusão'];
 
 const CreateTasks = () => {
-    const [searchTerm, setSearchTerm] = useState('');  // Adiciona o estado de busca
+    const [searchTerm, setSearchTerm] = useState(''); 
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
-    const { experimentId } = useParams();
     const navigate = useNavigate();
     const { t } = useTranslation();
     const [title, setTitle] = useState('');
@@ -67,13 +58,13 @@ const CreateTasks = () => {
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [activeStep, setActiveStep] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [requiredSurveysIds, setRequiredSurveysIds] = useState([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
+
     useEffect(() => {
         const fetchSurveys = async () => {
             try {
@@ -131,12 +122,11 @@ const CreateTasks = () => {
                     title,
                     summary,
                     description,
-                    experimentId,
                     requiredSurveysIds: selectedSurveys,
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
-            navigate(`/experiments/${experimentId}/tasks`);
+            navigate(`/experiments`);
         } catch (error) {
             console.error(t('Erro ao criar a tarefa'), error);
         } finally {
@@ -153,22 +143,6 @@ const CreateTasks = () => {
                 : [...prevSelectedSurveys, id] // Adicionar novo ID
         );
     };
-    
-
-    useEffect(() => {
-        const fetchSurveys = async () => {
-            try {
-                const response = await api.get('surveys', {
-                    headers: { Authorization: `Bearer ${user.accessToken}` },
-                });
-                setSurveys(response.data);
-            } catch (error) {
-                console.error(t('Erro ao buscar os questionários'), error);
-            }
-        };
-
-        fetchSurveys();
-    }, [user, t]);
 
     return (
 
