@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayArrow from "@mui/icons-material/PlayArrow";
-
+import { useTranslation } from 'react-i18next';
 import { LoadingIndicator } from '../components/LoadIndicator';
 
 import { ExperimentTemplate, mountSteps } from './ExperimentTemplate';

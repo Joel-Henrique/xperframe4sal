@@ -18,8 +18,6 @@
   "progress_icf": "Aceitar termo de consentimento",
   "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
 
-
-
   "task_title_required": "Título obrigatório.",
   "task_summary_required": "Sumário obrigatório.",
   "task_description_required": "Descrição obrigatória.",
@@ -170,6 +168,16 @@
   "multiple_choices" : "Múltipla Escolha",
 
   "Logout": "Sair",
-  "My_profile": "Meu perfil"
+  "My_profile": "Meu perfil",
+
+  "taks_busc_sucess":"Tarefa de busca finalizada com sucesso.",
+  "task_paused":"Atenção: Tarefa pausada, aperte o botão iniciar para retomar a tarefa.",
+  "iniciar": "Iniciar",
+  "pausar": "Pausar",
+  "finalizar": "Finalizar",
+  "tem_certeza": "Tem certeza?",
+  "finalizar_tarefa": "Ao finalizar a tarefa você não terá mais acesso a ela e será redirecionado para responder os questionários finais."
+  
+  
 
 }

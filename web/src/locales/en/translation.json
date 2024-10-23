@@ -167,5 +167,13 @@
    "multiple_choices" : "Multiple choices",
    
   "Logout": "Logout",
-  "My_profile": "My profile"
+  "My_profile": "My profile",
+
+  "taks_busc_sucess": "Search task completed successfully.",
+  "task_paused": "Attention: Task is paused, press the start button to resume the task.",
+  "iniciar": "Start",
+  "pausar": "Pause",
+  "finalizar": "Finish",
+  "tem_certeza": "Are you sure?",
+  "finalizar_tarefa": "Once you finish the task, you will no longer have access to it and will be redirected to answer the final questionnaires."
 }
