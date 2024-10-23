@@ -162,34 +162,7 @@ const CreateTasks = () => {
             {activeStep === 0 && (
                 <Box sx={{ display: 'flex', margin: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', margin: 4 }}>
                     <Box sx={{ width: '20%', margin: 0, display: 'flex', padding: 2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', '& > *': { marginBottom: 0, } }}>
-                        <Box sx={{ padding: 0 }}>
-                            <Typography
-                                variant="h5"
-                                gutterBottom
-                                align="left"
-                                sx={{ paddingLeft: 0, textAlign: 'left' }}
-                            >
-                                {t('Itens_task')}
-                            </Typography>
-
-                            <Box sx={{ padding: 0 }}>
-                                <ul style={{ listStyleType: 'none', padding: 0, textAlign: 'left' }}>
-                                    <li style={{ marginBottom: '10px', color: title ? 'green' : 'red' }}>
-                                        {title ? t('title_task') : t('title_task_uncheck')}
-                                    </li>
-                                    <li style={{ marginBottom: '10px', color: summary ? 'green' : 'red' }}>
-                                        {summary ? t('sum_task') : t('sum_task_uncheck')}
-                                    </li>
-                                    <li style={{ marginBottom: '10px', color: description && description.replace(/<[^>]+>/g, '').trim() !== '' ? 'green' : 'red' }}>
-                                        {description && description.replace(/<[^>]+>/g, '').trim() !== ''
-                                            ? t('desc_task')
-                                            : t('desc_task_uncheck')}
-                                    </li>
-                                </ul>
-                            </Box>
-                        </Box>
                     </Box>
-
                     <Box sx={{ maxWidth: 800, width: '60%', margin: 0, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', '& > *': { marginBottom: 0, } }}>
                         <TextField
                             label={t('Título da Tarefa')}
