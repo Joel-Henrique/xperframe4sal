@@ -1,16 +1,9 @@
-// React e Hooks
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// API
 import { api } from '../config/axios';
-
-// Editor de Texto
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
-
-import { // Material UI - Componentes e Ícones
+import { 
     TextField,
     Button,
     Typography,
@@ -28,10 +21,7 @@ import { // Material UI - Componentes e Ícones
     styled
 } from '@mui/material';
 import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
-
-// Tradução
 import { useTranslation } from 'react-i18next';
-
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -161,7 +151,6 @@ const CreateTasks = () => {
                 {t('Criação de Tarefas')}
             </Typography>
 
-            {/* Barra de Step Progress */}
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label, index) => (
                     <Step key={index}>
@@ -246,7 +235,6 @@ const CreateTasks = () => {
                             </CustomContainer>
                         </div>
 
-                        {/* Botões de Voltar e Próximo */}
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
                             <Button
                                 variant="contained"
@@ -281,7 +269,6 @@ const CreateTasks = () => {
                         </Box>
                     </Box>
                     <Box sx={{ width: '20%', padding: 2 }}></Box>
-
                 </Box>
             )}
 
@@ -300,7 +287,7 @@ const CreateTasks = () => {
                     maxWidth: 800,
                     marginX: 'auto'
                 }}>
-                    {/* Campo de pesquisa */}
+                    
                     <TextField
                         label={t('Pesquisar Questionários')}
                         variant="outlined"
@@ -347,7 +334,6 @@ const CreateTasks = () => {
                                             </IconButton>
                                         </Box>
 
-                                        {/* Exibir descrição logo abaixo da tarefa */}
                                         {openSurveyIds.includes(survey._id) && (
                                             <Box sx={{
                                                 marginTop: 1,
@@ -363,7 +349,6 @@ const CreateTasks = () => {
                         </FormControl>
                     )}
 
-                    {/* Botões de navegação */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                         <Button
                             variant="contained"
