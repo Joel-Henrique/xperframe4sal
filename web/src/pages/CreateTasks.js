@@ -147,14 +147,13 @@ const CreateTasks = () => {
 
 
     const handleSelectSurvey = (id) => {
-        setSelectedSurveys((prevSelectedSurveys) => {
-            if (prevSelectedSurveys.includes(id)) {
-                return prevSelectedSurveys.filter((selectedId) => selectedId !== id); // Desmarcar se já estiver selecionado
-            } else {
-                return [...prevSelectedSurveys, id]; // Adicionar novo ID
-            }
-        });
+        setSelectedSurveys((prevSelectedSurveys) =>
+            prevSelectedSurveys.includes(id)
+                ? prevSelectedSurveys.filter((selectedId) => selectedId !== id) // Desmarcar
+                : [...prevSelectedSurveys, id] // Adicionar novo ID
+        );
     };
+    
 
     useEffect(() => {
         const fetchSurveys = async () => {
@@ -357,9 +356,9 @@ const CreateTasks = () => {
                             </Typography>
                         )}
                         <ul style={{ paddingLeft: 20 }}>
-                            {selectedSurveys.map((id, index) => (
+                            {selectedSurveys.map((_id, index) => (
                                 <li key={index}>
-                                    {surveys.find((s) => s._id === id)?.title}
+                                    {surveys.find((s) => s._id === _id)?.title}
                                 </li>
                             ))}
                         </ul>
@@ -385,7 +384,7 @@ const CreateTasks = () => {
                     <Typography>{t('Descrição da Tarefa')}: {description.replace(/<[^>]+>/g, '')}</Typography>
 
                     <Typography>
-                        {t('Questionários selecionados')}: {selectedSurveys.map(id => surveys.find(s => s._id === id)?.title).join(', ')}
+                        {t('Questionários selecionados')}: {selectedSurveys.map(_id => surveys.find(s => s._id === _id)?.title).join(', ')}
                     </Typography>
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
@@ -411,8 +410,6 @@ const CreateTasks = () => {
                     </Box>
                 </Box>
             )}
-
-
         </Box>
     );
 };
