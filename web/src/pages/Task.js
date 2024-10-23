@@ -15,7 +15,7 @@ import { ReactComponent as GoogleLogo } from './../assets/search-engines-logos/G
 import { ErrorMessage } from '../components/ErrorMessage';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { CustomSnackbar } from '../components/CustomSnackbar';
-
+import { useTranslation } from 'react-i18next';
 
 async function updateUserExperimentStatus(userExperiment, user, api) {
   try {

@@ -16,7 +16,6 @@ import { LoadingIndicator } from '../components/LoadIndicator';
 
 import { ExperimentTemplate, mountSteps } from './ExperimentTemplate';
 
-import { useTranslation } from 'react-i18next';
 
 
 
