@@ -18,6 +18,18 @@
   "progress_icf": "Aceitar termo de consentimento",
   "unique_answer_survey_message": "Atenção: Este é um formulário de preenchimento único. Após enviá-lo você não poderá alterar suas respostas.",
 
+
+
+  "task_title_required": "Título obrigatório.",
+  "task_summary_required": "Sumário obrigatório.",
+  "task_description_required": "Descrição obrigatória.",
+  "step_1": "Informações Básicas",
+  "step_2": "Seleção de Questionários",
+  "step_3": "Revisão e Conclusão",
+  "Pesquisar Questionários": "Pesquisar Questionários",
+  "Voltar": "Voltar",
+  "Próximo": "Próximo",
+  "revis_conc": "Revisão e Conclusão",
   "Itens_task": "Itens para criação da Tarefa",
   "Fechar": "Fechar",
   "title_task": "Título da Tarefa ✅",
@@ -25,6 +37,7 @@
   "sum_task": "Sumário da Tarefa ✅",
   "sum_task_uncheck": "Sumário da Tarefa ❌",
   "desc_task": "Descrição da Tarefa ✅",
+  "desc_task1": "Descrição da Tarefa",
   "desc_task_uncheck": "Descrição da Tarefa ❌",
   "selected_taks1": "Questionários ✅",
   "non_selected_taks1": "Questionários ❌",
