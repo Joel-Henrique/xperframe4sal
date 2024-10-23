@@ -253,7 +253,7 @@ const CreateTasks = () => {
                                 color="secondary"
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
-                                sx={{ maxWidth: '150px' }}
+                                sx={{ maxWidth: '150px' , borderRadius: '20px'}}
                             >
                                 {t('Voltar')}
                             </Button>
@@ -262,7 +262,7 @@ const CreateTasks = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleNextinfob}
-                                sx={{ maxWidth: '150px' }}
+                                sx={{ maxWidth: '150px', borderRadius: '20px' }}
                             >
                                 {t('Próximo')}
                             </Button>
@@ -365,7 +365,12 @@ const CreateTasks = () => {
 
                     {/* Botões de navegação */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
-                        <Button variant="outlined" color="secondary" onClick={handleBack} sx={{ maxWidth: '120px', borderRadius: '20px' }}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleBack}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
+                        >
                             {t('Voltar')}
                         </Button>
                         <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px', borderRadius: '20px' }}>
@@ -399,7 +404,7 @@ const CreateTasks = () => {
                             variant="contained"
                             color="secondary"
                             onClick={handleBack}
-                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2, borderRadius: '20px' }}
                         >
                             {t('Voltar')}
                         </Button>
@@ -410,7 +415,7 @@ const CreateTasks = () => {
                             onClick={handleCreateTask}
                             disabled={isLoading}
                             fullWidth
-                            sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
+                            sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 , borderRadius: '20px'}}
                         >
                             {isLoading ? t('Criando...') : t('Criar')}
                         </Button>

@@ -22,11 +22,11 @@
   "task_title_required": "Title is required.",
   "task_summary_required": "Summary is required.",
   "task_description_required": "Description is required.",
-  
+
   "step_1": "Basic Information",
-  "step_2": "Questionnaire Selection",
+  "step_2": "Surveys Selection",
   "step_3": "Review and Conclusion",
-  "Pesquisar Questionários": "Search Questionnaires",
+  "Pesquisar Questionários": "Search Surveys",
   "Voltar": "Back",
   "Próximo": "Next",
   "revis_conc": "Review and Conclusion",
