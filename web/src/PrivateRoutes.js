@@ -79,6 +79,10 @@ export function PrivateRoutes(props) {
     navigate('/CreateSurveys');
     setAnchorEl(null);
   }
+  const handleGoCreateExperiment = () => {
+    navigate('/CreateExperiment');
+    setAnchorEl(null);
+  }
   const handleAccountButtonEnter = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -121,6 +125,14 @@ export function PrivateRoutes(props) {
             <ListItemText primary={t('menu_surveys')} />
           </ListItemButton>
         </ListItem>
+        <ListItem disablePadding>
+
+          <ListItemButton onClick={handleGoCreateExperiment}>
+            <MailIcon />
+            <ListItemText primary={t('menu_experiments')} />
+          </ListItemButton>
+        </ListItem>
+
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoContact}>
             <HomeIcon />
@@ -184,6 +196,9 @@ export function PrivateRoutes(props) {
             </Button>
             <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateSurveys}>
               {t('menu_surveys')}
+            </Button>
+            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateExperiment}>
+              {t('menu_experiments')}
             </Button>
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}

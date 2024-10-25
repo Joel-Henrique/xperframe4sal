@@ -5,6 +5,7 @@ import { Contact } from './Contact';
 import { Instructions } from './Instructions';
 import { CreateTasks } from './CreateTasks';
 import { CreateSurveys } from './CreateSurveys';
+import { CreateExperiment } from './CreateExperiment';
 import { Surveys } from './Surveys';
 import { Survey } from './Survey';
 import { Task } from './Task';
@@ -31,5 +32,6 @@ export {
   ResetPassword,
   CreateTasks,
   CreateSurveys,
+  CreateExperiment,
   Instructions
 }

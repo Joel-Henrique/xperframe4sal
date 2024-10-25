@@ -15,6 +15,7 @@ import {
   Account,
   CreateTasks,
   CreateSurveys,
+  CreateExperiment,
   ResetPassword,
   Instructions
 } from './pages';
@@ -44,6 +45,10 @@ const Router = () => {
 
       <Route path='/CreateSurveys' element={<PrivateRoutes />}>
          <Route index element={<CreateSurveys />} />
+      </Route>
+
+      <Route path='/CreateExperiment' element={<PrivateRoutes />}>
+         <Route index element={<CreateExperiment />} />
       </Route>
 
       <Route path='/experiments' element={<PrivateRoutes />}>
