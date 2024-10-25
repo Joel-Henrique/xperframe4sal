@@ -60,14 +60,16 @@ const CreateExperiment = () => {
     const [description, setDescription] = useState('');
     const [summary, setSummary] = useState(''); //mudar
     const [surveys, setSurveys] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [selectedSurveys, setSelectedSurveys] = useState([]);
+    const [selectedTasks, setSelectedTask] = useState([]);
     const [activeStep, setActiveStep] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
-
+    const [openTaskIds, setOpenTaskIds] = useState([]);
     const [type, setType] = useState('pre');
     const [typeExperiment, settypeExperiment] = useState('between-subject');
     const [questions, setQuestions] = useState([]);
@@ -75,6 +77,18 @@ const CreateExperiment = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_5'), t('step_6')];
+
+    const fetchTasks = async () => {
+        try {
+            const response = await api.get(`tasks`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            setTasks(response.data);
+        } catch (error) {
+            console.error(t('Erro ao buscar os questionários'), error);
+        }
+    };
+
     const fetchSurveys = async () => {
         try {
             const response = await api.get(`surveys`, {
@@ -82,11 +96,12 @@ const CreateExperiment = () => {
             });
             setSurveys(response.data);
         } catch (error) {
-            console.error(t('Erro ao buscar os questionários'), error);
+            console.error(t('task_busc_error'), error);
         }
     };
 
     useEffect(() => {
+        fetchTasks();
         fetchSurveys();
     }, [user, t]);
 
@@ -172,6 +187,7 @@ const CreateExperiment = () => {
             setOpenSurveyIds([...openSurveyIds, surveyId]);
         }
     };
+
     const handleSelectSurvey = (id) => {
         setSelectedSurveys((prevSelectedSurveys) =>
             prevSelectedSurveys.includes(id)
@@ -179,6 +195,15 @@ const CreateExperiment = () => {
                 : [...prevSelectedSurveys, id]
         );
     };
+
+    const handleSelectTasks = (id) => {
+        setSelectedTask((prevsetSelectedTask) =>
+            prevsetSelectedTask.includes(id)
+                ? prevsetSelectedTask.filter((selectedId) => selectedId !== id)
+                : [...prevsetSelectedTask, id]
+        );
+    };
+
 
 
     const questionTypes = [
@@ -438,21 +463,22 @@ const CreateExperiment = () => {
 
             {activeStep === 1 && (
                 <Box>
-                    <Box sx={{
-                        margin: 10,
-                        padding: 3,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#f9f9f9',
-                        borderRadius: '8px',
-                        boxShadow: 4,
-                        width: '100%',
-                        maxWidth: 800,
-                        marginX: 'auto'
-                    }}>
-
+                    <Box
+                        sx={{
+                            margin: 10,
+                            padding: 3,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '8px',
+                            boxShadow: 4,
+                            width: '100%',
+                            maxWidth: 800,
+                            marginX: 'auto'
+                        }}
+                    >
                         <TextField
                             label={t('Pesquisar Questionários')}
                             variant="outlined"
@@ -463,55 +489,66 @@ const CreateExperiment = () => {
                             sx={{ mb: 3 }}
                         />
 
-
                         {isLoading ? (
                             <CircularProgress />
                         ) : (
                             <FormControl fullWidth>
-                                {surveys
-                                    .filter((survey) =>
-                                        survey.title.toLowerCase().includes(searchTerm.toLowerCase())
-                                    )
-                                    .map((survey) => (
-                                        <Box key={survey._id} sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            mb: 1,
-                                            padding: 1,
-                                            backgroundColor: '#ffffff',
-                                            borderRadius: '4px',
-                                            boxShadow: 1,
-                                            '&:hover': { backgroundColor: '#e6f7ff' }
-                                        }}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Checkbox
-                                                        checked={selectedSurveys.includes(survey._id)}
-                                                        onChange={() => handleSelectSurvey(survey._id)}
-                                                    />
-                                                    <ListItemText primary={survey.title} sx={{ ml: 1 }} />
-                                                </Box>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => toggleSurveyDescription(survey._id)}
-                                                    sx={{ ml: 2 }}
-                                                >
-                                                    {openSurveyIds.includes(survey._id) ? <RemoveIcon /> : <AddIcon />}
-                                                </IconButton>
-                                            </Box>
-
-                                            {openSurveyIds.includes(survey._id) && (
-                                                <Box sx={{
-                                                    marginTop: 1,
+                                <Box
+                                    sx={{
+                                        maxHeight: '200px', // Defina a altura máxima que desejar
+                                        overflowY: 'auto',   // Ativa a barra de rolagem
+                                    }}
+                                >
+                                    {tasks
+                                        .filter((task) =>
+                                            task.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                        )
+                                        .map((task) => (
+                                            <Box
+                                                key={task._id}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    mb: 1,
                                                     padding: 1,
-                                                    backgroundColor: '#e8f5e9',
-                                                    borderRadius: '4px'
-                                                }}>
-                                                    <Typography variant="body2">{survey.description}</Typography>
+                                                    backgroundColor: '#ffffff',
+                                                    borderRadius: '4px',
+                                                    boxShadow: 1,
+                                                    '&:hover': { backgroundColor: '#e6f7ff' }
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <Checkbox
+                                                            checked={selectedTasks.includes(task._id)}
+                                                            onChange={() => handleSelectTasks(task._id)}
+                                                        />
+                                                        <ListItemText primary={task.title} sx={{ ml: 1 }} />
+                                                    </Box>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => toggleSurveyDescription(task._id)}
+                                                        sx={{ ml: 2 }}
+                                                    >
+                                                        {openSurveyIds.includes(task._id) ? <RemoveIcon /> : <AddIcon />}
+                                                    </IconButton>
                                                 </Box>
-                                            )}
-                                        </Box>
-                                    ))}
+
+                                                {openSurveyIds.includes(task._id) && (
+                                                    <Box
+                                                        sx={{
+                                                            marginTop: 1,
+                                                            padding: 1,
+                                                            backgroundColor: '#e8f5e9',
+                                                            borderRadius: '4px'
+                                                        }}
+                                                    >
+                                                        <Typography variant="body2">{task.description}</Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        ))}
+                                </Box>
                             </FormControl>
                         )}
                     </Box>
@@ -603,101 +640,107 @@ const CreateExperiment = () => {
 
             {activeStep === 2 && (
                 <Box>
-                    <Box sx={{
-                        margin: 10,
-                        padding: 3,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: '#f9f9f9',
-                        borderRadius: '8px',
-                        boxShadow: 4,
-                        width: '100%',
-                        maxWidth: 800,
-                        marginX: 'auto'
-                    }}>
+                    <Box>
+                        <Box
+                            sx={{
+                                margin: 10,
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f9f9f9',
+                                borderRadius: '8px',
+                                boxShadow: 4,
+                                width: '100%',
+                                maxWidth: 800,
+                                marginX: 'auto',
+                            }}
+                        >
+                            <TextField
+                                label={t('Pesquisar Questionários')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                sx={{ mb: 3 }}
+                            />
 
-                        <TextField
-                            label={t('Pesquisar Questionários')}
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            sx={{ mb: 3 }}
-                        />
-
-
-                        {isLoading ? (
-                            <CircularProgress />
-                        ) : (
-                            <FormControl fullWidth>
-                                {surveys
-                                    .filter((survey) =>
-                                        survey.title.toLowerCase().includes(searchTerm.toLowerCase())
-                                    )
-                                    .map((survey) => (
-                                        <Box key={survey._id} sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            mb: 1,
-                                            padding: 1,
-                                            backgroundColor: '#ffffff',
-                                            borderRadius: '4px',
-                                            boxShadow: 1,
-                                            '&:hover': { backgroundColor: '#e6f7ff' }
-                                        }}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Checkbox
-                                                        checked={selectedSurveys.includes(survey._id)}
-                                                        onChange={() => handleSelectSurvey(survey._id)}
-                                                    />
-                                                    <ListItemText primary={survey.title} sx={{ ml: 1 }} />
-                                                </Box>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => toggleSurveyDescription(survey._id)}
-                                                    sx={{ ml: 2 }}
+                            {isLoading ? (
+                                <CircularProgress />
+                            ) : (
+                                <Box
+                                    sx={{
+                                        maxHeight: '200px', // Defina a altura máxima que desejar
+                                        overflowY: 'auto',  // Ativa a barra de rolagem
+                                    }}
+                                >
+                                    <FormControl fullWidth>
+                                        {surveys
+                                            .filter((survey) =>
+                                                survey.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                            )
+                                            .map((survey) => (
+                                                <Box
+                                                    key={survey._id}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        mb: 1,
+                                                        padding: 1,
+                                                        backgroundColor: '#ffffff',
+                                                        borderRadius: '4px',
+                                                        boxShadow: 1,
+                                                        '&:hover': { backgroundColor: '#e6f7ff' },
+                                                    }}
                                                 >
-                                                    {openSurveyIds.includes(survey._id) ? <RemoveIcon /> : <AddIcon />}
-                                                </IconButton>
-                                            </Box>
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                        }}
+                                                    >
+                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Checkbox
+                                                                checked={selectedSurveys.includes(survey._id)}
+                                                                onChange={() => handleSelectSurvey(survey._id)}
+                                                            />
+                                                            <ListItemText primary={survey.title} sx={{ ml: 1 }} />
+                                                        </Box>
+                                                        <IconButton
+                                                            color="primary"
+                                                            onClick={() => toggleSurveyDescription(survey._id)}
+                                                            sx={{ ml: 2 }}
+                                                        >
+                                                            {openSurveyIds.includes(survey._id) ? (
+                                                                <RemoveIcon />
+                                                            ) : (
+                                                                <AddIcon />
+                                                            )}
+                                                        </IconButton>
+                                                    </Box>
 
-                                            {openSurveyIds.includes(survey._id) && (
-                                                <Box sx={{
-                                                    marginTop: 1,
-                                                    padding: 1,
-                                                    backgroundColor: '#e8f5e9',
-                                                    borderRadius: '4px'
-                                                }}>
-                                                    <Typography variant="body2">{survey.description}</Typography>
+                                                    {openSurveyIds.includes(survey._id) && (
+                                                        <Box
+                                                            sx={{
+                                                                marginTop: 1,
+                                                                padding: 1,
+                                                                backgroundColor: '#e8f5e9',
+                                                                borderRadius: '4px',
+                                                            }}
+                                                        >
+                                                            <Typography variant="body2">
+                                                                {survey.description}
+                                                            </Typography>
+                                                        </Box>
+                                                    )}
                                                 </Box>
-                                            )}
-                                        </Box>
-                                    ))}
-                            </FormControl>
-                        )}
-
-
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={handleBack}
-                                sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
-                            >
-                                {t('Voltar')}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNext}
-                                sx={{ maxWidth: '120px', borderRadius: '20px' }}
-                            >
-                                {t('Próximo')}
-                            </Button>
+                                            ))}
+                                    </FormControl>
+                                </Box>
+                            )}
                         </Box>
 
 
@@ -858,6 +901,24 @@ const CreateExperiment = () => {
                                 </Alert>
                             </Snackbar>
                         </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleBack}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
+                        >
+                            {t('Voltar')}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            sx={{ maxWidth: '120px', borderRadius: '20px' }}
+                        >
+                            {t('Próximo')}
+                        </Button>
                     </Box>
                 </Box>
             )}
