@@ -25,9 +25,10 @@ import {
     Grid,
     Paper,
 } from '@mui/material';
-import { Add as AddIcon, Remove as RemoveIcon } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Add, Remove } from '@mui/icons-material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -51,18 +52,30 @@ const CustomContainer = styled('div')(({ theme }) => ({
 
 const CreateExperiment = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const navigate = useNavigate();
     const { t } = useTranslation();
+
     const [title, setTitle] = useState('');
-    const [titleExperiment, settitleExperiment] = useState('');
-    const [descriptionExperiment, setdescriptionExperiment] = useState('');
-    const [description, setDescription] = useState('');
     const [summary, setSummary] = useState(''); //mudar
+    const [description, setDescription] = useState('');
+    const [type, setType] = useState('pre');
+
+    const [titleExperiment, settitleExperiment] = useState('');
+    const [typeExperiment, settypeExperiment] = useState('between-subject');
+    const [descriptionExperiment, setdescriptionExperiment] = useState('');
+
+    const [taskTitle, settaskTitle] = useState('');
+    const [taskDescription, settaskDescription] = useState('');
+    const [taskSummary, settaskSummary] = useState('');
+
     const [surveys, setSurveys] = useState([]);
     const [tasks, setTasks] = useState([]);
+
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [selectedTasks, setSelectedTask] = useState([]);
+
     const [activeStep, setActiveStep] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -70,8 +83,7 @@ const CreateExperiment = () => {
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
     const [openTaskIds, setOpenTaskIds] = useState([]);
-    const [type, setType] = useState('pre');
-    const [typeExperiment, settypeExperiment] = useState('between-subject');
+
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
@@ -130,55 +142,56 @@ const CreateExperiment = () => {
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
-
-    const handleCreate_taskbtt = () => {
-        if (!title) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_title_required'));
-            setSnackbarSeverity('error');
-            return;
-        }
-
-        if (!summary) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_summary_required'));
-            setSnackbarSeverity('error');
-            return;
-        }
-
-        if (!description || description.replace(/<[^>]+>/g, '').trim() === '') {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_description_required'));
-            setSnackbarSeverity('error');
-            return;
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
     const handleCreateTask = async () => {
         try {
             setIsLoading(true);
             await api.post(
                 `/tasks`,
                 {
-                    title,
-                    summary,
-                    description,
-                    requiredSurveysIds: selectedSurveys,
+                    title: taskTitle,
+                    summary: taskSummary,
+                    description: taskDescription,
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
-            navigate(`/experiments`);
+            toggleCreateTask();
+            fetchTasks();
         } catch (error) {
             console.error(t('Erro ao criar a tarefa'), error);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const handleCreate_taskbtt = () => {
+        if (!taskTitle) {
+            setSnackbarOpen(true);
+            setSnackbarMessage(t('task_title_required'));
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        if (!taskSummary) {
+            setSnackbarOpen(true);
+            setSnackbarMessage(t('task_summary_required'));
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        if (!taskDescription || taskDescription.replace(/<[^>]+>/g, '').trim() === '') {
+            setSnackbarOpen(true);
+            setSnackbarMessage(t('task_description_required'));
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        handleCreateTask();
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
 
     const toggleSurveyDescription = (surveyId) => {
         if (openSurveyIds.includes(surveyId)) {
@@ -203,6 +216,10 @@ const CreateExperiment = () => {
                 : [...prevsetSelectedTask, id]
         );
     };
+    const toggleCreateTask = () => {
+        setIsCreateTaskOpen((prev) => !prev);
+    };
+
 
 
 
@@ -391,12 +408,12 @@ const CreateExperiment = () => {
                             variant="outlined"
                             fullWidth
                             margin="normal"
-                            value={title}
+                            value={titleExperiment}
                             onChange={(e) => settitleExperiment(e.target.value)}
                             required
                             sx={{
                                 '& .MuiOutlinedInput-root': {
-                                    borderColor: title ? 'green' : 'red',
+                                    borderColor: titleExperiment ? 'green' : 'red',
                                 },
                             }}
                         />
@@ -415,7 +432,7 @@ const CreateExperiment = () => {
                             <CustomContainer>
                                 <ReactQuill
                                     theme="snow"
-                                    value={description}
+                                    value={descriptionExperiment}
                                     onChange={setdescriptionExperiment}
                                     placeholder={t('Experiment_Desc')}
                                     required
@@ -429,7 +446,7 @@ const CreateExperiment = () => {
                                 color="secondary"
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
-                                sx={{ maxWidth: '150px', borderRadius: '20px' }}
+                                sx={{ maxWidth: '150px' }}
                             >
                                 {t('Voltar')}
                             </Button>
@@ -438,7 +455,7 @@ const CreateExperiment = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleNext} //handleNextExperiment
-                                sx={{ maxWidth: '150px', borderRadius: '20px' }}
+                                sx={{ maxWidth: '150px' }}
                             >
                                 {t('Próximo')}
                             </Button>
@@ -459,182 +476,222 @@ const CreateExperiment = () => {
                     <Box sx={{ width: '20%', padding: 2 }}></Box>
                 </Box>
             )}
-            
+
             {/*tarefa */}
             {activeStep === 1 && (
                 <Box>
                     <Box
                         sx={{
-                            margin: 10,
-                            padding: 3,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: 10,
                             display: 'flex',
                             flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: '#f9f9f9',
-                            borderRadius: '8px',
-                            boxShadow: 4,
-                            width: '100%',
-                            maxWidth: 800,
-                            marginX: 'auto'
                         }}
                     >
-                        <TextField
-                            label={t('Pesquisar Questionários')}
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            sx={{ mb: 3 }}
-                        />
+                        <Box
+                            sx={{
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f9f9f9',
+                                borderRadius: '8px',
+                                boxShadow: 4,
+                                width: '60%',
+                                marginX: 'auto'
+                            }}
+                        >
+                            <TextField
+                                label={t('Pesquisar Questionários')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                sx={{ mb: 3 }}
+                            />
 
-                        {isLoading ? (
-                            <CircularProgress />
-                        ) : (
-                            <FormControl fullWidth>
-                                <Box
-                                    sx={{
-                                        maxHeight: '200px',
-                                        overflowY: 'auto',
-                                    }}
-                                >
-                                    {tasks
-                                        .filter((task) =>
-                                            task.title.toLowerCase().includes(searchTerm.toLowerCase())
-                                        )
-                                        .map((task) => (
-                                            <Box
-                                                key={task._id}
-                                                sx={{
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    mb: 1,
-                                                    padding: 1,
-                                                    backgroundColor: '#ffffff',
-                                                    borderRadius: '4px',
-                                                    boxShadow: 1,
-                                                    '&:hover': { backgroundColor: '#e6f7ff' }
-                                                }}
-                                            >
-                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Checkbox
-                                                            checked={selectedTasks.includes(task._id)}
-                                                            onChange={() => handleSelectTasks(task._id)}
-                                                        />
-                                                        <ListItemText primary={task.title} sx={{ ml: 1 }} />
+                            {isLoading ? (
+                                <CircularProgress />
+                            ) : (
+                                <FormControl fullWidth>
+                                    <Box
+                                        sx={{
+                                            maxHeight: '200px',
+                                            overflowY: 'auto',
+                                        }}
+                                    >
+                                        {tasks
+                                            .filter((task) =>
+                                                task.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                            )
+                                            .map((task) => (
+                                                <Box
+                                                    key={task._id}
+                                                    sx={{
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        mb: 1,
+                                                        padding: 1,
+                                                        backgroundColor: '#ffffff',
+                                                        borderRadius: '4px',
+                                                        boxShadow: 1,
+                                                        '&:hover': { backgroundColor: '#e6f7ff' }
+                                                    }}
+                                                >
+                                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Checkbox
+                                                                checked={selectedTasks.includes(task._id)}
+                                                                onChange={() => handleSelectTasks(task._id)}
+                                                            />
+                                                            <ListItemText primary={task.title} sx={{ ml: 1 }} />
+                                                        </Box>
+                                                        <IconButton
+                                                            color="primary"
+                                                            onClick={() => toggleSurveyDescription(task._id)}
+                                                            sx={{ ml: 2 }}
+                                                        >
+                                                            {openSurveyIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                        </IconButton>
                                                     </Box>
-                                                    <IconButton
-                                                        color="primary"
-                                                        onClick={() => toggleSurveyDescription(task._id)}
-                                                        sx={{ ml: 2 }}
-                                                    >
-                                                        {openSurveyIds.includes(task._id) ? <RemoveIcon /> : <AddIcon />}
-                                                    </IconButton>
+
+                                                    {openSurveyIds.includes(task._id) && (
+                                                        <Box
+                                                            sx={{
+                                                                marginTop: 1,
+                                                                padding: 1,
+                                                                backgroundColor: '#e8f5e9',
+                                                                borderRadius: '4px'
+                                                            }}
+                                                        >
+                                                            <Typography variant="body2">{task.description}</Typography>
+                                                        </Box>
+                                                    )}
                                                 </Box>
-
-                                                {openSurveyIds.includes(task._id) && (
-                                                    <Box
-                                                        sx={{
-                                                            marginTop: 1,
-                                                            padding: 1,
-                                                            backgroundColor: '#e8f5e9',
-                                                            borderRadius: '4px'
-                                                        }}
-                                                    >
-                                                        <Typography variant="body2">{task.description}</Typography>
-                                                    </Box>
-                                                )}
-                                            </Box>
-                                        ))}
+                                            ))}
+                                    </Box>
+                                </FormControl>
+                            )}
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleBack}
+                                        sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                                    >
+                                        {t('Voltar')}
+                                    </Button>
                                 </Box>
-                            </FormControl>
-                        )}
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Box sx={{ marginRight: 2 }}>
+                                        <Button variant="contained" color="primary" onClick={toggleCreateTask}>
+                                            {isCreateTaskOpen ? 'cancel' : 'creat_task'}
+                                        </Button>
+                                    </Box>
+                                    <Box>
+                                        <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px' }}>
+                                            {t('Próximo')}
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+
+                            <Snackbar
+                                open={snackbarOpen}
+                                autoHideDuration={3000}
+                                onClose={handleCloseSnackbar}
+                                anchorOrigin={{ vertical: 'botton', horizontal: 'right' }}
+                            >
+                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                                    {snackbarMessage}
+                                </Alert>
+                            </Snackbar>
+
+
+                        </Box>
+
                     </Box>
 
-                    <Box sx={{ display: 'flex', margin: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', margin: 4 }}>
-                        <Box sx={{ width: '20%', margin: 0, display: 'flex', padding: 2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', '& > *': { marginBottom: 0, } }}>
-                        </Box>
-                        <Box sx={{ maxWidth: 800, width: '60%', margin: 0, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', '& > *': { marginBottom: 0, } }}>
-                            <TextField
-                                label={t('Título da Tarefa')}
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderColor: title ? 'green' : 'red',
-                                    },
-                                }}
-                            />
-                            <TextField
-                                label={t('Sumário da Tarefa')}
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                multiline
-                                rows={4}
-                                value={summary}
-                                onChange={(e) => setSummary(e.target.value)}
-                                required
-                                placeholder={t('Forneça informações sobre o sumário da tarefa')}
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderColor: summary ? 'green' : 'red',
-                                    },
-                                }}
-                            />
 
-                            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                                <CustomContainer>
+
+                    {isCreateTaskOpen && (
+                        <Box sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                        }}>
+                            <Box sx={{ width: '20%' }} />
+                            <Box sx={{ width: '60%', marginTop: 2, padding: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: 4, width: '60%', marginX: 'auto' }}>
+
+                                <Typography variant="h4" component="h1" gutterBottom align="center">
+                                    {t('Criação de Tarefas')}
+                                </Typography>
+                                <TextField
+                                    label={t('Título da Tarefa')}
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    value={taskTitle}
+                                    onChange={(e) => settaskTitle(e.target.value)}
+                                    required
+                                />
+                                <TextField
+                                    label={t('Sumário da Tarefa')}
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                    value={taskSummary}
+                                    onChange={(e) => settaskSummary(e.target.value)}
+                                    required
+                                    placeholder={t('Forneça informações sobre o sumário da tarefa')}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderColor: taskSummary ? 'green' : 'red',
+                                        },
+                                    }}
+                                />
+                                <div style={{ width: '100%', margin: 2 }}>
                                     <ReactQuill
                                         theme="snow"
-                                        value={description}
-                                        onChange={setDescription}
-                                        placeholder={t('Descrição da Tarefa *')}
+                                        value={taskDescription}
+                                        onChange={settaskDescription}
+                                        placeholder="Descrição da Tarefa *"
                                         required
                                     />
-                                </CustomContainer>
-                            </div>
+                                </div>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleBack}
-                                    sx={{ maxWidth: '150px', borderRadius: '20px' }}
+                                <Box
+                                    sx={{
+                                        margin: 2,
+                                        width: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        justifyContent: 'flex-end',
+                                        alignItems: 'flex-end',
+                                    }}
                                 >
-                                    {t('Voltar')}
-                                </Button>
-
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={handleNext}
-                                    sx={{ maxWidth: '150px', borderRadius: '20px' }}
+                                    onClick={handleCreate_taskbtt}
+                                    disabled={isLoading}
+                                    fullWidth
+                                    sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
                                 >
-                                    {t('Próximo')}
+                                    {isLoading ? t('Criando...') : t('Criar')}
                                 </Button>
-
-                                <Snackbar
-                                    open={snackbarOpen}
-                                    autoHideDuration={3000}
-                                    onClose={handleCloseSnackbar}
-                                    anchorOrigin={{ vertical: 'botton', horizontal: 'right' }}
-                                >
-                                    <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                                        {snackbarMessage}
-                                    </Alert>
-                                </Snackbar>
-
+                                </Box>
                             </Box>
+                            <Box sx={{ width: '20%' }} />
                         </Box>
-                        <Box sx={{ width: '20%', padding: 2 }}></Box>
-                    </Box>
+                    )}
                 </Box>
             )}
 
@@ -699,7 +756,7 @@ const CreateExperiment = () => {
                                                         onClick={() => toggleSurveyDescription(survey._id)}
                                                         sx={{ ml: 2 }}
                                                     >
-                                                        {openSurveyIds.includes(survey._id) ? <RemoveIcon /> : <AddIcon />}
+                                                        {openSurveyIds.includes(survey._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                                     </IconButton>
                                                 </Box>
 
@@ -893,6 +950,7 @@ const CreateExperiment = () => {
                             </Snackbar>
                         </Box>
                     </Box>
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                         <Button
                             variant="contained"
