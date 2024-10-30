@@ -184,6 +184,33 @@ const CreateExperiment = () => {
             setIsLoading(false);
         }
     };
+    const handleCreateExp = async () => { //falta arrumar
+        try {
+            setIsLoading(true);
+            await api.post(
+                `/experiments`,
+                {
+                    title: titleExperiment,
+                    type: typeExperiment,
+                    description: descriptionExperiment,
+                    selectedTasks,
+                    selectedSurveys,
+                    selectedUsers,
+                },
+                { headers: { Authorization: `Bearer ${user.accessToken}` } }
+            );
+            toggleCreateTask();
+            fetchTasks();
+            settaskTitle("");
+            settaskSummary("");
+            settaskDescription("");
+            fetchTasks();
+        } catch (error) {
+            console.error(t('Erro ao criar a tarefa'), error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleCreate_taskbtt = () => {
         if (!taskTitle) {
@@ -461,7 +488,7 @@ const CreateExperiment = () => {
                 >
                     <Box
                         sx={{
-                            width: '60%', // Mantém a largura da caixa principal
+                            width: '60%', 
                             padding: 3,
                             display: 'flex',
                             flexDirection: 'column',
@@ -475,7 +502,7 @@ const CreateExperiment = () => {
                     >
                         <Box
                             sx={{
-                                width: '100%', // Ajuste para 100% da largura
+                                width: '100%', 
                                 margin: 0,
                                 padding: 2,
                                 display: 'flex',
@@ -484,7 +511,7 @@ const CreateExperiment = () => {
                                 alignItems: 'center',
                                 '& > *': {
                                     marginBottom: 0,
-                                    width: '100%', // Ajuste para 100% da largura
+                                    width: '100%', 
                                 },
                             }}
                         >
@@ -1236,13 +1263,13 @@ const CreateExperiment = () => {
 
                         <Grid container spacing={2} sx={{ mb: 3 }}>
                             <Grid item xs={12}>
-                                <strong>{t('Title_exp')}:</strong> {titleExperiment}
+                                <strong>{t('Experiment_title')}:</strong> {titleExperiment}
                             </Grid>
                             <Grid item xs={12}>
-                                <strong>{t('Type_exp')}:</strong> {typeExperiment}
+                                <strong>{t('Experiment_Type')}:</strong> {typeExperiment}
                             </Grid>
                             <Grid item xs={12}>
-                                <strong>{t('desc_exp')}:</strong> {descriptionExperiment.replace(/<[^>]+>/g, '')}
+                                <strong>{t('Experiment_Desc')}:</strong> {descriptionExperiment.replace(/<[^>]+>/g, '')}
                             </Grid>
                             <Grid item xs={12}>
                                 <strong>{t('selected_task')}:</strong> {selectedTasks.map(_id => tasks.find(s => s._id === _id)?.title).join(', ') || t('Nenhuma tarefa selecionada')}
@@ -1273,7 +1300,7 @@ const CreateExperiment = () => {
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={handleCreateTask}
+                                onClick={handleCreateExp} 
                                 disabled={isLoading}
                                 fullWidth
                                 sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
