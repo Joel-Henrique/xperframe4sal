@@ -74,6 +74,9 @@ const CreateExperiment = () => {
     const [surveys, setSurveys] = useState([]);
     const [tasks, setTasks] = useState([]);
 
+    const [users, setUsers] = useState([]);
+
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [selectedTasks, setSelectedTask] = useState([]);
 
@@ -101,6 +104,16 @@ const CreateExperiment = () => {
             console.error(t('Erro ao buscar os task'), error);
         }
     };
+    const fetchUsers = async () => {
+        try {
+            const response = await api.get(`users`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            setUsers(response.data);
+        } catch (error) {
+            console.error(t('Erro ao buscar os users'), error);
+        }
+    };
 
     const fetchSurveys = async () => {
         try {
@@ -114,6 +127,7 @@ const CreateExperiment = () => {
     };
 
     useEffect(() => {
+        fetchUsers();
         fetchTasks();
         fetchSurveys();
     }, [user, t]);
@@ -198,6 +212,13 @@ const CreateExperiment = () => {
     };
 
 
+    const toggleTaskDescription = (surveyId) => {
+        if (openTaskIds.includes(surveyId)) {
+            setOpenTaskIds(openTaskIds.filter((id) => id !== surveyId));
+        } else {
+            setOpenTaskIds([...openTaskIds, surveyId]);
+        }
+    };
     const toggleSurveyDescription = (surveyId) => {
         if (openSurveyIds.includes(surveyId)) {
             setOpenSurveyIds(openSurveyIds.filter((id) => id !== surveyId));
@@ -214,6 +235,14 @@ const CreateExperiment = () => {
         );
     };
 
+    const handleSelectUser = (id) => {
+        setSelectedUsers((prevSelectedUsers) =>
+            prevSelectedUsers.includes(id)
+                ? prevSelectedUsers.filter((selectedId) => selectedId !== id)
+                : [...prevSelectedUsers, id]
+        );
+    };
+
     const handleSelectTasks = (id) => {
         setSelectedTask((prevsetSelectedTask) =>
             prevsetSelectedTask.includes(id)
@@ -227,8 +256,6 @@ const CreateExperiment = () => {
     const toggleCreateQuest = () => {
         setIsCreateQuestOpen((prev) => !prev);
     };
-
-
 
 
     const questionTypes = [
@@ -566,14 +593,14 @@ const CreateExperiment = () => {
                                                         </Box>
                                                         <IconButton
                                                             color="primary"
-                                                            onClick={() => toggleSurveyDescription(task._id)}
+                                                            onClick={() => toggleTaskDescription(task._id)}
                                                             sx={{ ml: 2 }}
                                                         >
-                                                            {openSurveyIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                            {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                                         </IconButton>
                                                     </Box>
 
-                                                    {openSurveyIds.includes(task._id) && (
+                                                    {openTaskIds.includes(task._id) && (
                                                         <Box
                                                             sx={{
                                                                 marginTop: 1,
@@ -1002,12 +1029,7 @@ const CreateExperiment = () => {
             )}
 
 
-            {/*usuario */}
-            {activeStep === 3 && (
-                <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-
-                </Box>
-            )}
+            
         </Box>
     );
 };
