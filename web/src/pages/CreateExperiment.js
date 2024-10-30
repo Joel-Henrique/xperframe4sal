@@ -638,7 +638,7 @@ const CreateExperiment = () => {
                             }}
                         >
                             <TextField
-                                label={t('Pesquisar Tarefa')}
+                                label={t('search_task')}
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -856,7 +856,7 @@ const CreateExperiment = () => {
                             }}
                         >
                             <TextField
-                                label={t('Pesquisar Tarefa')}
+                                label={t('search_survey')}
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -1150,7 +1150,7 @@ const CreateExperiment = () => {
                         }}
                     >
                         <TextField
-                            label={t('Pesquisar por Usuarios')}
+                            label={t('search_user')}
                             variant="outlined"
                             fullWidth
                             margin="normal"
