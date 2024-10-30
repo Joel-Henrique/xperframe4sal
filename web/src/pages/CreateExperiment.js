@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -55,11 +54,9 @@ const CreateExperiment = () => {
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
-    const navigate = useNavigate();
     const { t } = useTranslation();
 
     const [title, setTitle] = useState('');
-    const [summary, setSummary] = useState(''); //mudar
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
 
@@ -74,7 +71,6 @@ const CreateExperiment = () => {
 
     const [surveys, setSurveys] = useState([]);
     const [tasks, setTasks] = useState([]);
-
     const [users, setUsers] = useState([]);
 
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -93,9 +89,7 @@ const CreateExperiment = () => {
     const [loading, setLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_5'), t('step_6')];
-
-
+    const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
 
     const fetchTasks = async () => {
         try {
@@ -104,7 +98,7 @@ const CreateExperiment = () => {
             });
             setTasks(response.data);
         } catch (error) {
-            console.error(t('Erro ao buscar os task'), error);
+            console.error(t('Error in Search'), error);
         }
     };
     const fetchUsers = async () => {
@@ -114,7 +108,7 @@ const CreateExperiment = () => {
             });
             setUsers(response.data);
         } catch (error) {
-            console.error(t('Erro ao buscar os users'), error);
+            console.error(t('Error in Search'), error);
         }
     };
 
@@ -125,7 +119,7 @@ const CreateExperiment = () => {
             });
             setSurveys(response.data);
         } catch (error) {
-            console.error(t('task_busc_error'), error);
+            console.error(t('Error in Search'), error);
         }
     };
 
@@ -179,7 +173,7 @@ const CreateExperiment = () => {
             settaskDescription("");
             fetchTasks();
         } catch (error) {
-            console.error(t('Erro ao criar a tarefa'), error);
+            console.error(t('Error creating task'), error);
         } finally {
             setIsLoading(false);
         }
@@ -206,7 +200,7 @@ const CreateExperiment = () => {
             settaskDescription("");
             fetchTasks();
         } catch (error) {
-            console.error(t('Erro ao criar a tarefa'), error);
+            console.error(t('Error creating task'), error);
         } finally {
             setIsLoading(false);
         }
@@ -240,7 +234,6 @@ const CreateExperiment = () => {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-
 
     const toggleTaskDescription = (surveyId) => {
         if (openTaskIds.includes(surveyId)) {
@@ -303,9 +296,9 @@ const CreateExperiment = () => {
         { value: 'within-subject', label: t('within-subject') },
     ];
     const betweenExperimentTypes = [
-        { value: 'random', label: t('Random') },
-        { value: 'score_based', label: t('Score_Based') },
-        { value: 'manual', label: t('Manual') },
+        { value: 'random', label: t('random') },
+        { value: 'score_based', label: t('score_based') },
+        { value: 'manual', label: t('manual') },
     ];
 
     const handleAddQuestion = () => {
@@ -432,7 +425,7 @@ const CreateExperiment = () => {
         fetchSurveys();
         setTitle("");
         setDescription("");
-        setQuestions([]); // Limpa as questões
+        setQuestions([]);
         setType('pre');
         fetchSurveys();
         try {
@@ -445,7 +438,7 @@ const CreateExperiment = () => {
             setLoading(false);
             setSnackbar({
                 open: true,
-                message: 'Questionário criado com sucesso!',
+                message: 'Questionnaire created successfully!',
                 severity: 'success',
             });
             fetchSurveys();
@@ -453,7 +446,7 @@ const CreateExperiment = () => {
             setLoading(false);
             setSnackbar({
                 open: true,
-                message: error.response?.data?.message || 'Erro ao criar o questionário',
+                message: error.response?.data?.message || 'Error creating the questionnaire',
                 severity: 'error',
             });
         }
@@ -488,7 +481,7 @@ const CreateExperiment = () => {
                 >
                     <Box
                         sx={{
-                            width: '60%', 
+                            width: '60%',
                             padding: 3,
                             display: 'flex',
                             flexDirection: 'column',
@@ -502,7 +495,7 @@ const CreateExperiment = () => {
                     >
                         <Box
                             sx={{
-                                width: '100%', 
+                                width: '100%',
                                 margin: 0,
                                 padding: 2,
                                 display: 'flex',
@@ -511,7 +504,7 @@ const CreateExperiment = () => {
                                 alignItems: 'center',
                                 '& > *': {
                                     marginBottom: 0,
-                                    width: '100%', 
+                                    width: '100%',
                                 },
                             }}
                         >
@@ -568,7 +561,7 @@ const CreateExperiment = () => {
                                         theme="snow"
                                         value={descriptionExperiment}
                                         onChange={setdescriptionExperiment}
-                                        placeholder={t('Experiment_Desc')}
+                                        placeholder={t('Experiment_Desc1')}
                                         required
                                     />
                                 </CustomContainer>
@@ -577,7 +570,7 @@ const CreateExperiment = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
                                 <Button
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     onClick={handleBack}
                                     disabled={activeStep === 0}
                                     sx={{ maxWidth: '150px' }}
@@ -713,7 +706,7 @@ const CreateExperiment = () => {
                                 <Box>
                                     <Button
                                         variant="contained"
-                                        color="secondary"
+                                        color="primary"
                                         onClick={handleBack}
                                         sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                     >
@@ -722,8 +715,8 @@ const CreateExperiment = () => {
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Box sx={{ marginRight: 2 }}>
-                                        <Button variant="contained" color="primary" onClick={toggleCreateTask}>
-                                            {isCreateTaskOpen ? 'cancel' : 'creat_task'}
+                                        <Button variant="contained" color="secondary" onClick={toggleCreateTask}>
+                                            {isCreateTaskOpen ? t('cancel') : t('create_task')}
                                         </Button>
                                     </Box>
                                     <Box>
@@ -795,7 +788,7 @@ const CreateExperiment = () => {
                                             theme="snow"
                                             value={taskDescription}
                                             onChange={settaskDescription}
-                                            placeholder={t('Experiment_Desc')}
+                                            placeholder={t('task_Desc1')}
                                             required
                                         />
                                     </CustomContainer>
@@ -813,7 +806,7 @@ const CreateExperiment = () => {
                                 >
                                     <Button
                                         variant="contained"
-                                        color="primary"
+                                        color="secondary"
                                         onClick={handleCreate_taskbtt}
                                         disabled={isLoading}
                                         fullWidth
@@ -922,7 +915,7 @@ const CreateExperiment = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
                                 <Button
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     onClick={handleBack}
                                     sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                 >
@@ -932,11 +925,11 @@ const CreateExperiment = () => {
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Button
                                         variant="contained"
-                                        color="primary"
+                                        color="secondary"
                                         onClick={toggleCreateQuest}
                                         sx={{ mr: 2 }}
                                     >
-                                        {isCreateQuestOpen ? 'cancel' : 'creat_survey'}
+                                        {isCreateQuestOpen ? t('cancel') : t('create_survey')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -1104,7 +1097,7 @@ const CreateExperiment = () => {
 
 
                                     <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
-                                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                                        <Button type="submit" variant="contained" color="secondary" disabled={loading}>
                                             {loading ? <CircularProgress size={24} /> : t('createSurvey')}
                                         </Button>
                                     </Box>
@@ -1202,7 +1195,7 @@ const CreateExperiment = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color="primary"
                                 onClick={handleBack}
                                 sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                             >
@@ -1266,16 +1259,23 @@ const CreateExperiment = () => {
                                 <strong>{t('Experiment_title')}:</strong> {titleExperiment}
                             </Grid>
                             <Grid item xs={12}>
-                                <strong>{t('Experiment_Type')}:</strong> {typeExperiment}
+                                <strong>{t('typeExperiment1')}</strong>: {t(typeExperiment)}
                             </Grid>
+
+                            {typeExperiment === 'between-subject' && (
+                                <Grid item xs={12}>
+                                    <strong>{t('Group_Separation_Method')}</strong>: {t(BtypeExperiment)}
+                                </Grid>
+                            )}
+
                             <Grid item xs={12}>
                                 <strong>{t('Experiment_Desc')}:</strong> {descriptionExperiment.replace(/<[^>]+>/g, '')}
                             </Grid>
                             <Grid item xs={12}>
-                                <strong>{t('selected_task')}:</strong> {selectedTasks.map(_id => tasks.find(s => s._id === _id)?.title).join(', ') || t('Nenhuma tarefa selecionada')}
+                                <strong>{t('selected_task')}:</strong> {selectedTasks.map(_id => tasks.find(s => s._id === _id)?.title).join(', ') || t('non_selected_task')}
                             </Grid>
                             <Grid item xs={12}>
-                                <strong>{t('selected_surveys')}:</strong> {selectedSurveys.map(_id => surveys.find(s => s._id === _id)?.title).join(', ') || t('Nenhuma pesquisa selecionada')}
+                                <strong>{t('selected_surveys')}:</strong> {selectedSurveys.map(_id => surveys.find(s => s._id === _id)?.title).join(', ') || t('non_selected_survey')}
                             </Grid>
                             <Grid item xs={12}>
                                 <strong>{t('selected_user')}:</strong> {selectedUsers
@@ -1283,14 +1283,14 @@ const CreateExperiment = () => {
                                         const user = users.find(s => s._id === _id);
                                         return user ? `${user.name} ${user.lastName} - ${user.email}` : '';
                                     })
-                                    .join(', ') || t('Nenhum usuário selecionado')}
+                                    .join(', ') || t('non_selected_user')}
                             </Grid>
                         </Grid>
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4, width: '100%' }}>
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color="primary"
                                 onClick={handleBack}
                                 sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                             >
@@ -1299,8 +1299,8 @@ const CreateExperiment = () => {
 
                             <Button
                                 variant="contained"
-                                color="primary"
-                                onClick={handleCreateExp} 
+                                color="secondary"
+                                onClick={handleCreateExp}
                                 disabled={isLoading}
                                 fullWidth
                                 sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
