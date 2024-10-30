@@ -65,6 +65,7 @@ const CreateExperiment = () => {
 
     const [titleExperiment, settitleExperiment] = useState('');
     const [typeExperiment, settypeExperiment] = useState('between-subject');
+    const [BtypeExperiment, setBtypeExperiment] = useState('random');
     const [descriptionExperiment, setdescriptionExperiment] = useState('');
 
     const [taskTitle, settaskTitle] = useState('');
@@ -93,6 +94,8 @@ const CreateExperiment = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_5'), t('step_6')];
+
+
 
     const fetchTasks = async () => {
         try {
@@ -272,6 +275,11 @@ const CreateExperiment = () => {
         { value: 'between-subject', label: t('between-subject') },
         { value: 'within-subject', label: t('within-subject') },
     ];
+    const betweenExperimentTypes = [
+        { value: 'random', label: t('Random') },
+        { value: 'score_based', label: t('Score_Based') },
+        { value: 'manual', label: t('Manual') },
+    ];
 
     const handleAddQuestion = () => {
         setQuestions([
@@ -439,85 +447,142 @@ const CreateExperiment = () => {
                     </Step>
                 ))}
             </Stepper>
+
             {/*experimento */}
             {activeStep === 0 && (
-                <Box sx={{ display: 'flex', margin: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', margin: 4 }}>
-                    <Box sx={{ width: '20%', margin: 0, display: 'flex', padding: 2, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', '& > *': { marginBottom: 0, } }}>
-                    </Box>
-                    <Box sx={{ maxWidth: 800, width: '60%', margin: 0, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', '& > *': { marginBottom: 0, } }}>
-                        <TextField
-                            label={t('Experiment_title')}
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={titleExperiment}
-                            onChange={(e) => settitleExperiment(e.target.value)}
-                            required
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        marginTop: 10,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '60%', // Mantém a largura da caixa principal
+                            padding: 3,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '8px',
+                            boxShadow: 4,
+                            mx: 'auto',
+                        }}
+                    >
+                        <Box
                             sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderColor: titleExperiment ? 'green' : 'red',
+                                width: '100%', // Ajuste para 100% da largura
+                                margin: 0,
+                                padding: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                '& > *': {
+                                    marginBottom: 0,
+                                    width: '100%', // Ajuste para 100% da largura
                                 },
                             }}
-                        />
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>{t('Experiment_Type')}</InputLabel>
-                            <Select value={typeExperiment} onChange={(e) => settypeExperiment(e.target.value)} label={t('ExperimentTypes')}>
-                                {ExperimentTypes.map((stype) => (
-                                    <MenuItem key={stype.value} value={stype.value}>
-                                        {stype.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        >
+                            <TextField
+                                label={t('Experiment_title')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={titleExperiment}
+                                onChange={(e) => settitleExperiment(e.target.value)}
+                                required
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        borderColor: titleExperiment ? 'green' : 'red',
+                                    },
+                                }}
+                            />
 
-                        <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                            <CustomContainer>
-                                <ReactQuill
-                                    theme="snow"
-                                    value={descriptionExperiment}
-                                    onChange={setdescriptionExperiment}
-                                    placeholder={t('Experiment_Desc')}
-                                    required
-                                />
-                            </CustomContainer>
-                        </div>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>{t('Experiment_Type')}</InputLabel>
+                                <Select
+                                    value={typeExperiment}
+                                    onChange={(e) => settypeExperiment(e.target.value)}
+                                    label={t('ExperimentTypes')}
+                                >
+                                    {ExperimentTypes.map((stype) => (
+                                        <MenuItem key={stype.value} value={stype.value}>
+                                            {stype.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={handleBack}
-                                disabled={activeStep === 0}
-                                sx={{ maxWidth: '150px' }}
-                            >
-                                {t('Voltar')}
-                            </Button>
+                            {typeExperiment === 'between-subject' && (
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+                                    <Select
+                                        value={BtypeExperiment}
+                                        onChange={(e) => setBtypeExperiment(e.target.value)}
+                                        label={t('ExperimentTypesbetween')}
+                                    >
+                                        {betweenExperimentTypes.map((stype) => (
+                                            <MenuItem key={stype.value} value={stype.value}>
+                                                {stype.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
 
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNext} //handleNextExperiment
-                                sx={{ maxWidth: '150px' }}
-                            >
-                                {t('Próximo')}
-                            </Button>
+                            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                                <CustomContainer>
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={descriptionExperiment}
+                                        onChange={setdescriptionExperiment}
+                                        placeholder={t('Experiment_Desc')}
+                                        required
+                                    />
+                                </CustomContainer>
+                            </div>
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleBack}
+                                    disabled={activeStep === 0}
+                                    sx={{ maxWidth: '150px' }}
+                                >
+                                    {t('Voltar')}
+                                </Button>
+
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleNextExperiment}
+                                    sx={{ maxWidth: '150px' }}
+                                >
+                                    {t('Próximo')}
+                                </Button>
+                            </Box>
 
                             <Snackbar
                                 open={snackbarOpen}
                                 autoHideDuration={3000}
                                 onClose={handleCloseSnackbar}
-                                anchorOrigin={{ vertical: 'botton', horizontal: 'right' }}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             >
-                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '18%' }}>
                                     {snackbarMessage}
                                 </Alert>
                             </Snackbar>
-
                         </Box>
                     </Box>
-                    <Box sx={{ width: '20%', padding: 2 }}></Box>
                 </Box>
             )}
+
 
             {/*tarefa */}
             {activeStep === 1 && (
@@ -696,14 +761,17 @@ const CreateExperiment = () => {
                                         },
                                     }}
                                 />
-                                <div style={{ width: '100%', margin: 2 }}>
-                                    <ReactQuill
-                                        theme="snow"
-                                        value={taskDescription}
-                                        onChange={settaskDescription}
-                                        placeholder="Descrição da Tarefa *"
-                                        required
-                                    />
+
+                                <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                                    <CustomContainer>
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={taskDescription}
+                                            onChange={settaskDescription}
+                                            placeholder={t('Experiment_Desc')}
+                                            required
+                                        />
+                                    </CustomContainer>
                                 </div>
 
                                 <Box
@@ -883,6 +951,7 @@ const CreateExperiment = () => {
                                     <TextField
                                         label={t('surveyDescription')}
                                         value={description}
+                                        required
                                         onChange={(e) => setDescription(e.target.value)}
                                         fullWidth
                                         multiline
@@ -1028,8 +1097,193 @@ const CreateExperiment = () => {
                 </Box>
             )}
 
+            {/*usuario */}
+            {activeStep === 3 && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        marginTop: 10,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '60%',
+                            padding: 3,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '8px',
+                            boxShadow: 4,
+                            mx: 'auto',
+                        }}
+                    >
+                        <TextField
+                            label={t('Pesquisar por Usuarios')}
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            sx={{ mb: 3 }}
+                        />
 
-            
+                        {isLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                                {users
+                                    .filter((user) =>
+                                        `${user.name} ${user.lastName} ${user.email}`.toLowerCase().includes(searchTerm.toLowerCase())
+                                    )
+
+                                    .map((user) => (
+                                        <Box
+                                            key={user._id}
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                mb: 1,
+                                                padding: 1,
+                                                backgroundColor: '#ffffff',
+                                                borderRadius: '4px',
+                                                boxShadow: 1,
+                                                '&:hover': { backgroundColor: '#e6f7ff' }
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <Checkbox
+                                                        checked={selectedUsers.includes(user._id)}
+                                                        onChange={() => handleSelectUser(user._id)}
+                                                    />
+                                                    <ListItemText
+                                                        primary={`${user.name} ${user.lastName} - ${user.email}`}
+                                                        sx={{ ml: 1 }}
+                                                    />
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                    ))}
+                            </FormControl>
+                        )}
+
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleBack}
+                                sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                            >
+                                {t('Voltar')}
+                            </Button>
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleNext}
+                                sx={{ maxWidth: 120 }}
+                            >
+                                {t('Próximo')}
+                            </Button>
+                        </Box>
+
+                        <Snackbar
+                            open={snackbarOpen}
+                            autoHideDuration={3000}
+                            onClose={handleCloseSnackbar}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        >
+                            <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                                {snackbarMessage}
+                            </Alert>
+                        </Snackbar>
+                    </Box>
+                </Box>
+            )}
+
+            {activeStep === 4 && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        marginTop: 10,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '60%',
+                            padding: 3,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '8px',
+                            boxShadow: 4,
+                            mx: 'auto',
+                        }}
+                    >
+                        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                            {t('revis_conc')}
+                        </Typography>
+
+                        <Grid container spacing={2} sx={{ mb: 3 }}>
+                            <Grid item xs={12}>
+                                <strong>{t('Title_exp')}:</strong> {titleExperiment}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <strong>{t('Type_exp')}:</strong> {typeExperiment}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <strong>{t('desc_exp')}:</strong> {descriptionExperiment.replace(/<[^>]+>/g, '')}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <strong>{t('selected_task')}:</strong> {selectedTasks.map(_id => tasks.find(s => s._id === _id)?.title).join(', ') || t('Nenhuma tarefa selecionada')}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <strong>{t('selected_surveys')}:</strong> {selectedSurveys.map(_id => surveys.find(s => s._id === _id)?.title).join(', ') || t('Nenhuma pesquisa selecionada')}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <strong>{t('selected_user')}:</strong> {selectedUsers
+                                    .map(_id => {
+                                        const user = users.find(s => s._id === _id);
+                                        return user ? `${user.name} ${user.lastName} - ${user.email}` : '';
+                                    })
+                                    .join(', ') || t('Nenhum usuário selecionado')}
+                            </Grid>
+                        </Grid>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4, width: '100%' }}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleBack}
+                                sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                            >
+                                {t('Voltar')}
+                            </Button>
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleCreateTask}
+                                disabled={isLoading}
+                                fullWidth
+                                sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
+                            >
+                                {isLoading ? t('Criando...') : t('Criar')}
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+            )}
         </Box>
     );
 };
