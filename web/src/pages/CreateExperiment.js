@@ -53,6 +53,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 const CreateExperiment = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
+    const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -97,7 +98,7 @@ const CreateExperiment = () => {
             });
             setTasks(response.data);
         } catch (error) {
-            console.error(t('Erro ao buscar os questionários'), error);
+            console.error(t('Erro ao buscar os task'), error);
         }
     };
 
@@ -155,6 +156,10 @@ const CreateExperiment = () => {
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
             toggleCreateTask();
+            fetchTasks();
+            settaskTitle("");
+            settaskSummary("");
+            settaskDescription("");
             fetchTasks();
         } catch (error) {
             console.error(t('Erro ao criar a tarefa'), error);
@@ -218,6 +223,9 @@ const CreateExperiment = () => {
     };
     const toggleCreateTask = () => {
         setIsCreateTaskOpen((prev) => !prev);
+    };
+    const toggleCreateQuest = () => {
+        setIsCreateQuestOpen((prev) => !prev);
     };
 
 
@@ -358,7 +366,13 @@ const CreateExperiment = () => {
                 return question;
             }),
         };
-
+        toggleCreateQuest();
+        fetchSurveys();
+        setTitle("");
+        setDescription("");
+        setQuestions([]); // Limpa as questões
+        setType('pre');
+        fetchSurveys();
         try {
             setLoading(true);
             const response = await api.post(`surveys`,
@@ -382,6 +396,7 @@ const CreateExperiment = () => {
             });
         }
     };
+
 
     return (
         <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
@@ -504,7 +519,7 @@ const CreateExperiment = () => {
                             }}
                         >
                             <TextField
-                                label={t('Pesquisar Questionários')}
+                                label={t('Pesquisar Tarefa')}
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -610,10 +625,7 @@ const CreateExperiment = () => {
                                     {snackbarMessage}
                                 </Alert>
                             </Snackbar>
-
-
                         </Box>
-
                     </Box>
 
 
@@ -677,16 +689,16 @@ const CreateExperiment = () => {
                                         alignItems: 'flex-end',
                                     }}
                                 >
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleCreate_taskbtt}
-                                    disabled={isLoading}
-                                    fullWidth
-                                    sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
-                                >
-                                    {isLoading ? t('Criando...') : t('Criar')}
-                                </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleCreate_taskbtt}
+                                        disabled={isLoading}
+                                        fullWidth
+                                        sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
+                                    >
+                                        {isLoading ? t('Criando...') : t('Criar')}
+                                    </Button>
                                 </Box>
                             </Box>
                             <Box sx={{ width: '20%' }} />
@@ -698,24 +710,31 @@ const CreateExperiment = () => {
             {/*questionário */}
             {activeStep === 2 && (
                 <Box>
-                    <Box>
-                        <Box sx={{
-                            margin: 10,
-                            padding: 3,
+                    <Box
+                        sx={{
                             display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: '#f9f9f9',
-                            borderRadius: '8px',
-                            boxShadow: 4,
-                            width: '100%',
-                            maxWidth: 800,
-                            marginX: 'auto'
-                        }}>
-
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            marginTop: 10,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '60%',
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f9f9f9',
+                                borderRadius: '8px',
+                                boxShadow: 4,
+                                mx: 'auto',
+                            }}
+                        >
                             <TextField
-                                label={t('Pesquisar Questionários')}
+                                label={t('Pesquisar Tarefa')}
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
@@ -733,16 +752,19 @@ const CreateExperiment = () => {
                                             survey.title.toLowerCase().includes(searchTerm.toLowerCase())
                                         )
                                         .map((survey) => (
-                                            <Box key={survey._id} sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                mb: 1,
-                                                padding: 1,
-                                                backgroundColor: '#ffffff',
-                                                borderRadius: '4px',
-                                                boxShadow: 1,
-                                                '&:hover': { backgroundColor: '#e6f7ff' }
-                                            }}>
+                                            <Box
+                                                key={survey._id}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    mb: 1,
+                                                    padding: 1,
+                                                    backgroundColor: '#ffffff',
+                                                    borderRadius: '4px',
+                                                    boxShadow: 1,
+                                                    '&:hover': { backgroundColor: '#e6f7ff' }
+                                                }}
+                                            >
                                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                         <Checkbox
@@ -762,8 +784,8 @@ const CreateExperiment = () => {
 
                                                 {openSurveyIds.includes(survey._id) && (
                                                     <Box sx={{
-                                                        marginTop: 1,
-                                                        padding: 1,
+                                                        mt: 1,
+                                                        p: 1,
                                                         backgroundColor: '#e8f5e9',
                                                         borderRadius: '4px'
                                                     }}>
@@ -775,202 +797,210 @@ const CreateExperiment = () => {
                                 </FormControl>
                             )}
 
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
                                 <Button
                                     variant="contained"
                                     color="secondary"
                                     onClick={handleBack}
-                                    sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
+                                    sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                 >
                                     {t('Voltar')}
                                 </Button>
-                                <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px', borderRadius: '20px' }}>
-                                    {t('Próximo')}
-                                </Button>
+
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={toggleCreateQuest}
+                                        sx={{ mr: 2 }}
+                                    >
+                                        {isCreateQuestOpen ? 'cancel' : 'creat_survey'}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        sx={{ maxWidth: 120 }}
+                                    >
+                                        {t('Próximo')}
+                                    </Button>
+                                </Box>
                             </Box>
-                        </Box>
-
-
-
-                        <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-                            <Typography variant="h4" component="h1" gutterBottom align="center">
-                                {t('title')}
-                            </Typography>
-                            <form onSubmit={handleSubmitquest}>
-                                <TextField
-                                    label={t('surveyTitle')}
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                    fullWidth
-                                    required
-                                    margin="normal"
-                                />
-                                <TextField
-                                    label={t('surveyDescription')}
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    fullWidth
-                                    multiline
-                                    rows={4}
-                                    margin="normal"
-                                />
-                                <FormControl fullWidth margin="normal">
-                                    <InputLabel>{t('surveyType')}</InputLabel>
-                                    <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
-                                        {surveyTypes.map((stype) => (
-                                            <MenuItem key={stype.value} value={stype.value}>
-                                                {stype.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-
-
-                                <Box sx={{ mt: 4 }}>
-                                    <Typography variant="h5" gutterBottom>
-                                        {t('questions')}
-                                    </Typography>
-                                    {questions.map((q, index) => (
-                                        <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
-                                            <Grid container spacing={2} alignItems="center">
-                                                <Grid item xs={11}>
-                                                    <TextField
-                                                        label={t('questionStatement', { index: index + 1 })}
-                                                        value={q.statement}
-                                                        onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
-                                                        fullWidth
-                                                        required
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={1}>
-                                                    <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
-                                                        <Remove />
-                                                    </IconButton>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel>{t('questionType')}</InputLabel>
-                                                        <Select
-                                                            value={q.type}
-                                                            onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
-                                                            label={t('questionType')}
-                                                        >
-                                                            {questionTypes.map((qt) => (
-                                                                <MenuItem key={qt.value} value={qt.value}>
-                                                                    {qt.label}
-                                                                </MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={6}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel>{t('required')}</InputLabel>
-                                                        <Select
-                                                            value={q.required}
-                                                            onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
-                                                            label={t('required')}
-                                                        >
-                                                            <MenuItem value={false}>{t('no')}</MenuItem>
-                                                            <MenuItem value={true}>{t('yes')}</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-
-
-                                                {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
-                                                    <Grid item xs={12}>
-                                                        <Typography variant="subtitle1">{t('options')}</Typography>
-                                                        {q.options.map((opt, optIndex) => (
-                                                            <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                                                <TextField
-                                                                    label={t('option', { index: optIndex + 1 })}
-                                                                    value={opt.statement}
-                                                                    onChange={(e) =>
-                                                                        handleOptionChange(q.id, opt.id, 'statement', e.target.value)
-                                                                    }
-                                                                    fullWidth
-                                                                    required
-                                                                />
-                                                                {q.type === 'multiple-choices' && (
-                                                                    <TextField
-                                                                        label={t('weight')}
-                                                                        type="number"
-                                                                        value={opt.score}
-                                                                        onChange={(e) =>
-                                                                            handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
-                                                                        }
-                                                                        sx={{ width: 100, ml: 2 }}
-                                                                        required
-                                                                    />
-                                                                )}
-                                                                <IconButton
-                                                                    color="error"
-                                                                    onClick={() => handleRemoveOption(q.id, opt.id)}
-                                                                    sx={{ ml: 2 }}
-                                                                >
-                                                                    <Remove />
-                                                                </IconButton>
-                                                            </Box>
-                                                        ))}
-                                                        <Button
-                                                            variant="outlined"
-                                                            startIcon={<Add />}
-                                                            onClick={() => handleAddOption(q.id)}
-                                                        >
-                                                            {t('addOption')}
-                                                        </Button>
-                                                    </Grid>
-                                                )}
-                                            </Grid>
-                                        </Paper>
-                                    ))}
-                                    <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
-                                        {t('addQuestion')}
-                                    </Button>
-                                </Box>
-
-
-                                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                                    <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                                        {loading ? <CircularProgress size={24} /> : t('createSurvey')}
-                                    </Button>
-                                </Box>
-                            </form>
-
 
                             <Snackbar
-                                open={snackbar.open}
-                                autoHideDuration={6000}
-                                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                open={snackbarOpen}
+                                autoHideDuration={3000}
+                                onClose={handleCloseSnackbar}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             >
-                                <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-                                    {snackbar.message}
+                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+                                    {snackbarMessage}
                                 </Alert>
                             </Snackbar>
                         </Box>
-                    </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleBack}
-                            sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
-                        >
-                            {t('Voltar')}
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleNext}
-                            sx={{ maxWidth: '120px', borderRadius: '20px' }}
-                        >
-                            {t('Próximo')}
-                        </Button>
+                        {isCreateQuestOpen && (
+                            <Box sx={{ width: '60%', mt: 2, padding: 3, backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: 4, mx: 'auto' }}>
+                                <Typography variant="h4" gutterBottom align="center">
+                                    {t('title')}
+                                </Typography>
+                                <form onSubmit={handleSubmitquest}>
+                                    <TextField
+                                        label={t('surveyTitle')}
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        fullWidth
+                                        required
+                                        margin="normal"
+                                    />
+                                    <TextField
+                                        label={t('surveyDescription')}
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        fullWidth
+                                        multiline
+                                        rows={4}
+                                        margin="normal"
+                                    />
+                                    <FormControl fullWidth margin="normal">
+                                        <InputLabel>{t('surveyType')}</InputLabel>
+                                        <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
+                                            {surveyTypes.map((stype) => (
+                                                <MenuItem key={stype.value} value={stype.value}>
+                                                    {stype.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+
+                                    <Box sx={{ mt: 4 }}>
+                                        <Typography variant="h5" gutterBottom>
+                                            {t('questions')}
+                                        </Typography>
+                                        {questions.map((q, index) => (
+                                            <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
+                                                <Grid container spacing={2} alignItems="center">
+                                                    <Grid item xs={11}>
+                                                        <TextField
+                                                            label={t('questionStatement', { index: index + 1 })}
+                                                            value={q.statement}
+                                                            onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
+                                                            fullWidth
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={1}>
+                                                        <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
+                                                            <Remove />
+                                                        </IconButton>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <FormControl fullWidth>
+                                                            <InputLabel>{t('questionType')}</InputLabel>
+                                                            <Select
+                                                                value={q.type}
+                                                                onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
+                                                                label={t('questionType')}
+                                                            >
+                                                                {questionTypes.map((qt) => (
+                                                                    <MenuItem key={qt.value} value={qt.value}>
+                                                                        {qt.label}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <FormControl fullWidth>
+                                                            <InputLabel>{t('required')}</InputLabel>
+                                                            <Select
+                                                                value={q.required}
+                                                                onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
+                                                                label={t('required')}
+                                                            >
+                                                                <MenuItem value={false}>{t('no')}</MenuItem>
+                                                                <MenuItem value={true}>{t('yes')}</MenuItem>
+                                                            </Select>
+                                                        </FormControl>
+                                                    </Grid>
+
+
+                                                    {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
+                                                        <Grid item xs={12}>
+                                                            <Typography variant="subtitle1">{t('options')}</Typography>
+                                                            {q.options.map((opt, optIndex) => (
+                                                                <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                                                    <TextField
+                                                                        label={t('option', { index: optIndex + 1 })}
+                                                                        value={opt.statement}
+                                                                        onChange={(e) =>
+                                                                            handleOptionChange(q.id, opt.id, 'statement', e.target.value)
+                                                                        }
+                                                                        fullWidth
+                                                                        required
+                                                                    />
+                                                                    {q.type === 'multiple-choices' && (
+                                                                        <TextField
+                                                                            label={t('weight')}
+                                                                            type="number"
+                                                                            value={opt.score}
+                                                                            onChange={(e) =>
+                                                                                handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                            }
+                                                                            sx={{ width: 100, ml: 2 }}
+                                                                            required
+                                                                        />
+                                                                    )}
+                                                                    <IconButton
+                                                                        color="error"
+                                                                        onClick={() => handleRemoveOption(q.id, opt.id)}
+                                                                        sx={{ ml: 2 }}
+                                                                    >
+                                                                        <Remove />
+                                                                    </IconButton>
+                                                                </Box>
+                                                            ))}
+                                                            <Button
+                                                                variant="outlined"
+                                                                startIcon={<Add />}
+                                                                onClick={() => handleAddOption(q.id)}
+                                                            >
+                                                                {t('addOption')}
+                                                            </Button>
+                                                        </Grid>
+                                                    )}
+                                                </Grid>
+                                            </Paper>
+                                        ))}
+                                        <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
+                                            {t('addQuestion')}
+                                        </Button>
+                                    </Box>
+
+
+
+                                    <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
+                                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                                            {loading ? <CircularProgress size={24} /> : t('createSurvey')}
+                                        </Button>
+                                    </Box>
+                                </form>
+                                <Snackbar
+                                    open={snackbar.open}
+                                    autoHideDuration={6000}
+                                    onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                >
+                                    <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+                                        {snackbar.message}
+                                    </Alert>
+                                </Snackbar>
+                            </Box>
+                        )}
                     </Box>
                 </Box>
             )}
+
 
             {/*usuario */}
             {activeStep === 3 && (
