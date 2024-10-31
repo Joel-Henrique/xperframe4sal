@@ -723,7 +723,7 @@ const CreateExperiment = () => {
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Box sx={{ marginRight: 2 }}>
-                                        <Button variant="contained" color="secondary" onClick={toggleCreateTask}>
+                                        <Button variant="contained" color="primary" onClick={toggleCreateTask}>
                                             {isCreateTaskOpen ? t('cancel') : t('create_task')}
                                         </Button>
                                     </Box>
@@ -814,7 +814,7 @@ const CreateExperiment = () => {
                                 >
                                     <Button
                                         variant="contained"
-                                        color="secondary"
+                                        color="primary"
                                         onClick={handleCreate_taskbtt}
                                         disabled={isLoading}
                                         fullWidth
@@ -933,7 +933,7 @@ const CreateExperiment = () => {
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Button
                                         variant="contained"
-                                        color="secondary"
+                                        color="primary"
                                         onClick={toggleCreateQuest}
                                         sx={{ mr: 2 }}
                                     >
@@ -1105,7 +1105,7 @@ const CreateExperiment = () => {
 
 
                                     <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
-                                        <Button type="submit" variant="contained" color="secondary" disabled={loading}>
+                                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
                                             {loading ? <CircularProgress size={24} /> : t('createSurvey')}
                                         </Button>
                                     </Box>
@@ -1289,7 +1289,7 @@ const CreateExperiment = () => {
                                 <strong>{t('selected_user')}:</strong> {selectedUsers
                                     .map(id => {
                                         const user = users.find(s => s.id === id);
-                                        return user ? `${user.name} ${user.lastName} - ${user.email}` : '';
+                                        return user ? ` ${user.name} ${user.lastName} - ${user.email} ` : '';
                                     })
                                     .join(', ') || t('non_selected_user')}
                             </Grid>
@@ -1307,7 +1307,7 @@ const CreateExperiment = () => {
 
                             <Button
                                 variant="contained"
-                                color="secondary"
+                                color="primary"
                                 onClick={handleCreateExp}
                                 disabled={isLoading}
                                 fullWidth
