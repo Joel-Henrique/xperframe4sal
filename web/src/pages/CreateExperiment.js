@@ -191,6 +191,7 @@ const CreateExperiment = () => {
             setIsLoading(false);
         }
     };
+
     const handleCreateExp = async () => { //falta arrumar
         try {
             setIsLoading(true);
@@ -714,6 +715,7 @@ const CreateExperiment = () => {
                                     </Box>
                                 </FormControl>
                             )}
+
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                 <Box>
                                     <Button
@@ -738,17 +740,6 @@ const CreateExperiment = () => {
                                     </Box>
                                 </Box>
                             </Box>
-
-                            <Snackbar
-                                open={snackbarOpen}
-                                autoHideDuration={3000}
-                                onClose={handleCloseSnackbar}
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            >
-                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                                    {snackbarMessage}
-                                </Alert>
-                            </Snackbar>
                         </Box>
                     </Box>
 
@@ -768,57 +759,68 @@ const CreateExperiment = () => {
                     >
                         <DialogTitle>{'Criação de Tarefas'}</DialogTitle>
                         <DialogContent>
-                            <TextField
-                                label={'Título da Tarefa'}
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={taskTitle}
-                                onChange={(e) => settaskTitle(e.target.value)}
-                                required
-                            />
-                            <TextField
-                                label={'Sumário da Tarefa'}
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                multiline
-                                rows={4}
-                                value={taskSummary}
-                                onChange={(e) => settaskSummary(e.target.value)}
-                                required
-                                placeholder={'Forneça informações sobre o sumário da tarefa'}
-                            />
+                            <form onSubmit={handleCreate_taskbtt}>
+                                <TextField
+                                    label={'Título da Tarefa'}
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    value={taskTitle}
+                                    onChange={(e) => settaskTitle(e.target.value)}
+                                    required
+                                />
+                                <TextField
+                                    label={'Sumário da Tarefa'}
+                                    variant="outlined"
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    rows={4}
+                                    value={taskSummary}
+                                    onChange={(e) => settaskSummary(e.target.value)}
+                                    required
+                                    placeholder={'Forneça informações sobre o sumário da tarefa'}
+                                />
 
-                            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                                <CustomContainer>
-                                    <ReactQuill
-                                        theme="snow"
-                                        value={taskDescription}
-                                        onChange={settaskDescription}
-                                        placeholder={t('task_Desc1')}
-                                        required
-                                    />
-                                </CustomContainer>
-                            </div>
+                                <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                                    <CustomContainer >
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={taskDescription}
+                                            onChange={(e) => settaskDescription(e.target.value)}
+                                            placeholder={t('task_Desc1')}
+                                            required
+                                        />
+                                    </CustomContainer>
+                                </div>
+                                <Button variant="contained" onClick={toggleCreateTask} color="primary">
+                                    {'Cancelar'}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    onClick={handleCreate_taskbtt}
+                                    disabled={isLoading}
+                                >
+                                    {'Criar'}
+                                </Button>
+                            </form>
 
+                            <Snackbar
+                                        open={snackbar.open}
+                                        autoHideDuration={6000}
+                                        onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                    >
+                                        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+                                            {snackbar.message}
+                                        </Alert>
+                                    </Snackbar>
                         </DialogContent>
-                        <DialogActions>
-                            <Button variant="contained" onClick={toggleCreateTask} color="primary">
-                                {'Cancelar'}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleCreateTask}
-                                disabled={isLoading}
-                            >
-                                {'Criar'}
-                            </Button>
-
-                        </DialogActions>
                     </Dialog>
                 </Box>
+
+
             )}
 
             {/*questionário */}
@@ -928,7 +930,7 @@ const CreateExperiment = () => {
                                         onClick={toggleCreateQuest}
                                         sx={{ mr: 2 }}
                                     >
-                                        {isCreateQuestOpen ? t('cancel') : t('create_survey')}
+                                        {t('create_survey')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -940,178 +942,183 @@ const CreateExperiment = () => {
                                     </Button>
                                 </Box>
                             </Box>
-
-                            <Snackbar
-                                open={snackbarOpen}
-                                autoHideDuration={3000}
-                                onClose={handleCloseSnackbar}
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            >
-                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                                    {snackbarMessage}
-                                </Alert>
-                            </Snackbar>
                         </Box>
 
-                        {isCreateQuestOpen && (
-                            <Box sx={{ width: '60%', mt: 2, padding: 3, backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: 4, mx: 'auto' }}>
-                                <Typography variant="h4" gutterBottom align="center">
-                                    {t('title')}
-                                </Typography>
-                                <form onSubmit={handleSubmitquest}>
-                                    <TextField
-                                        label={t('surveyTitle')}
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
-                                        fullWidth
-                                        required
-                                        margin="normal"
-                                    />
-                                    <TextField
-                                        label={t('surveyDescription')}
-                                        value={description}
-                                        required
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        fullWidth
-                                        multiline
-                                        rows={4}
-                                        margin="normal"
-                                    />
-                                    <FormControl fullWidth margin="normal">
-                                        <InputLabel>{t('surveyType')}</InputLabel>
-                                        <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
-                                            {surveyTypes.map((stype) => (
-                                                <MenuItem key={stype.value} value={stype.value}>
-                                                    {stype.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+
+                        <Dialog
+                            open={isCreateQuestOpen}
+                            onClose={toggleCreateQuest}
+                            fullWidth
+                            maxWidth="lg"
+                        >
+                            <DialogContent sx={{
+                                width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
+                                    backgroundColor: '#f9f9f9',
+                                }
+                            }}>
+                                <Box sx={{
+                                    width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
+                                        backgroundColor: '#f9f9f9',
+                                    }
+                                }}>
+                                    <Typography variant="h4" gutterBottom align="center">
+                                        {t('title')}
+                                    </Typography>
+                                    <form onSubmit={handleSubmitquest}>
+                                        <TextField
+                                            label={t('surveyTitle')}
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            fullWidth
+                                            required
+                                            margin="normal"
+                                        />
+                                        <TextField
+                                            label={t('surveyDescription')}
+                                            value={description}
+                                            required
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            fullWidth
+                                            multiline
+                                            rows={4}
+                                            margin="normal"
+                                        />
+                                        <FormControl fullWidth margin="normal">
+                                            <InputLabel>{t('surveyType')}</InputLabel>
+                                            <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
+                                                {surveyTypes.map((stype) => (
+                                                    <MenuItem key={stype.value} value={stype.value}>
+                                                        {stype.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
 
 
-                                    <Box sx={{ mt: 4 }}>
-                                        <Typography variant="h5" gutterBottom>
-                                            {t('questions')}
-                                        </Typography>
-                                        {questions.map((q, index) => (
-                                            <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
-                                                <Grid container spacing={2} alignItems="center">
-                                                    <Grid item xs={11}>
-                                                        <TextField
-                                                            label={t('questionStatement', { index: index + 1 })}
-                                                            value={q.statement}
-                                                            onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
-                                                            fullWidth
-                                                            required
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={1}>
-                                                        <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
-                                                            <Remove />
-                                                        </IconButton>
-                                                    </Grid>
-                                                    <Grid item xs={6}>
-                                                        <FormControl fullWidth>
-                                                            <InputLabel>{t('questionType')}</InputLabel>
-                                                            <Select
-                                                                value={q.type}
-                                                                onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
-                                                                label={t('questionType')}
-                                                            >
-                                                                {questionTypes.map((qt) => (
-                                                                    <MenuItem key={qt.value} value={qt.value}>
-                                                                        {qt.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={6}>
-                                                        <FormControl fullWidth>
-                                                            <InputLabel>{t('required')}</InputLabel>
-                                                            <Select
-                                                                value={q.required}
-                                                                onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
-                                                                label={t('required')}
-                                                            >
-                                                                <MenuItem value={false}>{t('no')}</MenuItem>
-                                                                <MenuItem value={true}>{t('yes')}</MenuItem>
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
+                                        <Box sx={{ mt: 4 }}>
+                                            <Typography variant="h5" gutterBottom>
+                                                {t('questions')}
+                                            </Typography>
+                                            {questions.map((q, index) => (
+                                                <Paper key={q.id} sx={{ padding: 2, mb: 2, backgroundColor: '#f9f9f9' }}>
+                                                    <Grid container spacing={2} alignItems="center">
+                                                        <Grid item xs={11}>
+                                                            <TextField
+                                                                label={t('questionStatement', { index: index + 1 })}
+                                                                value={q.statement}
+                                                                onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
+                                                                fullWidth
+                                                                required
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={1}>
+                                                            <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
+                                                                <Remove />
+                                                            </IconButton>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <FormControl fullWidth>
+                                                                <InputLabel>{t('questionType')}</InputLabel>
+                                                                <Select
+                                                                    value={q.type}
+                                                                    onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
+                                                                    label={t('questionType')}
+                                                                >
+                                                                    {questionTypes.map((qt) => (
+                                                                        <MenuItem key={qt.value} value={qt.value}>
+                                                                            {qt.label}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <FormControl fullWidth>
+                                                                <InputLabel>{t('required')}</InputLabel>
+                                                                <Select
+                                                                    value={q.required}
+                                                                    onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
+                                                                    label={t('required')}
+                                                                >
+                                                                    <MenuItem value={false}>{t('no')}</MenuItem>
+                                                                    <MenuItem value={true}>{t('yes')}</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Grid>
 
 
-                                                    {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
-                                                        <Grid item xs={12}>
-                                                            <Typography variant="subtitle1">{t('options')}</Typography>
-                                                            {q.options.map((opt, optIndex) => (
-                                                                <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                                                    <TextField
-                                                                        label={t('option', { index: optIndex + 1 })}
-                                                                        value={opt.statement}
-                                                                        onChange={(e) =>
-                                                                            handleOptionChange(q.id, opt.id, 'statement', e.target.value)
-                                                                        }
-                                                                        fullWidth
-                                                                        required
-                                                                    />
-                                                                    {q.type === 'multiple-choices' && (
+                                                        {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
+                                                            <Grid item xs={12}>
+                                                                <Typography variant="subtitle1">{t('options')}</Typography>
+                                                                {q.options.map((opt, optIndex) => (
+                                                                    <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                                         <TextField
-                                                                            label={t('weight')}
-                                                                            type="number"
-                                                                            value={opt.score}
+                                                                            label={t('option', { index: optIndex + 1 })}
+                                                                            value={opt.statement}
                                                                             onChange={(e) =>
-                                                                                handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                                handleOptionChange(q.id, opt.id, 'statement', e.target.value)
                                                                             }
-                                                                            sx={{ width: 100, ml: 2 }}
+                                                                            fullWidth
                                                                             required
                                                                         />
-                                                                    )}
-                                                                    <IconButton
-                                                                        color="error"
-                                                                        onClick={() => handleRemoveOption(q.id, opt.id)}
-                                                                        sx={{ ml: 2 }}
-                                                                    >
-                                                                        <Remove />
-                                                                    </IconButton>
-                                                                </Box>
-                                                            ))}
-                                                            <Button
-                                                                variant="outlined"
-                                                                startIcon={<Add />}
-                                                                onClick={() => handleAddOption(q.id)}
-                                                            >
-                                                                {t('addOption')}
-                                                            </Button>
-                                                        </Grid>
-                                                    )}
-                                                </Grid>
-                                            </Paper>
-                                        ))}
-                                        <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
-                                            {t('addQuestion')}
-                                        </Button>
-                                    </Box>
+                                                                        {q.type === 'multiple-choices' && (
+                                                                            <TextField
+                                                                                label={t('weight')}
+                                                                                type="number"
+                                                                                value={opt.score}
+                                                                                onChange={(e) =>
+                                                                                    handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                                }
+                                                                                sx={{ width: 100, ml: 2 }}
+                                                                                required
+                                                                            />
+                                                                        )}
+                                                                        <IconButton
+                                                                            color="error"
+                                                                            onClick={() => handleRemoveOption(q.id, opt.id)}
+                                                                            sx={{ ml: 2 }}
+                                                                        >
+                                                                            <Remove />
+                                                                        </IconButton>
+                                                                    </Box>
+                                                                ))}
+                                                                <Button
+                                                                    variant="outlined"
+                                                                    startIcon={<Add />}
+                                                                    onClick={() => handleAddOption(q.id)}
+                                                                >
+                                                                    {t('addOption')}
+                                                                </Button>
+                                                            </Grid>
+                                                        )}
+                                                    </Grid>
+                                                </Paper>
+                                            ))}
+                                            <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
+                                                {t('addQuestion')}
+                                            </Button>
+                                        </Box>
 
 
 
-                                    <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
-                                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                                            {loading ? <CircularProgress size={24} /> : t('createSurvey')}
-                                        </Button>
-                                    </Box>
-                                </form>
-                                <Snackbar
-                                    open={snackbar.open}
-                                    autoHideDuration={6000}
-                                    onClose={() => setSnackbar({ ...snackbar, open: false })}
-                                >
-                                    <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-                                        {snackbar.message}
-                                    </Alert>
-                                </Snackbar>
-                            </Box>
-                        )}
+                                        <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
+                                            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                                                {loading ? <CircularProgress size={24} /> : t('createSurvey')}
+                                            </Button>
+                                        </Box>
+                                    </form>
+                                    <Snackbar
+                                        open={snackbar.open}
+                                        autoHideDuration={6000}
+                                        onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                    >
+                                        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+                                            {snackbar.message}
+                                        </Alert>
+                                    </Snackbar>
+                                </Box>
+                            </DialogContent>
+                        </Dialog>
                     </Box>
                 </Box>
             )}
