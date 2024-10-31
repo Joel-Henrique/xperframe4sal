@@ -23,6 +23,10 @@ import {
     MenuItem,
     Grid,
     Paper,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, Remove } from '@mui/icons-material';
@@ -718,18 +722,18 @@ const CreateExperiment = () => {
                                         onClick={handleBack}
                                         sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                     >
-                                        {t('Voltar')}
+                                        {'Voltar'}
                                     </Button>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <Box sx={{ marginRight: 2 }}>
                                         <Button variant="contained" color="primary" onClick={toggleCreateTask}>
-                                            {isCreateTaskOpen ? t('cancel') : t('create_task')}
+                                            {isCreateTaskOpen ? 'Cancelar' : 'Criar Tarefa'}
                                         </Button>
                                     </Box>
                                     <Box>
                                         <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px' }}>
-                                            {t('Próximo')}
+                                            {'Próximo'}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -739,7 +743,7 @@ const CreateExperiment = () => {
                                 open={snackbarOpen}
                                 autoHideDuration={3000}
                                 onClose={handleCloseSnackbar}
-                                anchorOrigin={{ vertical: 'botton', horizontal: 'right' }}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                             >
                                 <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
                                     {snackbarMessage}
@@ -748,85 +752,72 @@ const CreateExperiment = () => {
                         </Box>
                     </Box>
 
+                    <Dialog
+                        open={isCreateTaskOpen}
+                        onClose={toggleCreateTask}
+                        fullWidth
+                        maxWidth="lg"
+                        sx={{
+                            '& .MuiDialog-paper': {
+                                backgroundColor: '#ffffff',
+                                borderRadius: '8px',
+                                boxShadow: 3,
+                                padding: 4
+                            }
+                        }}
+                    >
+                        <DialogTitle>{'Criação de Tarefas'}</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                label={'Título da Tarefa'}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={taskTitle}
+                                onChange={(e) => settaskTitle(e.target.value)}
+                                required
+                            />
+                            <TextField
+                                label={'Sumário da Tarefa'}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                multiline
+                                rows={4}
+                                value={taskSummary}
+                                onChange={(e) => settaskSummary(e.target.value)}
+                                required
+                                placeholder={'Forneça informações sobre o sumário da tarefa'}
+                            />
 
+                            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                                <CustomContainer>
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={taskDescription}
+                                        onChange={settaskDescription}
+                                        placeholder={t('task_Desc1')}
+                                        required
+                                    />
+                                </CustomContainer>
+                            </div>
 
-                    {isCreateTaskOpen && (
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                        }}>
-                            <Box sx={{ width: '20%' }} />
-                            <Box sx={{ width: '60%', marginTop: 2, padding: 3, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f9f9f9', borderRadius: '8px', boxShadow: 4, width: '60%', marginX: 'auto' }}>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant="contained" onClick={toggleCreateTask} color="primary">
+                                {'Cancelar'}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleCreateTask}
+                                disabled={isLoading}
+                            >
+                                {'Criar'}
+                            </Button>
 
-                                <Typography variant="h4" component="h1" gutterBottom align="center">
-                                    {t('Criação de Tarefas')}
-                                </Typography>
-                                <TextField
-                                    label={t('Título da Tarefa')}
-                                    variant="outlined"
-                                    fullWidth
-                                    margin="normal"
-                                    value={taskTitle}
-                                    onChange={(e) => settaskTitle(e.target.value)}
-                                    required
-                                />
-                                <TextField
-                                    label={t('Sumário da Tarefa')}
-                                    variant="outlined"
-                                    fullWidth
-                                    margin="normal"
-                                    multiline
-                                    rows={4}
-                                    value={taskSummary}
-                                    onChange={(e) => settaskSummary(e.target.value)}
-                                    required
-                                    placeholder={t('Forneça informações sobre o sumário da tarefa')}
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                            borderColor: taskSummary ? 'green' : 'red',
-                                        },
-                                    }}
-                                />
-
-                                <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                                    <CustomContainer>
-                                        <ReactQuill
-                                            theme="snow"
-                                            value={taskDescription}
-                                            onChange={settaskDescription}
-                                            placeholder={t('task_Desc1')}
-                                            required
-                                        />
-                                    </CustomContainer>
-                                </div>
-
-                                <Box
-                                    sx={{
-                                        margin: 2,
-                                        width: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'flex-end',
-                                    }}
-                                >
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={handleCreate_taskbtt}
-                                        disabled={isLoading}
-                                        fullWidth
-                                        sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
-                                    >
-                                        {isLoading ? t('Criando...') : t('Criar')}
-                                    </Button>
-                                </Box>
-                            </Box>
-                            <Box sx={{ width: '20%' }} />
-                        </Box>
-                    )}
+                        </DialogActions>
+                    </Dialog>
                 </Box>
             )}
 
