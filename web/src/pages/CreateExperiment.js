@@ -101,6 +101,15 @@ const CreateExperiment = () => {
             console.error(t('Error in Search'), error);
         }
     };
+    const fetchExp = async () => {
+        try {
+            const response = await api.get(`experiments`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+        } catch (error) {
+            console.error(t('Error in Search'), error);
+        }
+    };
     const fetchUsers = async () => {
         try {
             const response = await api.get(`users`, {
@@ -193,12 +202,8 @@ const CreateExperiment = () => {
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
-            toggleCreateTask();
-            fetchTasks();
-            settaskTitle("");
-            settaskSummary("");
-            settaskDescription("");
-            fetchTasks();
+            toggleCreateExp();
+            fetchExp();
         } catch (error) {
             console.error(t('Error creating task'), error);
         } finally {
@@ -274,6 +279,9 @@ const CreateExperiment = () => {
         );
     };
     const toggleCreateTask = () => {
+        setIsCreateTaskOpen((prev) => !prev);
+    };
+    const toggleCreateExp = () => {
         setIsCreateTaskOpen((prev) => !prev);
     };
     const toggleCreateQuest = () => {
@@ -1163,7 +1171,7 @@ const CreateExperiment = () => {
 
                                     .map((user) => (
                                         <Box
-                                            key={user._id}
+                                            key={user.id}
                                             sx={{
                                                 display: 'flex',
                                                 flexDirection: 'column',
@@ -1178,8 +1186,8 @@ const CreateExperiment = () => {
                                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <Checkbox
-                                                        checked={selectedUsers.includes(user._id)}
-                                                        onChange={() => handleSelectUser(user._id)}
+                                                        checked={selectedUsers.includes(user.id)}
+                                                        onChange={() => handleSelectUser(user.id)}
                                                     />
                                                     <ListItemText
                                                         primary={`${user.name} ${user.lastName} - ${user.email}`}
@@ -1279,8 +1287,8 @@ const CreateExperiment = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <strong>{t('selected_user')}:</strong> {selectedUsers
-                                    .map(_id => {
-                                        const user = users.find(s => s._id === _id);
+                                    .map(id => {
+                                        const user = users.find(s => s.id === id);
                                         return user ? `${user.name} ${user.lastName} - ${user.email}` : '';
                                     })
                                     .join(', ') || t('non_selected_user')}
