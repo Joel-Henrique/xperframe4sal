@@ -124,8 +124,8 @@ const CreateExperiment = () => {
     };
 
     useEffect(() => {
-        fetchUsers();
         fetchTasks();
+        fetchUsers();
         fetchSurveys();
     }, [user, t]);
 
