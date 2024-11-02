@@ -375,7 +375,7 @@ const CreateTasks = () => {
                             fullWidth
                             sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 , borderRadius: '20px'}}
                         >
-                            {isLoading ? t('Criando...') : t('Criar')}
+                            {isLoading ? t('creating') : t('create')}
                         </Button>
                     </Box>
                 </Box>

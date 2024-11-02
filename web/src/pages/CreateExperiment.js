@@ -1311,7 +1311,7 @@ const CreateExperiment = () => {
                                 fullWidth
                                 sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
                             >
-                                {isLoading ? t('Criando...') : t('Criar')}
+                                {isLoading ? t('creating') : t('create')}
                             </Button>
                         </Box>
                     </Box>
