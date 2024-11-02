@@ -588,7 +588,7 @@ const CreateExperiment = () => {
                                     disabled={activeStep === 0}
                                     sx={{ maxWidth: '150px' }}
                                 >
-                                    {t('Voltar')}
+                                    {t('back')}
                                 </Button>
 
                                 <Button
@@ -597,7 +597,7 @@ const CreateExperiment = () => {
                                     onClick={handleNextExperiment}
                                     sx={{ maxWidth: '150px' }}
                                 >
-                                    {t('Próximo')}
+                                    {t('next')}
                                 </Button>
                             </Box>
 
@@ -724,7 +724,7 @@ const CreateExperiment = () => {
                                         onClick={handleBack}
                                         sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                     >
-                                        {'Voltar'}
+                                        {'back'}
                                     </Button>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -735,7 +735,7 @@ const CreateExperiment = () => {
                                     </Box>
                                     <Box>
                                         <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px' }}>
-                                            {'Próximo'}
+                                            {'next'}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -757,11 +757,11 @@ const CreateExperiment = () => {
                             }
                         }}
                     >
-                        <DialogTitle>{'Criação de Tarefas'}</DialogTitle>
+                        <DialogTitle>{t('task_creation')}</DialogTitle>
                         <DialogContent>
                             <form onSubmit={handleCreate_taskbtt}>
                                 <TextField
-                                    label={'Título da Tarefa'}
+                                    label={t('task_title')}
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
@@ -770,7 +770,7 @@ const CreateExperiment = () => {
                                     required
                                 />
                                 <TextField
-                                    label={'Sumário da Tarefa'}
+                                    label={t('task_summary')}
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
@@ -920,7 +920,7 @@ const CreateExperiment = () => {
                                     onClick={handleBack}
                                     sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                 >
-                                    {t('Voltar')}
+                                    {t('back')}
                                 </Button>
 
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -938,7 +938,7 @@ const CreateExperiment = () => {
                                         onClick={handleNext}
                                         sx={{ maxWidth: 120 }}
                                     >
-                                        {t('Próximo')}
+                                        {t('next')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -1205,7 +1205,7 @@ const CreateExperiment = () => {
                                 onClick={handleBack}
                                 sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                             >
-                                {t('Voltar')}
+                                {t('back')}
                             </Button>
 
                             <Button
@@ -1214,7 +1214,7 @@ const CreateExperiment = () => {
                                 onClick={handleNext}
                                 sx={{ maxWidth: 120 }}
                             >
-                                {t('Próximo')}
+                                {t('next')}
                             </Button>
                         </Box>
 
@@ -1300,7 +1300,7 @@ const CreateExperiment = () => {
                                 onClick={handleBack}
                                 sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                             >
-                                {t('Voltar')}
+                                {t('back')}
                             </Button>
 
                             <Button

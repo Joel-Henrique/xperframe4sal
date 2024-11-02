@@ -11,10 +11,10 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MailIcon from '@mui/icons-material/Mail';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(`panel-0`);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -47,15 +47,15 @@ const Contact = () => {
         <AccordionDetails>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>{t('marcelo')}</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>Marcelo Machado - marcelo.oc.machado@gmail.com</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>{t('sean')}</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>Sean Wolfgand Matsui Siqueira - sean@uniriotec.br</Typography>
           </Box>
           <Box sx={{ display: 'flex' }}>
             <MailIcon />
-            <Typography noWrap sx={{ marginLeft: 1 }}>{t('jairo')}</Typography>
+            <Typography noWrap sx={{ marginLeft: 1 }}>Jairo Francisco de Souza - jairo.souza@ice.ufjf.br</Typography>
           </Box>
         </AccordionDetails>
       </Accordion>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../config/axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { 
+import {
     TextField,
     Button,
     Typography,
@@ -139,7 +139,7 @@ const CreateTasks = () => {
     const handleSelectSurvey = (id) => {
         setSelectedSurveys((prevSelectedSurveys) =>
             prevSelectedSurveys.includes(id)
-                ? prevSelectedSurveys.filter((selectedId) => selectedId !== id) 
+                ? prevSelectedSurveys.filter((selectedId) => selectedId !== id)
                 : [...prevSelectedSurveys, id]
         );
     };
@@ -148,7 +148,7 @@ const CreateTasks = () => {
         <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
 
             <Typography variant="h4" component="h1" gutterBottom align="center">
-                {t('Criação de Tarefas')}
+                {t('task_creation')}
             </Typography>
 
             <Stepper activeStep={activeStep} alternativeLabel>
@@ -165,7 +165,7 @@ const CreateTasks = () => {
                     </Box>
                     <Box sx={{ maxWidth: 800, width: '60%', margin: 0, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', '& > *': { marginBottom: 0, } }}>
                         <TextField
-                            label={t('Título da Tarefa')}
+                            label={t('task_title')}
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -179,7 +179,7 @@ const CreateTasks = () => {
                             }}
                         />
                         <TextField
-                            label={t('Sumário da Tarefa')}
+                            label={t('task_summary')}
                             variant="outlined"
                             fullWidth
                             margin="normal"
@@ -216,7 +216,7 @@ const CreateTasks = () => {
                                 disabled={activeStep === 0}
                                 sx={{ maxWidth: '150px' , borderRadius: '20px'}}
                             >
-                                {t('Voltar')}
+                                {t('back')}
                             </Button>
 
                             <Button
@@ -225,7 +225,7 @@ const CreateTasks = () => {
                                 onClick={handleNextinfob}
                                 sx={{ maxWidth: '150px', borderRadius: '20px' }}
                             >
-                                {t('Próximo')}
+                                {t('next')}
                             </Button>
 
                             <Snackbar
@@ -260,9 +260,9 @@ const CreateTasks = () => {
                     maxWidth: 800,
                     marginX: 'auto'
                 }}>
-                    
+
                     <TextField
-                        label={t('Pesquisar Questionários')}
+                        label={t('search_surveys')}
                         variant="outlined"
                         fullWidth
                         margin="normal"
@@ -329,10 +329,10 @@ const CreateTasks = () => {
                             onClick={handleBack}
                             sx={{ maxWidth: 150, fontWeight: 'bold', borderRadius: '20px', boxShadow: 2 }}
                         >
-                            {t('Voltar')}
+                            {t('back')}
                         </Button>
                         <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px', borderRadius: '20px' }}>
-                            {t('Próximo')}
+                            {t('next')}
                         </Button>
                     </Box>
                 </Box>
@@ -346,7 +346,7 @@ const CreateTasks = () => {
                     </Typography>
 
                     <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                        <strong>{t('Título da Tarefa')}:</strong> {title}
+                        <strong>{t('task_title')}:</strong> {title}
                     </Typography>
 
                     <Typography variant="subtitle1" sx={{ mb: 1 }}>
@@ -364,7 +364,7 @@ const CreateTasks = () => {
                             onClick={handleBack}
                             sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2, borderRadius: '20px' }}
                         >
-                            {t('Voltar')}
+                            {t('back')}
                         </Button>
 
                         <Button
