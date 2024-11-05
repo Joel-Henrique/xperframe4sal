@@ -202,7 +202,7 @@ const CreateExperiment = () => {
                 `/experiments`,
                 {
                     name: titleExperiment,
-                    summary: descriptionExperiment,
+                    description: descriptionExperiment,
                     type: typeExperiment,
                     surveysProps: selectedSurveys,
                     tasksProps: selectedTasks,

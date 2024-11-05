@@ -51,7 +51,7 @@ export class Experiment extends BaseEntity {
   @Prop({ required: true })
   name: string;
   @Prop({ required: true })
-  summary: string;
+  description: string;
   @Prop()
   icfId: string;
   @Prop({ type: {}, default: {} })
