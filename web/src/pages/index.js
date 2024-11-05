@@ -15,6 +15,7 @@ import { Register } from './Register';
 import { ForgotPassword } from './ForgotPassword';
 import { NotFoundPage } from './NotFoundPage';
 import { ResetPassword } from './ResetPassword';
+import { ExperimentList } from './ExperimentList';
 
 export {
   ICF,
@@ -33,5 +34,6 @@ export {
   CreateTasks,
   CreateSurveys,
   CreateExperiment,
+  ExperimentList,
   Instructions
 }
