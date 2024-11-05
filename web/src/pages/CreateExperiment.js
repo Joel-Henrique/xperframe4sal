@@ -167,6 +167,7 @@ const CreateExperiment = () => {
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
+
     const handleCreateTask = async () => {
         try {
             setIsLoading(true);
@@ -218,23 +219,14 @@ const CreateExperiment = () => {
 
     const handleCreate_taskbtt = () => {
         if (!taskTitle) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_title_required'));
-            setSnackbarSeverity('error');
             return;
         }
 
         if (!taskSummary) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_summary_required'));
-            setSnackbarSeverity('error');
             return;
         }
 
         if (!taskDescription || taskDescription.replace(/<[^>]+>/g, '').trim() === '') {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('task_description_required'));
-            setSnackbarSeverity('error');
             return;
         }
 
@@ -724,7 +716,7 @@ const CreateExperiment = () => {
                                         onClick={handleBack}
                                         sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                                     >
-                                        {'back'}
+                                        {t('back')}
                                     </Button>
                                 </Box>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -735,7 +727,7 @@ const CreateExperiment = () => {
                                     </Box>
                                     <Box>
                                         <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px' }}>
-                                            {'next'}
+                                            {t('next')}
                                         </Button>
                                     </Box>
                                 </Box>
@@ -781,18 +773,18 @@ const CreateExperiment = () => {
                                     required
                                     placeholder={'Forneça informações sobre o sumário da tarefa'}
                                 />
-
                                 <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                                    <CustomContainer >
+                                    <CustomContainer>
                                         <ReactQuill
-                                            theme="snow"
                                             value={taskDescription}
-                                            onChange={(e) => settaskDescription(e.target.value)}
+                                            onChange={(content) => settaskDescription(content)}
                                             placeholder={t('task_Desc1')}
                                             required
                                         />
                                     </CustomContainer>
                                 </div>
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                 <Button variant="contained" onClick={toggleCreateTask} color="primary">
                                     {'Cancelar'}
                                 </Button>
@@ -805,6 +797,7 @@ const CreateExperiment = () => {
                                 >
                                     {'Criar'}
                                 </Button>
+                                </Box>
                             </form>
 
                             <Snackbar
@@ -1100,8 +1093,11 @@ const CreateExperiment = () => {
                                         </Box>
 
 
-
-                                        <Box sx={{ mt: 4, textAlign: 'center', justifyContent: 'center', justifyContent: 'flex-end', alignItems: 'flex-end', display: 'flex' }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                            <Button variant="contained" onClick={toggleCreateQuest} color="primary">
+                                                {'Cancelar'}
+                                            </Button>
+                                
                                             <Button type="submit" variant="contained" color="primary" disabled={loading}>
                                                 {loading ? <CircularProgress size={24} /> : t('createSurvey')}
                                             </Button>
