@@ -195,7 +195,7 @@ const CreateExperiment = () => {
         }
     };
 
-    const handleCreateExp = async () => { //falta arrumar
+    const handleCreateExp = async () => { //testando
         try {
             setIsLoading(true);
             await api.post(
@@ -218,7 +218,7 @@ const CreateExperiment = () => {
             setActiveStep(0);
             fetchExp();
         } catch (error) {
-            console.error(t('Error creating task'), error);
+            console.error(t('Error creating experiment'), error);
         } finally {
             setIsLoading(false);
         }
@@ -283,9 +283,6 @@ const CreateExperiment = () => {
         );
     };
     const toggleCreateTask = () => {
-        setIsCreateTaskOpen((prev) => !prev);
-    };
-    const toggleCreateExp = () => {
         setIsCreateTaskOpen((prev) => !prev);
     };
     const toggleCreateQuest = () => {
@@ -778,7 +775,6 @@ const CreateExperiment = () => {
                                     value={taskSummary}
                                     onChange={(e) => settaskSummary(e.target.value)}
                                     required
-                                    placeholder={'Forneça informações sobre o sumário da tarefa'}
                                 />
                                 <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
                                     <CustomContainer>
