@@ -210,8 +210,12 @@ const CreateExperiment = () => {
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
-            navigate('/CreateExperiment');
-            toggleCreateExp();
+            settitleExperiment('');
+            setdescriptionExperiment('');
+            setSelectedSurveys([]);
+            setSelectedTask([]);
+            setSelectedUsers([]);
+            setActiveStep(0);
             fetchExp();
         } catch (error) {
             console.error(t('Error creating task'), error);
@@ -1310,7 +1314,7 @@ const CreateExperiment = () => {
                                 fullWidth
                                 sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
                             >
-                                {isLoading ? t('creating') : t('create')}
+                                {t('create')}
                             </Button>
                         </Box>
                     </Box>
