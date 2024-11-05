@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../config/axios';
+import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -54,6 +55,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 const CreateExperiment = () => {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
@@ -199,15 +201,16 @@ const CreateExperiment = () => {
             await api.post(
                 `/experiments`,
                 {
-                    title: titleExperiment,
+                    name: titleExperiment,
+                    summary: descriptionExperiment,
                     type: typeExperiment,
-                    description: descriptionExperiment,
-                    selectedTasks,
-                    selectedSurveys,
-                    selectedUsers,
+                    surveysProps: selectedSurveys,
+                    tasksProps: selectedTasks,
+                    userProps: selectedUsers,
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
+            navigate('/CreateExperiment');
             toggleCreateExp();
             fetchExp();
         } catch (error) {
