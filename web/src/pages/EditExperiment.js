@@ -1,103 +1,138 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../config/axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
     TextField,
     Button,
     Typography,
     Box,
+    Stepper,
+    Step,
+    StepLabel,
+    Checkbox,
+    ListItemText,
+    FormControl,
     Snackbar,
     Alert,
     CircularProgress,
-    FormControl,
+    IconButton,
+    styled,
     InputLabel,
     Select,
     MenuItem,
-    Checkbox,
-    ListItemText,
-    styled,
+    Grid,
+    Paper,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Add, Remove } from '@mui/icons-material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
     borderRadius: '8px',
     padding: '0px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    '& .ql-toolbar': {
+        backgroundColor: '#f5f5f5',
+        borderRadius: '8px 8px 0 0',
+    },
+    '& .ql-container': {
+        minHeight: '200px',
+        borderRadius: '0 0 8px 8px',
+    },
+    '& .ql-editor': {
+        fontFamily: theme.typography.fontFamily,
+        lineHeight: 1.6,
+        color: '#444',
+    },
 }));
 
-export default function EditExperiment() {
+const EditExperiment = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
     const { t } = useTranslation();
-    const { experimentId } = useParams(); // Pegar o ID do experimento a ser editado
 
-    const [title, setTitle] = useState('');
-    const [taskConditions, setTaskConditions] = useState([]);
-    const [selectedTasks, setSelectedTasks] = useState([]);
+    const [titleExperiment, settitleExperiment] = useState('');
+    const [typeExperiment, settypeExperiment] = useState('between-subject');
+    const [BtypeExperiment, setBtypeExperiment] = useState('random');
+    const [descriptionExperiment, setdescriptionExperiment] = useState('');
+    const [selectedTasks, setSelectedTask] = useState([]);
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    
     const [tasks, setTasks] = useState([]);
     const [surveys, setSurveys] = useState([]);
     const [users, setUsers] = useState([]);
-    
     const [isLoading, setIsLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [openSurveyIds, setOpenSurveyIds] = useState([]);
+    const [openTaskIds, setOpenTaskIds] = useState([]);
+    const [activeStep, setActiveStep] = useState(0);
 
-    // Fetch dos dados do experimento e opções de tarefas/questionários/usuários
+    const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
+
     useEffect(() => {
-        const fetchExperiment = async () => {
-            try {
-                const response = await api.get(`/experiments/${experimentId}`);
-                const { title, tasks, surveys, users } = response.data;
-                setTitle(title);
-                setSelectedTasks(tasks);
-                setSelectedSurveys(surveys);
-                setSelectedUsers(users);
-            } catch (error) {
-                console.error('Erro ao buscar experimento:', error);
-            }
-        };
-
         const fetchOptions = async () => {
             try {
                 const [tasksResponse, surveysResponse, usersResponse] = await Promise.all([
                     api.get('/tasks'),
                     api.get('/surveys'),
-                    api.get('/users'),
+                    api.get('/users')
                 ]);
                 setTasks(tasksResponse.data);
                 setSurveys(surveysResponse.data);
                 setUsers(usersResponse.data);
             } catch (error) {
-                console.error('Erro ao buscar opções:', error);
+                console.error('Error fetching options:', error);
             }
         };
 
-        fetchExperiment();
-        fetchOptions();
-    }, [experimentId]);
+        const fetchExperiment = async () => {
+            try {
+                const response = await api.get(`/experiments/${id}`);
+                const experiment = response.data;
+                settitleExperiment(experiment.name);
+                settypeExperiment(experiment.type);
+                setdescriptionExperiment(experiment.summary);
+                setSelectedTask(experiment.tasksProps);
+                setSelectedSurveys(experiment.surveysProps);
+                setSelectedUsers(experiment.userProps);
+            } catch (error) {
+                console.error('Error fetching experiment:', error);
+            }
+        };
 
-    const handleUpdateExperiment = async () => {
+        fetchOptions();
+        fetchExperiment();
+    }, [id]);
+
+    const handleEditExperiment = async () => {
         try {
             setIsLoading(true);
             await api.put(
-                `/experiments/${experimentId}`,
+                `/experiments/${id}`,
                 {
-                    title,
-                    taskConditions,
-                    selectedTasks,
-                    selectedSurveys,
-                    selectedUsers,
+                    name: titleExperiment,
+                    summary: descriptionExperiment,
+                    type: typeExperiment,
+                    surveysProps: selectedSurveys,
+                    tasksProps: selectedTasks,
+                    userProps: selectedUsers,
                 },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('user')?.accessToken}` } }
             );
 
             setSnackbarSeverity('success');
             setSnackbarMessage('Experimento atualizado com sucesso!');
-            navigate(`/experiments`);
+            navigate('/experiments');
         } catch (error) {
             setSnackbarSeverity('error');
             setSnackbarMessage('Erro ao atualizar o experimento. Tente novamente.');
@@ -111,103 +146,1019 @@ export default function EditExperiment() {
         setSnackbarOpen(false);
     };
 
-    const handleTaskChange = (event) => {
-        setSelectedTasks(event.target.value);
+    const handleSelectSurvey = (id) => {
+        setSelectedSurveys((prevSelectedSurveys) =>
+            prevSelectedSurveys.includes(id)
+                ? prevSelectedSurveys.filter((selectedId) => selectedId !== id)
+                : [...prevSelectedSurveys, id]
+        );
     };
 
-    const handleSurveyChange = (event) => {
-        setSelectedSurveys(event.target.value);
+    const handleSelectUser = (id) => {
+        setSelectedUsers((prevSelectedUsers) =>
+            prevSelectedUsers.includes(id)
+                ? prevSelectedUsers.filter((selectedId) => selectedId !== id)
+                : [...prevSelectedUsers, id]
+        );
     };
 
-    const handleUserChange = (event) => {
-        setSelectedUsers(event.target.value);
+    const handleSelectTasks = (id) => {
+        setSelectedTask((prevsetSelectedTask) =>
+            prevsetSelectedTask.includes(id)
+                ? prevsetSelectedTask.filter((selectedId) => selectedId !== id)
+                : [...prevsetSelectedTask, id]
+        );
+    };
+
+    const toggleTaskDescription = (surveyId) => {
+        if (openTaskIds.includes(surveyId)) {
+            setOpenTaskIds(openTaskIds.filter((id) => id !== surveyId));
+        } else {
+            setOpenTaskIds([...openTaskIds, surveyId]);
+        }
+    };
+
+    const toggleSurveyDescription = (surveyId) => {
+        if (openSurveyIds.includes(surveyId)) {
+            setOpenSurveyIds(openSurveyIds.filter((id) => id !== surveyId));
+        } else {
+            setOpenSurveyIds([...openSurveyIds, surveyId]);
+        }
+    };
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleNextExperiment = () => {
+        if (!titleExperiment) {
+            setSnackbarOpen(true);
+            setSnackbarMessage(t('titleExperiment_required'));
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        if (!descriptionExperiment || descriptionExperiment.replace(/<[^>]+>/g, '').trim() === '') {
+            setSnackbarOpen(true);
+            setSnackbarMessage(t('descriptionExperiment_required'));
+            setSnackbarSeverity('error');
+            return;
+        }
+
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const toggleCreateTask = () => {
+        setIsCreateTaskOpen((prev) => !prev);
+    };
+    const toggleCreateQuest = () => {
+        setIsCreateQuestOpen((prev) => !prev);
+    };
+
+
+    const questionTypes = [
+        { value: 'open', label: t('open') },
+        { value: 'multiple-selection', label: t('multiple_selection') },
+        { value: 'multiple-choices', label: t('multiple_choices') },
+    ];
+    const surveyTypes = [
+        { value: 'pre', label: t('pre') },
+        { value: 'demo', label: t('demo') },
+        { value: 'post', label: t('post') }
+    ];
+    const ExperimentTypes = [
+        { value: 'between-subject', label: t('between-subject') },
+        { value: 'within-subject', label: t('within-subject') },
+    ];
+    const betweenExperimentTypes = [
+        { value: 'random', label: t('random') },
+        { value: 'score_based', label: t('score_based') },
+        { value: 'manual', label: t('manual') },
+    ];
+
+    const handleAddQuestion = () => {
+        setQuestions([
+            ...questions,
+            {
+                id: Date.now(),
+                statement: '',
+                type: 'open',
+                required: false,
+                options: [],
+                subQuestions: [],
+            },
+        ]);
+    };
+
+    const handleRemoveQuestion = (id) => {
+        setQuestions(questions.filter((q) => q.id !== id));
+    };
+
+    const handleQuestionChange = (id, field, value) => {
+        setQuestions(
+            questions.map((q) =>
+                q.id === id
+                    ? {
+                        ...q,
+                        [field]: value,
+                    }
+                    : q
+            )
+        );
+    };
+
+    const handleAddOption = (questionId) => {
+        setQuestions(
+            questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: [
+                            ...q.options,
+                            { id: Date.now(), statement: '', score: 0, subQuestion: null },
+                        ],
+                    }
+                    : q
+            )
+        );
+    };
+
+    const handleRemoveOption = (questionId, optionId) => {
+        setQuestions(
+            questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: q.options.filter((opt) => opt.id !== optionId),
+                    }
+                    : q
+            )
+        );
+    };
+
+    const handleOptionChange = (questionId, optionId, field, value) => {
+        setQuestions(
+            questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: q.options.map((opt) =>
+                            opt.id === optionId
+                                ? {
+                                    ...opt,
+                                    [field]: value,
+                                }
+                                : opt
+                        ),
+                    }
+                    : q
+            )
+        );
+    };
+
+    const handleSubmitquest = async (e) => {
+        e.preventDefault();
+        const name = title;
+        const payload = {
+            name,
+            title,
+            description,
+            type,
+            questions: questions.map((q) => {
+                const question = {
+                    statement: q.statement,
+                    type: q.type,
+                    required: q.required,
+                };
+
+                if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
+                    question.options = q.options.map((opt) => {
+                        const option = { statement: opt.statement };
+                        if (q.type === 'multiple-choices') {
+                            option.score = opt.score;
+                        }
+                        if (opt.subQuestion) {
+                            option.subQuestion = {
+                                statement: opt.subQuestion.statement,
+                                type: opt.subQuestion.type,
+                                required: opt.subQuestion.required,
+                                options: opt.subQuestion.options.map((subOpt) => ({
+                                    statement: subOpt.statement,
+                                    score: subOpt.score,
+                                })),
+                            };
+                        }
+                        return option;
+                    });
+                }
+
+                return question;
+            }),
+        };
+        toggleCreateQuest();
+        fetchSurveys();
+        setTitle("");
+        setDescription("");
+        setQuestions([]);
+        setType('pre');
+        fetchSurveys();
+        try {
+            setLoading(true);
+            const response = await api.post(`surveys`,
+                payload,
+                { 'headers': { Authorization: `Bearer ${user.accessToken}` } }
+            );
+
+            setLoading(false);
+            setSnackbar({
+                open: true,
+                message: 'Questionnaire created successfully!',
+                severity: 'success',
+            });
+            fetchSurveys();
+        } catch (error) {
+            setLoading(false);
+            setSnackbar({
+                open: true,
+                message: error.response?.data?.message || 'Error creating the questionnaire',
+                severity: 'error',
+            });
+        }
     };
 
     return (
-        <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
+        <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+
             <Typography variant="h4" component="h1" gutterBottom align="center">
-                {t('Edição de Experimento')}
+                {t('Experiment_edit')}
             </Typography>
 
+            <Stepper activeStep={activeStep} alternativeLabel>
+                {steps.map((label, index) => (
+                    <Step key={index}>
+                        <StepLabel>{label}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+
+            {/*experimento */}
+            {activeStep === 0 && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        marginTop: 10,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            width: '60%',
+                            padding: 3,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#f9f9f9',
+                            borderRadius: '8px',
+                            boxShadow: 4,
+                            mx: 'auto',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '100%',
+                                margin: 0,
+                                padding: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                '& > *': {
+                                    marginBottom: 0,
+                                    width: '100%',
+                                },
+                            }}
+                        >
+                            <TextField
+                                label={t('Experiment_title')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={titleExperiment}
+                                onChange={(e) => settitleExperiment(e.target.value)}
+                                required
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        borderColor: titleExperiment ? 'green' : 'red',
+                                    },
+                                }}
+                            />
+
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>{t('Experiment_Type')}</InputLabel>
+                                <Select
+                                    value={typeExperiment}
+                                    onChange={(e) => settypeExperiment(e.target.value)}
+                                    label={t('ExperimentTypes')}
+                                >
+                                    <MenuItem value="between-subject">{t('between-subject')}</MenuItem>
+                                    <MenuItem value="within-subject">{t('within-subject')}</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            {typeExperiment === 'between-subject' && (
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+                                    <Select
+                                        value={BtypeExperiment}
+                                        onChange={(e) => setBtypeExperiment(e.target.value)}
+                                        label={t('ExperimentTypesbetween')}
+                                    >
+                                        <MenuItem value="random">{t('random')}</MenuItem>
+                                        <MenuItem value="score_based">{t('score_based')}</MenuItem>
+                                        <MenuItem value="manual">{t('manual')}</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            )}
+
+                            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                                <CustomContainer>
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={descriptionExperiment}
+                                        onChange={setdescriptionExperiment}
+                                        placeholder={t('Experiment_Desc1')}
+                                        required
+                                    />
+                                </CustomContainer>
+                            </div>
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleBack}
+                                    disabled={activeStep === 0}
+                                    sx={{ maxWidth: '150px' }}
+                                >
+                                    {t('back')}
+                                </Button>
+
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleNextExperiment}
+                                    sx={{ maxWidth: '150px' }}
+                                >
+                                    {t('next')}
+                                </Button>
+                            </Box>
+
+                            <Snackbar
+                                open={snackbarOpen}
+                                autoHideDuration={3000}
+                                onClose={handleCloseSnackbar}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                            >
+                                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '18%' }}>
+                                    {snackbarMessage}
+                                </Alert>
+                            </Snackbar>
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+
+            {/*tarefa */}
+            {activeStep === 1 && (
+                <Box>
+                    <Box
+                        sx={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: 10,
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f9f9f9',
+                                borderRadius: '8px',
+                                boxShadow: 4,
+                                width: '60%',
+                                marginX: 'auto'
+                            }}
+                        >
+                            <TextField
+                                label={t('search_task')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                sx={{ mb: 3 }}
+                            />
+
+                            {isLoading ? (
+                                <CircularProgress />
+                            ) : (
+                                <FormControl fullWidth>
+                                    <Box
+                                        sx={{
+                                            maxHeight: '200px',
+                                            overflowY: 'auto',
+                                        }}
+                                    >
+                                        {tasks.map((task) => (
+                                            <Box
+                                                key={task._id}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    mb: 1,
+                                                    padding: 1,
+                                                    backgroundColor: '#ffffff',
+                                                    borderRadius: '4px',
+                                                    boxShadow: 1,
+                                                    '&:hover': { backgroundColor: '#e6f7ff' }
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <Checkbox
+                                                            checked={selectedTasks.includes(task._id)}
+                                                            onChange={() => handleSelectTasks(task._id)}
+                                                        />
+                                                        <ListItemText primary={task.title} sx={{ ml: 1 }} />
+                                                    </Box>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => toggleTaskDescription(task._id)}
+                                                        sx={{ ml: 2 }}
+                                                    >
+                                                        {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                    </IconButton>
+                                                </Box>
+
+                                                {openTaskIds.includes(task._id) && (
+                                                    <Box
+                                                        sx={{
+                                                            marginTop: 1,
+                                                            padding: 1,
+                                                            backgroundColor: '#e8f5e9',
+                                                            borderRadius: '4px'
+                                                        }}
+                                                    >
+                                                        <Typography variant="body2">{task.description}</Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                </FormControl>
+                            )}
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleBack}
+                                        sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                                    >
+                                        {t('back')}
+                                    </Button>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Box sx={{ marginRight: 2 }}>
+                                        <Button variant="contained" color="primary">
+                                            {t('create_task')}
+                                        </Button>
+                                    </Box>
+                                    <Box>
+                                        <Button variant="contained" color="primary" onClick={handleNext} sx={{ maxWidth: '120px' }}>
+                                            {t('next')}
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+
+            {/*questionário */}
+             {/*questionário */}
+             {activeStep === 2 && (
+                <Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            marginTop: 10,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: '60%',
+                                padding: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#f9f9f9',
+                                borderRadius: '8px',
+                                boxShadow: 4,
+                                mx: 'auto',
+                            }}
+                        >
+                            <TextField
+                                label={t('search_survey')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                sx={{ mb: 3 }}
+                            />
+
+                            {isLoading ? (
+                                <CircularProgress />
+                            ) : (
+                                <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                                    {surveys
+                                        .filter((survey) =>
+                                            survey.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                        )
+                                        .map((survey) => (
+                                            <Box
+                                                key={survey._id}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    mb: 1,
+                                                    padding: 1,
+                                                    backgroundColor: '#ffffff',
+                                                    borderRadius: '4px',
+                                                    boxShadow: 1,
+                                                    '&:hover': { backgroundColor: '#e6f7ff' }
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <Checkbox
+                                                            checked={selectedSurveys.includes(survey._id)}
+                                                            onChange={() => handleSelectSurvey(survey._id)}
+                                                        />
+                                                        <ListItemText primary={survey.title} sx={{ ml: 1 }} />
+                                                    </Box>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => toggleSurveyDescription(survey._id)}
+                                                        sx={{ ml: 2 }}
+                                                    >
+                                                        {openSurveyIds.includes(survey._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                    </IconButton>
+                                                </Box>
+
+                                                {openSurveyIds.includes(survey._id) && (
+                                                    <Box sx={{
+                                                        mt: 1,
+                                                        p: 1,
+                                                        backgroundColor: '#e8f5e9',
+                                                        borderRadius: '4px'
+                                                    }}>
+                                                        <Typography variant="body2">{survey.description}</Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        ))}
+                                </FormControl>
+                            )}
+
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleBack}
+                                    sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                                >
+                                    {t('back')}
+                                </Button>
+
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={toggleCreateQuest}
+                                        sx={{ mr: 2 }}
+                                    >
+                                        {t('create_survey')}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleNext}
+                                        sx={{ maxWidth: 120 }}
+                                    >
+                                        {t('next')}
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Box>
+
+
+                        <Dialog
+                            open={isCreateQuestOpen}
+                            onClose={toggleCreateQuest}
+                            fullWidth
+                            maxWidth="lg"
+                        >
+                            <DialogContent sx={{
+                                width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
+                                    backgroundColor: '#f9f9f9',
+                                }
+                            }}>
+                                <Box sx={{
+                                    width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
+                                        backgroundColor: '#f9f9f9',
+                                    }
+                                }}>
+                                    <Typography variant="h4" gutterBottom align="center">
+                                        {t('title')}
+                                    </Typography>
+                                    <form onSubmit={handleSubmitquest}>
+                                        <TextField
+                                            label={t('surveyTitle')}
+                                            value={title}
+                                            onChange={(e) => setTitle(e.target.value)}
+                                            fullWidth
+                                            required
+                                            margin="normal"
+                                        />
+                                        <TextField
+                                            label={t('surveyDescription')}
+                                            value={description}
+                                            required
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            fullWidth
+                                            multiline
+                                            rows={4}
+                                            margin="normal"
+                                        />
+                                        <FormControl fullWidth margin="normal">
+                                            <InputLabel>{t('surveyType')}</InputLabel>
+                                            <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
+                                                {surveyTypes.map((stype) => (
+                                                    <MenuItem key={stype.value} value={stype.value}>
+                                                        {stype.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+
+
+                                        <Box sx={{ mt: 4 }}>
+                                            <Typography variant="h5" gutterBottom>
+                                                {t('questions')}
+                                            </Typography>
+                                            {questions.map((q, index) => (
+                                                <Paper key={q.id} sx={{ padding: 2, mb: 2, backgroundColor: '#f9f9f9' }}>
+                                                    <Grid container spacing={2} alignItems="center">
+                                                        <Grid item xs={11}>
+                                                            <TextField
+                                                                label={t('questionStatement', { index: index + 1 })}
+                                                                value={q.statement}
+                                                                onChange={(e) => handleQuestionChange(q.id, 'statement', e.target.value)}
+                                                                fullWidth
+                                                                required
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={1}>
+                                                            <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
+                                                                <Remove />
+                                                            </IconButton>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <FormControl fullWidth>
+                                                                <InputLabel>{t('questionType')}</InputLabel>
+                                                                <Select
+                                                                    value={q.type}
+                                                                    onChange={(e) => handleQuestionChange(q.id, 'type', e.target.value)}
+                                                                    label={t('questionType')}
+                                                                >
+                                                                    {questionTypes.map((qt) => (
+                                                                        <MenuItem key={qt.value} value={qt.value}>
+                                                                            {qt.label}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <FormControl fullWidth>
+                                                                <InputLabel>{t('required')}</InputLabel>
+                                                                <Select
+                                                                    value={q.required}
+                                                                    onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
+                                                                    label={t('required')}
+                                                                >
+                                                                    <MenuItem value={false}>{t('no')}</MenuItem>
+                                                                    <MenuItem value={true}>{t('yes')}</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+                                                        </Grid>
+
+
+                                                        {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
+                                                            <Grid item xs={12}>
+                                                                <Typography variant="subtitle1">{t('options')}</Typography>
+                                                                {q.options.map((opt, optIndex) => (
+                                                                    <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                                                        <TextField
+                                                                            label={t('option', { index: optIndex + 1 })}
+                                                                            value={opt.statement}
+                                                                            onChange={(e) =>
+                                                                                handleOptionChange(q.id, opt.id, 'statement', e.target.value)
+                                                                            }
+                                                                            fullWidth
+                                                                            required
+                                                                        />
+                                                                        {q.type === 'multiple-choices' && (
+                                                                            <TextField
+                                                                                label={t('weight')}
+                                                                                type="number"
+                                                                                value={opt.score}
+                                                                                onChange={(e) =>
+                                                                                    handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                                }
+                                                                                sx={{ width: 100, ml: 2 }}
+                                                                                required
+                                                                            />
+                                                                        )}
+                                                                        <IconButton
+                                                                            color="error"
+                                                                            onClick={() => handleRemoveOption(q.id, opt.id)}
+                                                                            sx={{ ml: 2 }}
+                                                                        >
+                                                                            <Remove />
+                                                                        </IconButton>
+                                                                    </Box>
+                                                                ))}
+                                                                <Button
+                                                                    variant="outlined"
+                                                                    startIcon={<Add />}
+                                                                    onClick={() => handleAddOption(q.id)}
+                                                                >
+                                                                    {t('addOption')}
+                                                                </Button>
+                                                            </Grid>
+                                                        )}
+                                                    </Grid>
+                                                </Paper>
+                                            ))}
+                                            <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
+                                                {t('addQuestion')}
+                                            </Button>
+                                        </Box>
+
+
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                            <Button variant="contained" onClick={toggleCreateQuest} color="primary">
+                                                {'Cancelar'}
+                                            </Button>
+                                
+                                            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                                                {loading ? <CircularProgress size={24} /> : t('createSurvey')}
+                                            </Button>
+                                        </Box>
+                                    </form>
+                                    <Snackbar
+                                        open={snackbar.open}
+                                        autoHideDuration={6000}
+                                        onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                    >
+                                        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+                                            {snackbar.message}
+                                        </Alert>
+                                    </Snackbar>
+                                </Box>
+                            </DialogContent>
+                        </Dialog>
+                    </Box>
+                </Box>
+            )}
+
+            {/*usuario */}
+            
+
+    {activeStep === 3 && (
+    <Box
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            marginTop: 10,
+        }}
+    >
+        <Box
+            sx={{
+                width: '60%',
+                padding: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#f9f9f9',
+                borderRadius: '8px',
+                boxShadow: 4,
+                mx: 'auto',
+            }}
+        >
             <TextField
-                label={t('Título do Experimento')}
+                label={t('search_user')}
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ mb: 3 }}
             />
 
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="tasks-label">{t('Selecione as Tarefas')}</InputLabel>
-                <Select
-                    labelId="tasks-label"
-                    multiple
-                    value={selectedTasks}
-                    onChange={handleTaskChange}
-                    renderValue={(selected) => selected.map(id => tasks.find(task => task.id === id)?.title).join(', ')}
-                >
-                    {tasks.map((task) => (
-                        <MenuItem key={task.id} value={task.id}>
-                            <Checkbox checked={selectedTasks.indexOf(task.id) > -1} />
-                            <ListItemText primary={task.title} />
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            {isLoading ? (
+                <CircularProgress />
+            ) : (
+                <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                    {users
+                        .filter((user) =>
+                            `${user.name} ${user.lastName} ${user.email}`.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
 
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="surveys-label">{t('Selecione os Questionários')}</InputLabel>
-                <Select
-                    labelId="surveys-label"
-                    multiple
-                    value={selectedSurveys}
-                    onChange={handleSurveyChange}
-                    renderValue={(selected) => selected.map(id => surveys.find(survey => survey.id === id)?.title).join(', ')}
-                >
-                    {surveys.map((survey) => (
-                        <MenuItem key={survey.id} value={survey.id}>
-                            <Checkbox checked={selectedSurveys.indexOf(survey.id) > -1} />
-                            <ListItemText primary={survey.title} />
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+                        .map((user) => (
+                            <Box
+                                key={user.id}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    mb: 1,
+                                    padding: 1,
+                                    backgroundColor: '#ffffff',
+                                    borderRadius: '4px',
+                                    boxShadow: 1,
+                                    '&:hover': { backgroundColor: '#e6f7ff' }
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Checkbox
+                                            checked={selectedUsers.includes(user.id)}
+                                            onChange={() => handleSelectUser(user.id)}
+                                        />
+                                        <ListItemText
+                                            primary={`${user.name} ${user.lastName} - ${user.email}`}
+                                            sx={{ ml: 1 }}
+                                        />
+                                    </Box>
+                                </Box>
+                            </Box>
+                        ))}
+                </FormControl>
+            )}
 
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="users-label">{t('Selecione os Usuários')}</InputLabel>
-                <Select
-                    labelId="users-label"
-                    multiple
-                    value={selectedUsers}
-                    onChange={handleUserChange}
-                    renderValue={(selected) => selected.map(id => users.find(user => user.id === id)?.name).join(', ')}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBack}
+                    sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                 >
-                    {users.map((user) => (
-                        <MenuItem key={user.id} value={user.id}>
-                            <Checkbox checked={selectedUsers.indexOf(user.id) > -1} />
-                            <ListItemText primary={user.name} />
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+                    {t('back')}
+                </Button>
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleUpdateExperiment}
-                disabled={isLoading}
-                fullWidth
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    sx={{ maxWidth: 120 }}
+                >
+                    {t('next')}
+                </Button>
+            </Box>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
-                {isLoading ? <CircularProgress size={24} /> : t('Atualizar')}
-            </Button>
-
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
         </Box>
-    );
-}
+    </Box>
+)}
+
+{activeStep === 4 && (
+    <Box
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            marginTop: 10,
+        }}
+    >
+        <Box
+            sx={{
+                width: '60%',
+                padding: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#f9f9f9',
+                borderRadius: '8px',
+                boxShadow: 4,
+                mx: 'auto',
+            }}
+        >
+            <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                {t('revis_conc')}
+            </Typography>
+
+            <Grid container spacing={2} sx={{ mb: 3 }}>
+                <Grid item xs={12}>
+                    <strong>{t('Experiment_title')}:</strong> {titleExperiment}
+                </Grid>
+                <Grid item xs={12}>
+                    <strong>{t('typeExperiment1')}</strong>: {t(typeExperiment)}
+                </Grid>
+
+                {typeExperiment === 'between-subject' && (
+                    <Grid item xs={12}>
+                        <strong>{t('Group_Separation_Method')}</strong>: {t(BtypeExperiment)}
+                    </Grid>
+                )}
+
+                <Grid item xs={12}>
+                    <strong>{t('Experiment_Desc')}:</strong> {descriptionExperiment.replace(/<[^>]+>/g, '')}
+                </Grid>
+                <Grid item xs={12}>
+                    <strong>{t('selected_task')}:</strong> {selectedTasks.map(_id => tasks.find(s => s._id === _id)?.title).join(', ') || t('non_selected_task')}
+                </Grid>
+                <Grid item xs={12}>
+                    <strong>{t('selected_surveys')}:</strong> {selectedSurveys.map(_id => surveys.find(s => s._id === _id)?.title).join(', ') || t('non_selected_survey')}
+                </Grid>
+                <Grid item xs={12}>
+                    <strong>{t('selected_user')}:</strong> {selectedUsers
+                        .map(id => {
+                            const user = users.find(s => s.id === id);
+                            return user ? ` ${user.name} ${user.lastName} - ${user.email} ` : '';
+                        })
+                        .join(', ') || t('non_selected_user')}
+                </Grid>
+            </Grid>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4, width: '100%' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBack}
+                    sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                >
+                    {t('back')}
+                </Button>
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleEditExperiment}
+                    disabled={isLoading}
+                    fullWidth
+                    sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
+                >
+                    {t('create')}
+                </Button>
+            </Box>
+        </Box>
+    </Box>
+)}
+</Box>
+);
+};
+
+export { EditExperiment };
