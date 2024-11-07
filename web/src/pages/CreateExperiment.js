@@ -210,6 +210,8 @@ const CreateExperiment = () => {
                 },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
+
+            
             settitleExperiment('');
             setdescriptionExperiment('');
             setSelectedSurveys([]);
@@ -217,6 +219,9 @@ const CreateExperiment = () => {
             setSelectedUsers([]);
             setActiveStep(0);
             fetchExp();
+            
+
+
         } catch (error) {
             console.error(t('Error creating experiment'), error);
         } finally {
@@ -1184,6 +1189,7 @@ const CreateExperiment = () => {
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <Checkbox
                                                         checked={selectedUsers.includes(user.id)}
+                                                        
                                                         onChange={() => handleSelectUser(user.id)}
                                                     />
                                                     <ListItemText
