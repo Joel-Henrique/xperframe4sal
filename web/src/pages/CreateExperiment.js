@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { api } from '../config/axios';
-import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -26,8 +25,7 @@ import {
     Paper,
     Dialog,
     DialogTitle,
-    DialogContent,
-    DialogActions
+    DialogContent
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, Remove } from '@mui/icons-material';
@@ -55,7 +53,8 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 const CreateExperiment = () => {
-    const navigate = useNavigate();
+    const [activeStep, setActiveStep] = useState(0);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
@@ -83,19 +82,24 @@ const CreateExperiment = () => {
     const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [selectedTasks, setSelectedTask] = useState([]);
 
-    const [activeStep, setActiveStep] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingTask, setIsLoadingTask] = useState(false);
+    const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
+    const [isLoadingUser, setIsLoadingUser] = useState(false);
+    const [isLoadingExp, setIsLoadingExp] = useState(false);
+
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
     const [openTaskIds, setOpenTaskIds] = useState([]);
 
     const [questions, setQuestions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
 
     const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
+
 
     const fetchTasks = async () => {
         try {
@@ -107,15 +111,7 @@ const CreateExperiment = () => {
             console.error(t('Error in Search'), error);
         }
     };
-    const fetchExp = async () => {
-        try {
-            const response = await api.get(`experiments`, {
-                headers: { Authorization: `Bearer ${user.accessToken}` },
-            });
-        } catch (error) {
-            console.error(t('Error in Search'), error);
-        }
-    };
+
     const fetchUsers = async () => {
         try {
             const response = await api.get(`users`, {
@@ -147,32 +143,44 @@ const CreateExperiment = () => {
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
 
     const handleNextExperiment = () => {
         if (!titleExperiment) {
             setSnackbarOpen(true);
             setSnackbarMessage(t('titleExperiment_required'));
             setSnackbarSeverity('error');
-            return;
+        } else {
+            if (!descriptionExperiment || descriptionExperiment.replace(/<[^>]+>/g, '').trim() === '') {
+                setSnackbarOpen(true);
+                setSnackbarMessage(t('descriptionExperiment_required'));
+                setSnackbarSeverity('error');
+            } else {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            }
         }
-
-        if (!descriptionExperiment || descriptionExperiment.replace(/<[^>]+>/g, '').trim() === '') {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('descriptionExperiment_required'));
-            setSnackbarSeverity('error');
-            return;
-        }
-
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
-
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
     };
 
+    const handleCreate_taskbtt = () => {
+        if (!taskTitle) {
+        } else {
+            if (!taskSummary) {
+            } else {
+                if (!taskDescription || taskDescription.replace(/<[^>]+>/g, '').trim() === '') {
+                } else {
+                    handleCreateTask();
+                }
+            }
+        }
+    };
     const handleCreateTask = async () => {
         try {
-            setIsLoading(true);
+            setIsLoadingTask(true);
             await api.post(
                 `/tasks`,
                 {
@@ -183,7 +191,6 @@ const CreateExperiment = () => {
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
             toggleCreateTask();
-            fetchTasks();
             settaskTitle("");
             settaskSummary("");
             settaskDescription("");
@@ -191,13 +198,12 @@ const CreateExperiment = () => {
         } catch (error) {
             console.error(t('Error creating task'), error);
         } finally {
-            setIsLoading(false);
+            setIsLoadingTask(false);
         }
     };
-
     const handleCreateExp = async () => { //testando
         try {
-            setIsLoading(true);
+            setIsLoadingExp(true);
             await api.post(
                 `/experiments`,
                 {
@@ -211,42 +217,87 @@ const CreateExperiment = () => {
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
 
-            
             settitleExperiment('');
             setdescriptionExperiment('');
             setSelectedSurveys([]);
             setSelectedTask([]);
             setSelectedUsers([]);
             setActiveStep(0);
-            fetchExp();
-            
-
 
         } catch (error) {
             console.error(t('Error creating experiment'), error);
         } finally {
-            setIsLoading(false);
+            setIsLoadingExp(false);
         }
     };
 
-    const handleCreate_taskbtt = () => {
-        if (!taskTitle) {
-            return;
+    const handleCreateSurvey = async (e) => {
+        e.preventDefault();
+        const name = title;
+        const payload = {
+            name,
+            title,
+            description,
+            type,
+            questions: questions.map((q) => {
+                const question = {
+                    statement: q.statement,
+                    type: q.type,
+                    required: q.required,
+                };
+
+                if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
+                    question.options = q.options.map((opt) => {
+                        const option = { statement: opt.statement };
+                        if (q.type === 'multiple-choices') {
+                            option.score = opt.score;
+                        }
+                        if (opt.subQuestion) {
+                            option.subQuestion = {
+                                statement: opt.subQuestion.statement,
+                                type: opt.subQuestion.type,
+                                required: opt.subQuestion.required,
+                                options: opt.subQuestion.options.map((subOpt) => ({
+                                    statement: subOpt.statement,
+                                    score: subOpt.score,
+                                })),
+                            };
+                        }
+                        return option;
+                    });
+                }
+                return question;
+            }),
+        };
+        toggleCreateQuest();
+        fetchSurveys();
+        setTitle("");
+        setDescription("");
+        setQuestions([]);
+        setType('pre');
+        fetchSurveys();
+        try {
+            setIsLoadingSurvey(true);
+            const response = await api.post(`surveys`,
+                payload,
+                { 'headers': { Authorization: `Bearer ${user.accessToken}` } }
+            );
+
+            setIsLoadingSurvey(false);
+            setSnackbar({
+                open: true,
+                message: 'Questionnaire created successfully!',
+                severity: 'success',
+            });
+            fetchSurveys();
+        } catch (error) {
+            setIsLoadingSurvey(false);
+            setSnackbar({
+                open: true,
+                message: error.response?.data?.message || 'Error creating the questionnaire',
+                severity: 'error',
+            });
         }
-
-        if (!taskSummary) {
-            return;
-        }
-
-        if (!taskDescription || taskDescription.replace(/<[^>]+>/g, '').trim() === '') {
-            return;
-        }
-
-        handleCreateTask();
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
     const toggleTaskDescription = (surveyId) => {
@@ -393,77 +444,6 @@ const CreateExperiment = () => {
                     : q
             )
         );
-    };
-
-
-    const handleSubmitquest = async (e) => {
-        e.preventDefault();
-        const name = title;
-        const payload = {
-            name,
-            title,
-            description,
-            type,
-            questions: questions.map((q) => {
-                const question = {
-                    statement: q.statement,
-                    type: q.type,
-                    required: q.required,
-                };
-
-                if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
-                    question.options = q.options.map((opt) => {
-                        const option = { statement: opt.statement };
-                        if (q.type === 'multiple-choices') {
-                            option.score = opt.score;
-                        }
-                        if (opt.subQuestion) {
-                            option.subQuestion = {
-                                statement: opt.subQuestion.statement,
-                                type: opt.subQuestion.type,
-                                required: opt.subQuestion.required,
-                                options: opt.subQuestion.options.map((subOpt) => ({
-                                    statement: subOpt.statement,
-                                    score: subOpt.score,
-                                })),
-                            };
-                        }
-                        return option;
-                    });
-                }
-
-                return question;
-            }),
-        };
-        toggleCreateQuest();
-        fetchSurveys();
-        setTitle("");
-        setDescription("");
-        setQuestions([]);
-        setType('pre');
-        fetchSurveys();
-        try {
-            setLoading(true);
-            const response = await api.post(`surveys`,
-                payload,
-                { 'headers': { Authorization: `Bearer ${user.accessToken}` } }
-            );
-
-            setLoading(false);
-            setSnackbar({
-                open: true,
-                message: 'Questionnaire created successfully!',
-                severity: 'success',
-            });
-            fetchSurveys();
-        } catch (error) {
-            setLoading(false);
-            setSnackbar({
-                open: true,
-                message: error.response?.data?.message || 'Error creating the questionnaire',
-                severity: 'error',
-            });
-        }
     };
 
 
@@ -654,7 +634,7 @@ const CreateExperiment = () => {
                                 sx={{ mb: 3 }}
                             />
 
-                            {isLoading ? (
+                            {isLoadingTask ? (
                                 <CircularProgress />
                             ) : (
                                 <FormControl fullWidth>
@@ -793,30 +773,30 @@ const CreateExperiment = () => {
                                 </div>
 
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
-                                <Button variant="contained" onClick={toggleCreateTask} color="primary">
-                                    {'Cancelar'}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    type="submit"
-                                    onClick={handleCreate_taskbtt}
-                                    disabled={isLoading}
-                                >
-                                    {'Criar'}
-                                </Button>
+                                    <Button variant="contained" onClick={toggleCreateTask} color="primary">
+                                        {'Cancelar'}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        onClick={handleCreate_taskbtt}
+                                        disabled={isLoadingTask}
+                                    >
+                                        {'Criar'}
+                                    </Button>
                                 </Box>
                             </form>
 
                             <Snackbar
-                                        open={snackbar.open}
-                                        autoHideDuration={6000}
-                                        onClose={() => setSnackbar({ ...snackbar, open: false })}
-                                    >
-                                        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-                                            {snackbar.message}
-                                        </Alert>
-                                    </Snackbar>
+                                open={snackbar.open}
+                                autoHideDuration={6000}
+                                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                            >
+                                <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+                                    {snackbar.message}
+                                </Alert>
+                            </Snackbar>
                         </DialogContent>
                     </Dialog>
                 </Box>
@@ -860,7 +840,7 @@ const CreateExperiment = () => {
                                 sx={{ mb: 3 }}
                             />
 
-                            {isLoading ? (
+                            {isLoadingSurvey ? (
                                 <CircularProgress />
                             ) : (
                                 <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
@@ -965,7 +945,7 @@ const CreateExperiment = () => {
                                     <Typography variant="h4" gutterBottom align="center">
                                         {t('title')}
                                     </Typography>
-                                    <form onSubmit={handleSubmitquest}>
+                                    <form onSubmit={handleCreateSurvey}>
                                         <TextField
                                             label={t('surveyTitle')}
                                             value={title}
@@ -1105,9 +1085,9 @@ const CreateExperiment = () => {
                                             <Button variant="contained" onClick={toggleCreateQuest} color="primary">
                                                 {'Cancelar'}
                                             </Button>
-                                
-                                            <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                                                {loading ? <CircularProgress size={24} /> : t('createSurvey')}
+
+                                            <Button type="submit" variant="contained" color="primary" disabled={isLoadingSurvey}>
+                                                {isLoadingSurvey ? <CircularProgress size={24} /> : t('createSurvey')}
                                             </Button>
                                         </Box>
                                     </form>
@@ -1162,7 +1142,7 @@ const CreateExperiment = () => {
                             sx={{ mb: 3 }}
                         />
 
-                        {isLoading ? (
+                        {isLoadingUser ? (
                             <CircularProgress />
                         ) : (
                             <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
@@ -1189,7 +1169,7 @@ const CreateExperiment = () => {
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <Checkbox
                                                         checked={selectedUsers.includes(user.id)}
-                                                        
+
                                                         onChange={() => handleSelectUser(user.id)}
                                                     />
                                                     <ListItemText
@@ -1312,7 +1292,7 @@ const CreateExperiment = () => {
                                 variant="contained"
                                 color="primary"
                                 onClick={handleCreateExp}
-                                disabled={isLoading}
+                                disabled={isLoadingExp}
                                 fullWidth
                                 sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
                             >
