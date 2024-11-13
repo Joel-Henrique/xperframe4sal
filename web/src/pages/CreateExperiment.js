@@ -678,7 +678,6 @@ const CreateExperiment = () => {
                                                             {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                                         </IconButton>
                                                     </Box>
-
                                                     {openTaskIds.includes(task._id) && (
                                                         <Box
                                                             sx={{
@@ -687,10 +686,10 @@ const CreateExperiment = () => {
                                                                 backgroundColor: '#e8f5e9',
                                                                 borderRadius: '4px'
                                                             }}
-                                                        >
-                                                            <Typography variant="body2">{task.description}</Typography>
-                                                        </Box>
+                                                            dangerouslySetInnerHTML={{ __html: task.description }}
+                                                        />
                                                     )}
+
                                                 </Box>
                                             ))}
                                     </Box>
