@@ -7,7 +7,7 @@ export class Task extends BaseEntity {
   title: string;
   @Prop({ required: true })
   summary: string;
-  @Prop({ required: true })
+  @Prop()
   description: string;
 }
 

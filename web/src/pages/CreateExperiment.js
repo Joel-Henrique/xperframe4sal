@@ -149,17 +149,8 @@ const CreateExperiment = () => {
 
     const handleNextExperiment = () => {
         if (!titleExperiment) {
-            setSnackbarOpen(true);
-            setSnackbarMessage(t('titleExperiment_required'));
-            setSnackbarSeverity('error');
         } else {
-            if (!descriptionExperiment || descriptionExperiment.replace(/<[^>]+>/g, '').trim() === '') {
-                setSnackbarOpen(true);
-                setSnackbarMessage(t('descriptionExperiment_required'));
-                setSnackbarSeverity('error');
-            } else {
-                setActiveStep((prevActiveStep) => prevActiveStep + 1);
-            }
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
     };
     const handleCloseSnackbar = () => {
@@ -168,14 +159,8 @@ const CreateExperiment = () => {
 
     const handleCreate_taskbtt = () => {
         if (!taskTitle) {
-        } else {
-            if (!taskSummary) {
-            } else {
-                if (!taskDescription || taskDescription.replace(/<[^>]+>/g, '').trim() === '') {
-                } else {
-                    handleCreateTask();
-                }
-            }
+        }else {
+            handleCreateTask();
         }
     };
     const handleCreateTask = async () => {
@@ -556,7 +541,6 @@ const CreateExperiment = () => {
                                         value={descriptionExperiment}
                                         onChange={setdescriptionExperiment}
                                         placeholder={t('Experiment_Desc1')}
-                                        required
                                     />
                                 </CustomContainer>
                             </div>
@@ -766,7 +750,6 @@ const CreateExperiment = () => {
                                             value={taskDescription}
                                             onChange={(content) => settaskDescription(content)}
                                             placeholder={t('task_Desc1')}
-                                            required
                                         />
                                     </CustomContainer>
                                 </div>

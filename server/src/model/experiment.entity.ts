@@ -50,7 +50,7 @@ export class UserProps {
 export class Experiment extends BaseEntity {
   @Prop({ required: true })
   name: string;
-  @Prop({ required: true })
+  @Prop()
   summary: string;
   @Prop()
   icfId: string;
