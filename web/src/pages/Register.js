@@ -21,6 +21,7 @@ const Register = () => {
   const { t } = useTranslation(); 
 
   const [name, setName] = useState('');
+  const [pesquisador, setPesquisador] = useState(false);
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -89,7 +90,7 @@ const Register = () => {
     setLastName(lastName.trim());
     setEmail(email.trim());
 
-    const userData = { name, lastName, email, password };
+    const userData = { name, lastName, email, password , pesquisador};
     setIsLoading(true);
     try {
       let response = await api.post("/users", userData);

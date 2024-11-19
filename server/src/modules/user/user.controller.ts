@@ -18,6 +18,7 @@ import { ForgotPasswordDto, GetRecoveryPasswordDto, GetUserDto, ResetPasswordDto
 export class LoginDto {
   email: string;
   password: string;
+  pesquisador: boolean;
 }
 
 @Controller('users')
@@ -48,6 +49,7 @@ export class UserController {
       user.name = user.name.trim();
       user.lastName = user.lastName.trim();
       user.email = user.email.trim();
+      user.pesquisador = user.pesquisador.valueOf();
       const userDto = await this._userService.create(user);
 
       return {
@@ -55,6 +57,7 @@ export class UserController {
         name: userDto.name,
         lastName: userDto.lastName,
         email: userDto.email,
+        pesquisador: userDto.pesquisador,
       };
     } catch (error) {
       throw error;
@@ -75,6 +78,7 @@ export class UserController {
           name: user.name,
           lastName: user.lastName,
           email: user.email,
+          pesquisador: user.pesquisador,
         };
       }
       catch (error) {
@@ -94,6 +98,7 @@ export class UserController {
           name: user.name,
           lastName: user.lastName,
           email: user.email,
+          pesquisador: user.pesquisador,
         };
       });
     } catch (error) {
@@ -110,6 +115,7 @@ export class UserController {
       name: user.name,
       lastName: user.lastName,
       email: user.email,
+      pesquisador: user.pesquisador,
     };
   }
 
@@ -124,6 +130,7 @@ export class UserController {
       name: userDto.name,
       lastName: userDto.lastName,
       email: userDto.email,
+      pesquisador: user.pesquisador,
     };
   }
 
