@@ -16,6 +16,8 @@ import { ForgotPassword } from './ForgotPassword';
 import { NotFoundPage } from './NotFoundPage';
 import { ResetPassword } from './ResetPassword';
 import { ExperimentList } from './ExperimentList';
+import { Researcher } from './Researcher';
+import { NotResearcher } from './NotResearcher';
 
 export {
   ICF,
@@ -35,5 +37,8 @@ export {
   CreateSurveys,
   CreateExperiment,
   ExperimentList,
-  Instructions
+  Instructions,
+  Researcher,
+  NotResearcher,
+  
 }
