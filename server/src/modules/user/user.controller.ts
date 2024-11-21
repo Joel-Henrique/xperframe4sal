@@ -10,10 +10,15 @@ import {
   Query,
   NotFoundException,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { User } from '../../model/user.entity';
-import { AuthGuard } from '@nestjs/passport';
-import { ForgotPasswordDto, GetRecoveryPasswordDto, GetUserDto, ResetPasswordDto } from 'src/model/user.dto';
+import {UserService} from './user.service';
+import {User} from '../../model/user.entity';
+import {AuthGuard} from '@nestjs/passport';
+import {
+  ForgotPasswordDto,
+  GetRecoveryPasswordDto,
+  GetUserDto,
+  ResetPasswordDto,
+} from 'src/model/user.dto';
 
 export class LoginDto {
   email: string;
@@ -22,10 +27,12 @@ export class LoginDto {
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly _userService: UserService) { }
+  constructor(private readonly _userService: UserService) {}
 
   @Post('forgot-password')
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<void> {
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<void> {
     try {
       await this._userService.forgotPassword(forgotPasswordDto);
     } catch (error) {
@@ -34,7 +41,9 @@ export class UserController {
   }
 
   @Post('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<void> {
     try {
       await this._userService.resetPassword(resetPasswordDto);
     } catch (error) {
@@ -65,7 +74,11 @@ export class UserController {
   @Get()
   async findAll(
     @Query('email') email: string,
-  ): Promise<GetUserDto[] | GetUserDto | { data?: any; error?: string; statusCode?: number }> {
+  ): Promise<
+    | GetUserDto[]
+    | GetUserDto
+    | {data?: any; error?: string; statusCode?: number}
+  > {
     if (email) {
       try {
         const user = await this._userService.findOneByEmail(email);
@@ -76,10 +89,9 @@ export class UserController {
           lastName: user.lastName,
           email: user.email,
         };
-      }
-      catch (error) {
+      } catch (error) {
         if (error instanceof NotFoundException) {
-          return { error: 'Usuário não encontrado', statusCode: 404 };
+          return {error: 'Usuário não encontrado', statusCode: 404};
         } else {
           throw error;
         }
@@ -115,7 +127,10 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() user: User): Promise<GetUserDto> {
+  async update(
+    @Param('id') id: string,
+    @Body() user: User,
+  ): Promise<GetUserDto> {
     user.lastChangedAt = new Date();
     const userDto = await this._userService.update(id, user);
 
@@ -135,13 +150,16 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch()
-  async addChangePasswordToken(@Query('email') email: string): Promise<GetRecoveryPasswordDto> {
+  async addChangePasswordToken(
+    @Query('email') email: string,
+  ): Promise<GetRecoveryPasswordDto> {
     const user = await this._userService.addChangePasswordToken(email);
     return {
       id: user._id,
       recoveryPasswordToken: user.recoveryPasswordToken,
-      recoveryPasswordTokenExpirationDate: user.recoveryPasswordTokenExpirationDate,
-    }
+      recoveryPasswordTokenExpirationDate:
+        user.recoveryPasswordTokenExpirationDate,
+    };
   }
 
   // @UseGuards(AuthGuard('jwt'))
