@@ -13,10 +13,7 @@ import {
   ForgotPassword,
   NotFoundPage,
   Account,
-  CreateTasks,
-  CreateSurveys,
   CreateExperiment,
-  ExperimentList,
   ResetPassword,
   Instructions,
   Researcher,
@@ -42,27 +39,16 @@ const Router = () => {
         <Route index element={<Instructions />} />
       </Route>
 
-      <Route path='/createtasks' element={<PrivateRoutes />}>
-         <Route index element={<CreateTasks />} />
-      </Route>
-
-      <Route path='/CreateSurveys' element={<PrivateRoutes />}>
-         <Route index element={<CreateSurveys />} />
-      </Route>
-
       <Route path='/CreateExperiment' element={<PrivateRoutes />}>
          <Route index element={<CreateExperiment />} />
-      </Route>
-
-      <Route path='/ExperimentList' element={<PrivateRoutes />}>
-         <Route index element={<ExperimentList />} />
       </Route>
 
       <Route path='/NotResearcher' element={<PrivateRoutes />}>
          <Route index element={<NotResearcher />} />
       </Route>
+
       <Route path='/Researcher' element={<PrivateRoutes />}>
-         <Route index element={<NotResearcher />} />
+         <Route index element={<Researcher />} />
       </Route>
 
       <Route path='/experiments' element={<PrivateRoutes />}>
