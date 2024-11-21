@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-const Experiments = () => {
-  const navigate = useNavigate();
-  const [user] = useState(JSON.parse(localStorage.getItem('user')));
-
-  useEffect(() => {
-    if (user) {
+useEffect(() => {
+  console.log('Usuário carregado:', user);
+  if (user) {
+    if (user.pesquisador !== undefined) {
+      console.log('Pesquisador:', user.pesquisador);
       if (user.pesquisador) {
-        navigate('/Researcher'); 
+        navigate('/Researcher');
       } else {
-        navigate('/NotResearcher'); 
+        navigate('/NotResearcher');
       }
-    
+    } else {
+      console.warn('Propriedade pesquisador não encontrada no objeto user.');
+      navigate('/NotResearcher');
     }
-  }, [user, navigate]);
-
-};
-
-export { Experiments };
+  }
+}, [user, navigate]);
