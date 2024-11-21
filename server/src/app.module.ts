@@ -17,6 +17,8 @@ import {UserTaskSessionModule} from './modules/user-task-session/user-task-sessi
 import {MailerModule} from '@nestjs-modules/mailer';
 import {ConfigModule} from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import {User2Module} from './modules/user2/user2.module';
+import {User} from './modules/user2/entity/user.entity';
 
 @Module({
   imports: [
@@ -50,7 +52,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: 'cbf',
-      entities: [],
+      entities: [User],
       synchronize: true,
     }),
     MailerModule.forRoot({
@@ -61,6 +63,7 @@ import {TypeOrmModule} from '@nestjs/typeorm';
         },
       },
     }),
+    User2Module,
   ],
   controllers: [AppController],
   providers: [],
