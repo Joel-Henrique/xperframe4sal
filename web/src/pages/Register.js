@@ -10,6 +10,8 @@ import {
   InputAdornment,
   IconButton,
   Box,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -18,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const [name, setName] = useState('');
   const [pesquisador, setPesquisador] = useState(false);
@@ -65,23 +67,8 @@ const Register = () => {
   };
 
   const handleRegister = async () => {
-    if (!isValidEmail) {
-      setAlertMessage(t("invalid_email_message"));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidName) {
-      setAlertMessage(t("invalid_name_message"));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidLastName) {
-      setAlertMessage(t("invalid_last_name_message"));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidPassword) {
-      setAlertMessage(t("invalid_password_message"));
+    if (!isValidEmail || !isValidName || !isValidLastName || !isValidPassword) {
+      setAlertMessage(t("form_invalid_message"));
       setMessageType('fail');
       return;
     }
@@ -90,7 +77,7 @@ const Register = () => {
     setLastName(lastName.trim());
     setEmail(email.trim());
 
-    const userData = { name, lastName, email, password , pesquisador};
+    const userData = { name, lastName, email, password, pesquisador };
     setIsLoading(true);
     try {
       let response = await api.post("/users", userData);
@@ -187,6 +174,16 @@ const Register = () => {
                 </InputAdornment>
               ),
             }}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={pesquisador}
+                onChange={(e) => setPesquisador(e.target.checked)}
+                color="primary"
+              />
+            }
+            label={t('researcher_label')}
           />
           <Button
             variant="contained"
