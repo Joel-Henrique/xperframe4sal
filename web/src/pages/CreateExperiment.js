@@ -159,7 +159,7 @@ const CreateExperiment = () => {
 
     const handleCreate_taskbtt = () => {
         if (!taskTitle) {
-        }else {
+        } else {
             handleCreateTask();
         }
     };
@@ -430,6 +430,45 @@ const CreateExperiment = () => {
             )
         );
     };
+    const [isValidTitleExp, setIsValidTitleExp] = useState(true);
+    const isValidFormExperiment = isValidTitleExp && titleExperiment;
+
+    const [isValidTitleTask, setIsValidTitleTask] = useState(true);
+    const [isValidSumaryTask, setIsValidSumaryTask] = useState(true);
+
+    const [isValidTitleSurvey, setIsValidTitleSurvey] = useState(true);
+    const [isValidDescSurvey, setIsValidDescSurvey] = useState(true);
+
+    const isValidFormTask = isValidTitleTask && taskTitle && isValidSumaryTask && taskSummary;
+    const isValidFormSurvey = isValidTitleSurvey && title && isValidDescSurvey && description;
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleNameChangeTitle = (e) => {
+        const inputName = e.target.value;
+        settitleExperiment(inputName);
+        setIsValidTitleExp(inputName.trim() !== "");
+    };
+    const handleNameChangeTitleTask = (e) => {
+        const inputName = e.target.value;
+        settaskTitle(inputName);
+        setIsValidTitleTask(inputName.trim() !== "");
+    };
+    const handleNameChangeSumaryTask = (e) => {
+        const inputName = e.target.value;
+        settaskSummary(inputName);
+        setIsValidSumaryTask(inputName.trim() !== "");
+    };
+    const handleNameChangeTitleSurvey = (e) => {
+        const inputName = e.target.value;
+        setTitle(inputName);
+        setIsValidTitleTask(inputName.trim() !== "");
+    };
+    const handleNameChangeDescSurvey= (e) => {
+        const inputName = e.target.value;
+        setDescription(inputName);
+        setIsValidSumaryTask(inputName.trim() !== "");
+    };
 
 
     return (
@@ -489,18 +528,16 @@ const CreateExperiment = () => {
                         >
                             <TextField
                                 label={t('Experiment_title')}
+                                error={!isValidTitleExp}
+                                helperText={!isValidTitleExp ? t('invalid_name_message') : ''}
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
                                 value={titleExperiment}
-                                onChange={(e) => settitleExperiment(e.target.value)}
+                                onChange={handleNameChangeTitle}
                                 required
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderColor: titleExperiment ? 'green' : 'red',
-                                    },
-                                }}
                             />
+
 
                             <FormControl fullWidth margin="normal">
                                 <InputLabel>{t('Experiment_Type')}</InputLabel>
@@ -561,6 +598,7 @@ const CreateExperiment = () => {
                                     color="primary"
                                     onClick={handleNextExperiment}
                                     sx={{ maxWidth: '150px' }}
+                                    disabled={!isValidFormExperiment || isLoading}
                                 >
                                     {t('next')}
                                 </Button>
@@ -726,22 +764,26 @@ const CreateExperiment = () => {
                             <form onSubmit={handleCreate_taskbtt}>
                                 <TextField
                                     label={t('task_title')}
+                                    error={!isValidTitleTask}
+                                    helperText={!isValidTitleTask ? t('invalid_name_message') : ''}
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     value={taskTitle}
-                                    onChange={(e) => settaskTitle(e.target.value)}
+                                    onChange={handleNameChangeTitleTask}
                                     required
                                 />
                                 <TextField
                                     label={t('task_summary')}
+                                    error={!isValidSumaryTask}
+                                    helperText={!isValidSumaryTask? t('invalid_name_message') : ''}
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     multiline
                                     rows={4}
                                     value={taskSummary}
-                                    onChange={(e) => settaskSummary(e.target.value)}
+                                    onChange= {handleNameChangeSumaryTask}
                                     required
                                 />
                                 <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
@@ -763,7 +805,7 @@ const CreateExperiment = () => {
                                         color="primary"
                                         type="submit"
                                         onClick={handleCreate_taskbtt}
-                                        disabled={isLoadingTask}
+                                        disabled={!isValidFormTask || isLoadingTask}
                                     >
                                         {'Criar'}
                                     </Button>
@@ -931,7 +973,7 @@ const CreateExperiment = () => {
                                         <TextField
                                             label={t('surveyTitle')}
                                             value={title}
-                                            onChange={(e) => setTitle(e.target.value)}
+                                            onChange={handleNameChangeTitleSurvey}
                                             fullWidth
                                             required
                                             margin="normal"
@@ -940,7 +982,7 @@ const CreateExperiment = () => {
                                             label={t('surveyDescription')}
                                             value={description}
                                             required
-                                            onChange={(e) => setDescription(e.target.value)}
+                                            onChange={handleNameChangeDescSurvey}
                                             fullWidth
                                             multiline
                                             rows={4}
@@ -1068,7 +1110,8 @@ const CreateExperiment = () => {
                                                 {'Cancelar'}
                                             </Button>
 
-                                            <Button type="submit" variant="contained" color="primary" disabled={isLoadingSurvey}>
+                                            <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
+                                                
                                                 {isLoadingSurvey ? <CircularProgress size={24} /> : t('createSurvey')}
                                             </Button>
                                         </Box>
