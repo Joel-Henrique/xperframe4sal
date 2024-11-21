@@ -1,5 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const NotResearcher = () => {
   return (
@@ -9,5 +11,4 @@ const NotResearcher = () => {
     </div>
   );
 };
-
 export { NotResearcher };
