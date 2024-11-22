@@ -18,7 +18,6 @@ import { ForgotPasswordDto, GetRecoveryPasswordDto, GetUserDto, ResetPasswordDto
 export class LoginDto {
   email: string;
   password: string;
-  pesquisador: boolean;
 }
 
 @Controller('users')
@@ -69,16 +68,18 @@ export class UserController {
   async findAll(
     @Query('email') email: string,
   ): Promise<GetUserDto[] | GetUserDto | { data?: any; error?: string; statusCode?: number }> {
+
+    
     if (email) {
       try {
         const user = await this._userService.findOneByEmail(email);
 
         return {
           id: user._id,
+          pesquisador: user.pesquisador,
           name: user.name,
           lastName: user.lastName,
           email: user.email,
-          pesquisador: user.pesquisador,
         };
       }
       catch (error) {

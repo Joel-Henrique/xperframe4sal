@@ -33,6 +33,7 @@ export class AuthService {
     return {
       id: user._id,
       email: user.email,
+      pesquisador: user.pesquisador,
       name: user.name,
       lastName: user.lastName,
       accessToken: this.jwtService.sign(payload),
