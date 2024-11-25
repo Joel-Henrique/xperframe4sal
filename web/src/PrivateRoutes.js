@@ -184,9 +184,7 @@ export function PrivateRoutes(props) {
             <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoInstruction}>
               {t('menu_instructions')}
             </Button>
-            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateExperiment}>
-              {t('menu_experiments')}
-            </Button>
+            
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}
             </Button>

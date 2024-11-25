@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 const Account = () => {
-  const { t } = useTranslation(); // Adicionando a função de tradução
+  const { t } = useTranslation(); 
   const storedUser = localStorage.getItem('user');
   const navigate = useNavigate();
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);

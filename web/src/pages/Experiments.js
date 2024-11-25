@@ -11,14 +11,12 @@ const Experiments = () => {
     console.log('Usuário carregado:', storedUser);
     if (storedUser) {
       if (storedUser.pesquisador !== undefined) {
-        console.log('Pesquisador:', storedUser.pesquisador);
         if (storedUser.pesquisador) {
           navigate('/Researcher');
         } else {
           navigate('/NotResearcher');
         }
       } else {
-        console.warn('Propriedade pesquisador não encontrada no objeto user.');
         navigate('/NotResearcher');
       }
     }
