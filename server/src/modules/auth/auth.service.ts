@@ -1,14 +1,16 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { User } from 'src/model/user.entity';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+//import { UserService } from '../user/user.service';
+//import { User } from 'src/model/user.entity';
+import {User2Service} from '../user2/user2.service';
+import {User} from '../user2/entity/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userService: User2Service,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async validateUserCredentials(
     email: string,
@@ -29,7 +31,7 @@ export class AuthService {
   }
 
   async loginWithCredentials(user: User) {
-    const payload = { email: user.email };
+    const payload = {email: user.email};
     return {
       id: user._id,
       email: user.email,

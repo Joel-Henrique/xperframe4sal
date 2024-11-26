@@ -18,7 +18,7 @@ import {
 } from 'src/model/user.dto';
 import {User} from './entity/user.entity';
 
-@Controller('user2')
+@Controller('users2')
 export class User2Controller {
   constructor(private readonly _userService: User2Service) {}
 
@@ -29,7 +29,7 @@ export class User2Controller {
     try {
       await this._userService.forgotPassword(forgotPasswordDto);
     } catch (error) {
-      throw error;
+      throw new Error(error.message);
     }
   }
   @Post('reset-password')

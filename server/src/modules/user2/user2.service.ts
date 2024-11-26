@@ -46,10 +46,7 @@ export class User2Service {
     try {
       await this.sendResetPasswordEmail(user.email, user.recoveryPasswordToken);
     } catch (error) {
-      throw new HttpException(
-        `Ocorreu um errro inesperado tente novamente`,
-        500,
-      );
+      throw new HttpException(error.message, 500);
     }
   }
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
@@ -76,6 +73,7 @@ export class User2Service {
     try {
       user.password = await bcrypt.hash(user.password, 10);
       const userSaved = await this.userRepository.save(user);
+      //TODO create userExperiment
       return userSaved;
     } catch (error) {
       throw error;

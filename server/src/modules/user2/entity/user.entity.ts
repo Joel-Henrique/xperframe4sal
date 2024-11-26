@@ -12,12 +12,12 @@ export class User {
   email: string;
   @Column({nullable: false})
   password: string;
-  @Column()
+  @Column({nullable: true})
   birthDate: Date;
-  @Column()
+  @Column({nullable: true})
   recoveryPasswordToken: string;
-  @Column()
+  @Column({nullable: true})
   recoveryPasswordTokenExpirationDate: Date;
-  @Column()
+  @Column({nullable: true})
   pesquisador: boolean;
 }
