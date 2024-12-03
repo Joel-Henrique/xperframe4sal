@@ -19,7 +19,10 @@ import {ConfigModule} from '@nestjs/config';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {User2Module} from './modules/user2/user2.module';
 import {User} from './modules/user2/entity/user.entity';
-
+import {Experiments2Module} from './modules/experiments2/experiments2.module';
+import {Experiment} from './modules/experiments2/entity/experiment.entity';
+import {Task2Module} from './modules/task2/task2.module';
+import {Task} from './modules/task2/entities/task.entity';
 @Module({
   imports: [
     ExperimentsModule,
@@ -52,7 +55,7 @@ import {User} from './modules/user2/entity/user.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: 'cbf',
-      entities: [User],
+      entities: [User, Experiment, Task],
       synchronize: true,
     }),
     MailerModule.forRoot({
@@ -64,6 +67,8 @@ import {User} from './modules/user2/entity/user.entity';
       },
     }),
     User2Module,
+    Experiments2Module,
+    Task2Module,
   ],
   controllers: [AppController],
   providers: [],
