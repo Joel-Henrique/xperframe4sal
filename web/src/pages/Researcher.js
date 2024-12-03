@@ -14,7 +14,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
-const ExperimentAccordion = ({ experiment, expanded, onChange, onClick }) => (
+const ExperimentAccordion = ({ experiment, expanded, onChange, onClick, t }) => (
   <Accordion
     sx={{ marginBottom: '5px' }}
     elevation={3}
@@ -49,6 +49,7 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onClick }) => (
     </AccordionDetails>
   </Accordion>
 );
+
 
 const LoadingState = () => (
   <div>
@@ -152,6 +153,7 @@ const Researcher = () => {
             expanded={expanded === `panel-owner-${index}`}
             onChange={handleChange(`panel-owner-${index}`)}
             onClick={() => handleClick(experiment._id)}
+            t={t}
           />
         ))
       ) : (
@@ -172,6 +174,7 @@ const Researcher = () => {
             expanded={expanded === `panel-${index}`}
             onChange={handleChange(`panel-${index}`)}
             onClick={() => handleClick(experiment._id)}
+            t={t}
           />
         ))
       ) : (
