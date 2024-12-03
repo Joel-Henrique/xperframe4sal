@@ -179,6 +179,7 @@
   "invalid_email_message": "invalid email",
   "researcher_experiments_title": "Created Experiments",
   "create_experiment_button": "Create New Experiment",
-  "view_experiment_button": "View Experiment"
+  "view_experiment_button": "View Experiment",
+  "Access":"Access"
 
 }

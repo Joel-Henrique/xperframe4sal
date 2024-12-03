@@ -192,6 +192,7 @@ const CreateExperiment = () => {
             await api.post(
                 `/experiments`,
                 {
+                    ownerId: user.id,
                     name: titleExperiment,
                     summary: descriptionExperiment,
                     type: typeExperiment,

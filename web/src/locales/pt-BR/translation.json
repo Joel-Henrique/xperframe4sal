@@ -181,5 +181,6 @@
   "invalid_email_message": "email invalido",
   "researcher_experiments_title": "Experimentos Criados",
   "create_experiment_button": "Criar Novo Experimento",
-  "view_experiment_button": "Visualizar Experimento"
+  "view_experiment_button": "Visualizar Experimento",
+  "Access":"Acessar"
 }
