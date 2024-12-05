@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Experiment } from '../../model/experiment.entity';
-import { UserExperiment } from '../../model/user-experiment.entity'
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { UserTask } from 'src/model/user-task.entity';
+import {Injectable} from '@nestjs/common';
+import {Experiment} from '../../model/experiment.entity';
+import {UserExperiment} from '../../model/user-experiment.entity';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {UserTask} from 'src/model/user-task.entity';
 
 @Injectable()
 export class ExperimentsService {
@@ -15,13 +15,13 @@ export class ExperimentsService {
     private readonly _userExperimentModel: Model<UserExperiment>,
 
     @InjectModel('UserTask')
-    private readonly _userTaskModel: Model<UserTask>
-  ) { }
+    private readonly _userTaskModel: Model<UserTask>,
+  ) {}
 
   async create(experiment: Experiment): Promise<Experiment> {
     const userIds = [];
     const taskIds = [];
-    
+
     Object.keys(experiment.userProps).forEach((userId) => {
       const userProps = experiment.userProps[userId];
       userIds.push(userProps);
@@ -49,22 +49,19 @@ export class ExperimentsService {
     // Salva UserTasks
     for (let i = 0; i < taskIds.length; i++) {
       const taskId = taskIds[i];
-      for (let i = 0; i < userIds.length; i++){
+      for (let i = 0; i < userIds.length; i++) {
         const userId = userIds[i];
         const userTask = new this._userTaskModel({
           userId: userId,
           taskId: taskId,
-      });
+        });
 
-      await userTask.save();
-    }
+        await userTask.save();
+      }
     }
 
     return _experiment;
   }
-
-
-  
 
   async findAll(): Promise<Experiment[]> {
     return await this._experimentModel.find().exec();
@@ -75,7 +72,7 @@ export class ExperimentsService {
   }
 
   async findOneByName(name: string): Promise<Experiment> {
-    return await this._experimentModel.findOne({ name: name }).exec();
+    return await this._experimentModel.findOne({name: name}).exec();
   }
 
   async update(id: string, experiment: Experiment): Promise<Experiment> {
@@ -85,6 +82,6 @@ export class ExperimentsService {
   }
 
   async remove(id: string) {
-    return await this._experimentModel.findByIdAndDelete(id).exec();;
+    return await this._experimentModel.findByIdAndDelete(id).exec();
   }
 }

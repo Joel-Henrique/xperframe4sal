@@ -1,5 +1,6 @@
 import {BaseEntity} from 'src/model/base_entity2';
-import {Column, Entity} from 'typeorm';
+import {Task} from 'src/modules/task2/entities/task.entity';
+import {Column, Entity, OneToMany} from 'typeorm';
 
 /*enum SurveyType {
   PRE = 'pre',
@@ -19,4 +20,6 @@ export class Experiment extends BaseEntity {
   name: string;
   @Column()
   summary: string;
+  @OneToMany(() => Task, (task) => task.experiment)
+  tasks: Task[];
 }

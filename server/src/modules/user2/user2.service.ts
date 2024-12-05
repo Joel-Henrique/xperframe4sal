@@ -140,7 +140,7 @@ export class User2Service {
       } else {
         user.password = undefined;
       }
-      await this.userRepository.update(id, user);
+      await this.userRepository.update({_id: id}, user);
       const result = await this.findOne(id);
       return result;
     } catch (error) {
@@ -148,7 +148,9 @@ export class User2Service {
     }
   }
   async remove(id: string) {
-    return await this.userRepository.delete(id);
+    const user = await this.findOne(id);
+    await this.userRepository.delete({_id: id});
+    return user;
   }
   async removeAll() {
     try {
