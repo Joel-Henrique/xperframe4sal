@@ -10,6 +10,8 @@ export class Task extends BaseEntity {
   summary: string;
   @Column()
   description: string;
-  @ManyToOne(() => Experiment, (experiment) => experiment.tasks)
+  @ManyToOne(() => Experiment, (experiment) => experiment.tasks, {
+    nullable: true,
+  })
   experiment: Experiment;
 }
