@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../config/axios';
+import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
@@ -53,6 +54,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 const CreateExperiment = () => {
+    const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -143,8 +145,13 @@ const CreateExperiment = () => {
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
+
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleBackResearcher = () => {
+        navigate('/researcher');
     };
 
     const handleNextExperiment = () => {
@@ -587,8 +594,7 @@ const CreateExperiment = () => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={handleBack}
-                                    disabled={activeStep === 0}
+                                    onClick={handleBackResearcher}
                                     sx={{ maxWidth: '150px' }}
                                 >
                                     {t('back')}
