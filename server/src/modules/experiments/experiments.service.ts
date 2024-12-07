@@ -63,9 +63,6 @@ export class ExperimentsService {
     return _experiment;
   }
 
-
-  
-
   async findAll(): Promise<Experiment[]> {
     return await this._experimentModel.find().exec();
   }

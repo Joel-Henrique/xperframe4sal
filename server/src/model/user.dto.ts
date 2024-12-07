@@ -3,7 +3,7 @@ export interface GetUserDto {
   name: string;
   lastName: string;
   email: string;
-  pesquisador: boolean;
+  researcher: boolean;
 }
 
 export interface GetRecoveryPasswordDto {

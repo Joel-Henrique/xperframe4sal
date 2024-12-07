@@ -9,7 +9,6 @@ import {
   Typography,
   Divider,
   Skeleton,
-  Grid,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +49,6 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onClick, t }) => 
   </Accordion>
 );
 
-
 const LoadingState = () => (
   <div>
     {[...Array(3)].map((_, index) => (
@@ -63,80 +61,70 @@ const Researcher = () => {
   const navigate = useNavigate();
   const [experiments, setExperiments] = useState(null);
   const [experimentsOwner, setOwnerExperiments] = useState(null);
-  const [expanded, setExpanded] = useState(`panel-owner-0`);
+  const [expanded, setExpanded] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [user] = useState(JSON.parse(localStorage.getItem('user')));
+  const user = JSON.parse(localStorage.getItem('user'));
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchExperimentData = async () => {
+    const fetchAllExperiments = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await api.get(`user-experiments?userId=${user.id}`, {
+        const allExperimentsResponse = await api.get('experiments', {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         });
-        const userExperimentsData = response.data;
-        let experimentList = [];
-        if (userExperimentsData?.length > 0) {
-          for (let i = 0; i < userExperimentsData.length; i++) {
-            if (!userExperimentsData[i].hasFinished) {
-              const experimentResponse = await api.get(
-                `experiments/${userExperimentsData[i].experimentId}`,
-                { headers: { Authorization: `Bearer ${user.accessToken}` } }
-              );
-              experimentList.push(experimentResponse.data);
-            }
+  
+        const allExperiments = allExperimentsResponse.data;
+  
+        const participatedExperiments = [];
+        const ownedExperiments = [];
+  
+        allExperiments.forEach((experiment) => {
+          if (experiment.ownerId === user.id) {
+            ownedExperiments.push(experiment);
+          } else if (experiment.userProps?.includes(user.id)) {
+            participatedExperiments.push(experiment);
           }
-        }
-        const ownedExperiments = experimentList.filter(
-          (experiment) => experiment.ownerId === user.id
-        );
-        const participatedExperiments = experimentList.filter(
-          (experiment) => experiment.ownerId !== user.id
-        );
+        });
+  
         setExperiments(participatedExperiments);
         setOwnerExperiments(ownedExperiments);
-      } catch (error) {
+  
+        if (ownedExperiments.length > 0) {
+          setExpanded(`panel-owner-0`);
+        } else if (participatedExperiments.length > 0) {
+          setExpanded(`panel-0`);
+        }
+      } catch (err) {
         setError(t('error_loading_experiments'));
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
+  
+    fetchAllExperiments();
+  }, [user.id, user.accessToken, t]);
+  
+  const handleCreateExperiment = () => navigate('/CreateExperiment');
 
-    fetchExperimentData();
-  }, [user?.id, user?.accessToken, t]);
-
-  const handleCreateExperiment = () => {
-    navigate('/CreateExperiment');
-  };
-
-  const handleClick = (experimentId) => {
-    navigate(`/experiments/${experimentId}/surveys`);
-  };
+  const handleClick = (experimentId) => navigate(`/experiments/${experimentId}/surveys`);
 
   const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+    setExpanded(isExpanded ? panel : null);
   };
 
   return (
     <>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', marginBottom: '16px'}}>
         <Typography variant="h6" gutterBottom>
           {t('researcher_experiments_title')}
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateExperiment}
-        >
+        <Button variant="contained" color="primary" onClick={handleCreateExperiment}>
           {t('create_experiment_button')}
         </Button>
       </div>
-
-
-
 
       {isLoading && <LoadingState />}
       {error && (
@@ -159,8 +147,6 @@ const Researcher = () => {
       ) : (
         !isLoading && <Typography>{t('no_experiments')}</Typography>
       )}
-
-
 
       <Typography variant="h6" gutterBottom style={{ marginTop: '16px' }}>
         {t('see_experiment_list_title')}

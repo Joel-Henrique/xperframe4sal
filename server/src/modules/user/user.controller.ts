@@ -48,7 +48,7 @@ export class UserController {
       user.name = user.name.trim();
       user.lastName = user.lastName.trim();
       user.email = user.email.trim();
-      user.pesquisador = user.pesquisador.valueOf();
+      user.researcher = user.researcher.valueOf();
       const userDto = await this._userService.create(user);
 
       return {
@@ -56,7 +56,7 @@ export class UserController {
         name: userDto.name,
         lastName: userDto.lastName,
         email: userDto.email,
-        pesquisador: userDto.pesquisador,
+        researcher: userDto.researcher,
       };
     } catch (error) {
       throw error;
@@ -76,7 +76,7 @@ export class UserController {
 
         return {
           id: user._id,
-          pesquisador: user.pesquisador,
+          researcher: user.researcher,
           name: user.name,
           lastName: user.lastName,
           email: user.email,
@@ -99,7 +99,7 @@ export class UserController {
           name: user.name,
           lastName: user.lastName,
           email: user.email,
-          pesquisador: user.pesquisador,
+          researcher: user.researcher,
         };
       });
     } catch (error) {
@@ -116,7 +116,7 @@ export class UserController {
       name: user.name,
       lastName: user.lastName,
       email: user.email,
-      pesquisador: user.pesquisador,
+      researcher: user.researcher,
     };
   }
 
@@ -131,7 +131,7 @@ export class UserController {
       name: userDto.name,
       lastName: userDto.lastName,
       email: userDto.email,
-      pesquisador: user.pesquisador,
+      researcher: user.researcher,
     };
   }
 

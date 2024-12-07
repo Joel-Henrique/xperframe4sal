@@ -10,7 +10,7 @@ export enum Role {
 @Schema()
 export class User extends BaseEntity {
   @Prop()
-    pesquisador: boolean;
+    researcher: boolean;
   @Prop({
     required: true,
   })
