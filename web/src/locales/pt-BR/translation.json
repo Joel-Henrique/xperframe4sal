@@ -179,8 +179,11 @@
   "invalid_name_message": "Campo Obrigatório*",
   "invalid_last_name_message": "Campo Obrigatório*",
   "invalid_email_message": "email invalido",
-  "researcher_experiments_title": "Experimentos Criados",
+  "researcher_experiments_title": "Experimentos Criados: ",
   "create_experiment_button": "Criar Novo Experimento",
   "view_experiment_button": "Visualizar Experimento",
-  "Access":"Acessar"
+  "Access":"Acessar",
+  "researcher_label": "Pesquisador",
+  "normal_user_label": "Participante do Experimento"
+
 }

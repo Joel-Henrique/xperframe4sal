@@ -10,20 +10,19 @@ import {
   InputAdornment,
   IconButton,
   Box,
-  Checkbox,
-  FormControlLabel,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
 import { useTranslation } from 'react-i18next';
+import { Switch } from '@mui/material';
 
 const Register = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [name, setName] = useState('');
-  const [pesquisador, setPesquisador] = useState(false);
+  const [researcher, setResearcher] = useState(false);
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -77,7 +76,7 @@ const Register = () => {
     setLastName(lastName.trim());
     setEmail(email.trim());
 
-    const userData = { name, lastName, email, password, pesquisador };
+    const userData = { name, lastName, email, password, researcher };
     setIsLoading(true);
     try {
       let response = await api.post("/users", userData);
@@ -175,16 +174,16 @@ const Register = () => {
               ),
             }}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={pesquisador}
-                onChange={(e) => setPesquisador(e.target.checked)}
-                color="primary"
-              />
-            }
-            label={t('researcher_label')}
-          />
+          <Box display="flex" alignItems="center" justifyContent="space-between" margin="16px 0">
+            <Typography>
+              {researcher ? t('researcher_label') : t('normal_user_label')}
+            </Typography>
+            <Switch
+              checked={researcher}
+              onChange={(e) => setResearcher(e.target.checked)}
+              color="primary"
+            />
+          </Box>
           <Button
             variant="contained"
             color="primary"
