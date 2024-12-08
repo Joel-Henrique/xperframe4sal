@@ -52,6 +52,10 @@ export class Experiment extends BaseEntity {
   ownerId: string;
   @Prop({ required: true })
   name: string;
+  @Prop({required: true})
+  typeExperiment: string;
+  @Prop()
+  betweenExperimentType: string;
   @Prop()
   summary: string;
   @Prop()
