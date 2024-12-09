@@ -111,7 +111,7 @@ const NotResearcher = () => {
                 style={{ margin: '16px' }}
                 onClick={() => handleClick(experiment._id)}
               >
-                {t('enter_label')}
+                {t('Access')}
               </Button>
             </div>
           </AccordionDetails>

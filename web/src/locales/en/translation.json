@@ -181,6 +181,7 @@
   "create_experiment_button": "Create New Experiment",
   "view_experiment_button": "View Experiment",
   "Access":"Access",
+  "edit": "Edit",
   "researcher_label": "Researcher",
   "normal_user_label": "Experiment Participant"
 

@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
-const ExperimentAccordion = ({ experiment, expanded, onChange, onClick, t }) => (
+const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, t }) => (
   <Accordion
     sx={{ marginBottom: '5px' }}
     elevation={3}
@@ -35,12 +35,21 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onClick, t }) => 
     <Divider />
     <AccordionDetails>
       <Typography dangerouslySetInnerHTML={{ __html: experiment.summary }} />
-      <div style={{ textAlign: 'right' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
+      <Button
+          variant="contained"
+          color="primary"
+          style={{ margin: '2px' }}
+          onClick={() => onEdit(experiment._id)}
+        >
+          {t('edit')}
+        </Button>
+
         <Button
           variant="contained"
           color="primary"
-          style={{ margin: '16px' }}
-          onClick={onClick}
+          style={{ margin: '2px' }}
+          onClick={() => onAccess(experiment._id)}
         >
           {t('Access')}
         </Button>
@@ -71,16 +80,15 @@ const Researcher = () => {
     const fetchAllExperiments = async () => {
       setIsLoading(true);
       setError(null);
+
       try {
-        const allExperimentsResponse = await api.get('experiments', {
+        const { data: allExperiments } = await api.get('experiments', {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         });
-  
-        const allExperiments = allExperimentsResponse.data;
-  
+
         const participatedExperiments = [];
         const ownedExperiments = [];
-  
+
         allExperiments.forEach((experiment) => {
           if (experiment.ownerId === user.id) {
             ownedExperiments.push(experiment);
@@ -88,10 +96,10 @@ const Researcher = () => {
             participatedExperiments.push(experiment);
           }
         });
-  
+
         setExperiments(participatedExperiments);
         setOwnerExperiments(ownedExperiments);
-  
+
         if (ownedExperiments.length > 0) {
           setExpanded(`panel-owner-0`);
         } else if (participatedExperiments.length > 0) {
@@ -103,13 +111,19 @@ const Researcher = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchAllExperiments();
   }, [user.id, user.accessToken, t]);
-  
+
   const handleCreateExperiment = () => navigate('/CreateExperiment');
 
-  const handleClick = (experimentId) => navigate(`/experiments/${experimentId}/surveys`);
+  const handleAccessExperiment = (experimentId) => {
+    navigate(`/experiments/${experimentId}/surveys`);
+  };
+
+  const handleEditExperiment = (experimentId) => {
+    navigate(`/experiments/${experimentId}/edit`);
+  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
@@ -117,7 +131,7 @@ const Researcher = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', marginBottom: '16px'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', marginBottom: '16px' }}>
         <Typography variant="h6" gutterBottom>
           {t('researcher_experiments_title')}
         </Typography>
@@ -140,7 +154,8 @@ const Researcher = () => {
             experiment={experiment}
             expanded={expanded === `panel-owner-${index}`}
             onChange={handleChange(`panel-owner-${index}`)}
-            onClick={() => handleClick(experiment._id)}
+            onAccess={handleAccessExperiment}
+            onEdit={handleEditExperiment}
             t={t}
           />
         ))
@@ -159,7 +174,8 @@ const Researcher = () => {
             experiment={experiment}
             expanded={expanded === `panel-${index}`}
             onChange={handleChange(`panel-${index}`)}
-            onClick={() => handleClick(experiment._id)}
+            onAccess={handleAccessExperiment}
+            onEdit={handleEditExperiment}
             t={t}
           />
         ))
