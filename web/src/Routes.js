@@ -17,7 +17,8 @@ import {
   ResetPassword,
   Instructions,
   Researcher,
-  NotResearcher
+  NotResearcher,
+  EditExperiment
 } from './pages';
 
 
@@ -49,6 +50,9 @@ const Router = () => {
 
       <Route path='/Researcher' element={<PrivateRoutes />}>
          <Route index element={<Researcher />} />
+      </Route>
+      <Route path='/EditExperiment' element={<PrivateRoutes />}>
+         <Route index element={<EditExperiment />} />
       </Route>
 
       <Route path='/experiments' element={<PrivateRoutes />}>

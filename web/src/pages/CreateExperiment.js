@@ -503,13 +503,13 @@ const CreateExperiment = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexDirection: 'column',
-                        marginTop: 10,
+                        marginTop: 3,
                     }}
                 >
                     <Box
                         sx={{
                             width: '60%',
-                            padding: 3,
+                            padding: 2,
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
@@ -524,7 +524,7 @@ const CreateExperiment = () => {
                             sx={{
                                 width: '100%',
                                 margin: 0,
-                                padding: 2,
+                                padding: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'center',

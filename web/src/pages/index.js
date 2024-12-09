@@ -15,6 +15,7 @@ import { NotFoundPage } from './NotFoundPage';
 import { ResetPassword } from './ResetPassword';
 import { Researcher } from './Researcher';
 import { NotResearcher } from './NotResearcher';
+import { EditExperiment } from './EditExperiment';
 
 export {
   ICF,
@@ -34,5 +35,6 @@ export {
   Instructions,
   Researcher,
   NotResearcher,
+  EditExperiment,
   
 }

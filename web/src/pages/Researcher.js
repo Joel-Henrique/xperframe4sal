@@ -122,7 +122,7 @@ const Researcher = () => {
   };
 
   const handleEditExperiment = (experimentId) => {
-    navigate(`/experiments/${experimentId}/edit`);
+    navigate(`/EditExperiment/${experimentId}`);
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
