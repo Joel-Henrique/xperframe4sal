@@ -9,12 +9,12 @@ import {Column, Entity, OneToMany} from 'typeorm';
   OTHER = 'other',
 }*/
 
-/*export enum StepsType {
+export enum StepsType {
   ICF = 'icf',
   PRE = 'pre',
   POST = 'post',
   TASK = 'task',
-}*/
+}
 @Entity()
 export class Experiment extends BaseEntity {
   @Column()
