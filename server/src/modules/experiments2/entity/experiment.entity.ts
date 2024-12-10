@@ -1,5 +1,6 @@
 import {BaseEntity} from 'src/model/base_entity2';
 import {Task} from 'src/modules/task2/entities/task.entity';
+import {UserExperiment} from 'src/modules/user-experiments2/entities/user-experiments.entity';
 import {Column, Entity, OneToMany} from 'typeorm';
 
 /*enum SurveyType {
@@ -22,4 +23,9 @@ export class Experiment extends BaseEntity {
   summary: string;
   @OneToMany(() => Task, (task) => task.experiment)
   tasks: Task[];
+  @OneToMany(
+    () => UserExperiment,
+    (userExperiment) => userExperiment.experiment,
+  )
+  userExperiments: UserExperiment[];
 }

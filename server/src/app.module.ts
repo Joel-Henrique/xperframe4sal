@@ -23,6 +23,8 @@ import {Experiments2Module} from './modules/experiments2/experiments2.module';
 import {Experiment} from './modules/experiments2/entity/experiment.entity';
 import {Task2Module} from './modules/task2/task2.module';
 import {Task} from './modules/task2/entities/task.entity';
+import {UserExperiments2Module} from './modules/user-experiments2/user-experiments2.module';
+import {UserExperiment} from './modules/user-experiments2/entities/user-experiments.entity';
 @Module({
   imports: [
     ExperimentsModule,
@@ -55,7 +57,7 @@ import {Task} from './modules/task2/entities/task.entity';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: 'cbf',
-      entities: [User, Experiment, Task],
+      entities: [User, Experiment, Task, UserExperiment],
       synchronize: true,
     }),
     MailerModule.forRoot({
@@ -69,6 +71,7 @@ import {Task} from './modules/task2/entities/task.entity';
     User2Module,
     Experiments2Module,
     Task2Module,
+    UserExperiments2Module,
   ],
   controllers: [AppController],
   providers: [],
