@@ -1,5 +1,6 @@
 import {BaseEntity} from 'src/model/base_entity2';
 import {UserExperiment} from 'src/modules/user-experiments2/entities/user-experiments.entity';
+import {UserTask} from 'src/modules/user-task2/entities/user-tasks.entity';
 import {Column, Entity, OneToMany} from 'typeorm';
 
 @Entity()
@@ -22,4 +23,6 @@ export class User extends BaseEntity {
   pesquisador: boolean;
   @OneToMany(() => UserExperiment, (userExperiment) => userExperiment.user)
   userExperiments: UserExperiment[];
+  @OneToMany(() => UserTask, (userTask) => userTask.user)
+  userTasks: UserTask[];
 }
