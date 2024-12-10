@@ -3,6 +3,8 @@ import { api } from '../config/axios';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import EditIcon from '@mui/icons-material/Edit';
+
 import {
     TextField,
     Button,
@@ -99,6 +101,30 @@ const CreateExperiment = () => {
 
     const [questions, setQuestions] = useState([]);
 
+
+    const [taskTitleEdit, setTaskTitleEdit] = useState('');
+    const [taskSummaryEdit, setTaskSummaryEdit] = useState('');
+    const [taskDescriptionEdit, setTaskDescriptionEdit] = useState('');
+    const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
+    const [editingTaskId, setEditingTaskId] = useState(null);
+
+
+    const toggleEditTask = () => {
+        setIsEditTaskOpen((prev) => !prev);
+    };
+
+    const handleEditTask = (taskId) => {
+        const taskToEdit = tasks.find((task) => task._id === taskId); 
+        if (taskToEdit) {
+            setTaskTitleEdit(taskToEdit.title); 
+            setTaskSummaryEdit(taskToEdit.summary); 
+            setTaskDescriptionEdit(taskToEdit.description);
+            setEditingTaskId(taskId); 
+        }
+        setIsEditTaskOpen(true); 
+    };
+    
+    
 
     const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
 
@@ -479,6 +505,58 @@ const CreateExperiment = () => {
         setIsValidSumaryTask(inputName.trim() !== "");
     };
 
+    const handleEditTaskSubmit = async (e) => { 
+        e.preventDefault();
+        if (!isValidTitleTask || !isValidSummaryTask) {
+            setSnackbar({
+                open: true,
+                severity: 'error',
+                message: 'Por favor, corrija os erros antes de salvar.',
+            });
+            return; 
+        }
+    
+        try {
+            await api.patch(
+                `/tasks/${editingTaskId}`, 
+                {
+                    title: taskTitleEdit,
+                    summary: taskSummaryEdit, 
+                    description: taskDescriptionEdit, 
+                },
+                { headers: { Authorization: `Bearer ${user.accessToken}` } } 
+            );
+            toggleEditTask();
+            setTaskTitleEdit("");
+            setTaskSummaryEdit("");
+            setTaskDescriptionEdit("");
+            fetchTasks();
+            
+            setSnackbar({
+                open: true,
+                severity: 'success',
+                message: 'Tarefa salva com sucesso!',
+            });
+        } catch (error) {
+            setSnackbar({
+                open: true,
+                severity: 'error',
+                message: 'Erro ao salvar a tarefa. Tente novamente.',
+            });
+            console.error('Erro ao atualizar a tarefa:', error);
+        }
+    };
+    
+    const [isValidSummaryTask, setIsValidSummaryTask] = useState(true);
+
+    const validateSummary = (summary) => {
+        const isValid = summary && summary.trim().length > 5;
+        setIsValidSummaryTask(isValid);
+        return isValid;
+    };
+        
+
+    
 
     return (
         <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
@@ -692,22 +770,32 @@ const CreateExperiment = () => {
                                                         '&:hover': { backgroundColor: '#e6f7ff' }
                                                     }}
                                                 >
-                                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                            <Checkbox
-                                                                checked={selectedTasks.includes(task._id)}
-                                                                onChange={() => handleSelectTasks(task._id)}
-                                                            />
-                                                            <ListItemText primary={task.title} sx={{ ml: 1 }} />
-                                                        </Box>
-                                                        <IconButton
-                                                            color="primary"
-                                                            onClick={() => toggleTaskDescription(task._id)}
-                                                            sx={{ ml: 2 }}
-                                                        >
-                                                            {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                                        </IconButton>
-                                                    </Box>
+<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Checkbox
+            checked={selectedTasks.includes(task._id)}
+            onChange={() => handleSelectTasks(task._id)}
+        />
+        <ListItemText primary={task.title} sx={{ ml: 1 }} />
+    </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton
+            color="primary"
+            onClick={() => handleEditTask(task._id)} 
+            sx={{ ml: 2 }}
+        >
+            <EditIcon />
+        </IconButton>
+        <IconButton
+            color="primary"
+            onClick={() => toggleTaskDescription(task._id)}
+            sx={{ ml: 1 }}
+        >
+            {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
+    </Box>
+</Box>
+
                                                     {openTaskIds.includes(task._id) && (
                                                         <Box
                                                             sx={{
@@ -752,6 +840,66 @@ const CreateExperiment = () => {
                             </Box>
                         </Box>
                     </Box>
+    <Dialog
+    open={isEditTaskOpen}
+    onClose={toggleEditTask}
+    fullWidth
+    maxWidth="lg"
+    sx={{
+        '& .MuiDialog-paper': {
+            backgroundColor: '#ffffff',
+            borderRadius: '8px',
+            boxShadow: 3,
+            padding: 4,
+        },
+    }}
+>
+    <DialogTitle>{t('task_edit')}</DialogTitle>
+    <DialogContent>
+        <form onSubmit={handleEditTaskSubmit}>
+            <TextField
+                label={t('task_title')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={taskTitleEdit} 
+                onChange={(e) => setTaskTitleEdit(e.target.value)}
+                required
+            />
+            <TextField
+                label={t('task_summary')}
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+                value={taskSummaryEdit} 
+                onChange={(e) => setTaskSummaryEdit(e.target.value)}
+                required
+            />
+            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                <CustomContainer>
+                    <ReactQuill
+                        value={taskDescriptionEdit}
+                        onChange={(content) => setTaskDescriptionEdit(content)}
+                        placeholder={t('task_Desc1')}
+                    />
+                </CustomContainer>
+            </div>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                <Button variant="contained" onClick={toggleEditTask} color="primary">
+                    {t('cancel')}
+                </Button>
+                <Button variant="contained" color="primary" type="submit">
+                    {t('save')}
+                </Button>
+            </Box>
+        </form>
+    </DialogContent>
+</Dialog>
+
+
 
                     <Dialog
                         open={isCreateTaskOpen}
