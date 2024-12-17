@@ -13,7 +13,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 
-const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, t }) => (
+const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, isOwner, t }) => (
   <Accordion
     sx={{ marginBottom: '5px' }}
     elevation={3}
@@ -36,15 +36,16 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
     <AccordionDetails>
       <Typography dangerouslySetInnerHTML={{ __html: experiment.summary }} />
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
-      <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: '2px' }}
-          onClick={() => onEdit(experiment._id)}
-        >
-          {t('edit')}
-        </Button>
-
+        {isOwner && (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ margin: '2px' }}
+            onClick={() => onEdit(experiment._id)}
+          >
+            {t('edit')}
+          </Button>
+        )}
         <Button
           variant="contained"
           color="primary"
@@ -129,7 +130,6 @@ const Researcher = () => {
     setExpanded(isExpanded ? panel : null);
   };
 
-
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', marginBottom: '16px' }}>
@@ -157,6 +157,7 @@ const Researcher = () => {
             onChange={handleChange(`panel-owner-${index}`)}
             onAccess={handleAccessExperiment}
             onEdit={handleEditExperiment}
+            isOwner={true}
             t={t}
           />
         ))
@@ -167,7 +168,7 @@ const Researcher = () => {
       <Typography variant="h6" gutterBottom style={{ marginTop: '16px' }}>
         {t('see_experiment_list_title')}
       </Typography>
-      
+
       {experiments?.length > 0 ? (
         experiments.map((experiment, index) => (
           <ExperimentAccordion
@@ -176,6 +177,8 @@ const Researcher = () => {
             expanded={expanded === `panel-${index}`}
             onChange={handleChange(`panel-${index}`)}
             onAccess={handleAccessExperiment}
+            onEdit={handleEditExperiment}
+            isOwner={false}
             t={t}
           />
         ))
@@ -186,4 +189,4 @@ const Researcher = () => {
   );
 };
 
-export default Researcher ;
+export default Researcher;
