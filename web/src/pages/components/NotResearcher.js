@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../config/axios';
+import { api } from '../../config/axios';
 import {
   Accordion,
   AccordionDetails,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { LoadingIndicator } from '../components/LoadIndicator';
+import { LoadingIndicator } from '../../components/LoadIndicator';
 
 import { useTranslation } from 'react-i18next';
 
@@ -121,4 +121,4 @@ const NotResearcher = () => {
   );
 };
 
-export { NotResearcher };
+export default NotResearcher;

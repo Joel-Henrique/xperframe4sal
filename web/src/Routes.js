@@ -43,14 +43,6 @@ const Router = () => {
       <Route path='/CreateExperiment' element={<PrivateRoutes />}>
          <Route index element={<CreateExperiment />} />
       </Route>
-
-      <Route path='/NotResearcher' element={<PrivateRoutes />}>
-         <Route index element={<NotResearcher />} />
-      </Route>
-
-      <Route path='/Researcher' element={<PrivateRoutes />}>
-         <Route index element={<Researcher />} />
-      </Route>
       
       <Route path='/EditExperiment' element={<PrivateRoutes />}>
         <Route path=':experimentId' element={<EditExperiment />} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../config/axios';
+import { api } from '../../config/axios';
 import {
   Accordion,
   AccordionDetails,
@@ -129,6 +129,7 @@ const Researcher = () => {
     setExpanded(isExpanded ? panel : null);
   };
 
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', marginBottom: '16px' }}>
@@ -166,7 +167,7 @@ const Researcher = () => {
       <Typography variant="h6" gutterBottom style={{ marginTop: '16px' }}>
         {t('see_experiment_list_title')}
       </Typography>
-
+      
       {experiments?.length > 0 ? (
         experiments.map((experiment, index) => (
           <ExperimentAccordion
@@ -175,7 +176,6 @@ const Researcher = () => {
             expanded={expanded === `panel-${index}`}
             onChange={handleChange(`panel-${index}`)}
             onAccess={handleAccessExperiment}
-            onEdit={handleEditExperiment}
             t={t}
           />
         ))
@@ -186,4 +186,4 @@ const Researcher = () => {
   );
 };
 
-export { Researcher };
+export default Researcher ;
