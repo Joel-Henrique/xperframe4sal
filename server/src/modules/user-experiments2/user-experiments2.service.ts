@@ -1,19 +1,33 @@
-import {Injectable} from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserExperiment} from './entities/user-experiments.entity';
 import {Repository} from 'typeorm';
+import {CreateUserExperimentDto} from './dto/create-userExperiment.dto';
+import {User2Service} from '../user2/user2.service';
+import {Experiments2Service} from '../experiments2/experiments2.service';
 
 @Injectable()
 export class UserExperiments2Service {
   constructor(
     @InjectRepository(UserExperiment)
     private readonly userExperimentRepository: Repository<UserExperiment>,
+    private readonly userService: User2Service,
+    @Inject(forwardRef(() => Experiments2Service))
+    private readonly experimentService: Experiments2Service,
   ) {}
 
-  async create(userExperiment: UserExperiment): Promise<UserExperiment> {
+  async create(
+    createUserExperimentDto: CreateUserExperimentDto,
+  ): Promise<UserExperiment> {
     try {
-      const newUserExperiment =
-        this.userExperimentRepository.create(userExperiment);
+      const {userId, experimentId} = createUserExperimentDto;
+      const user = await this.userService.findOne(userId);
+      //return user;
+      const experiment = await this.experimentService.find(experimentId);
+      const newUserExperiment = this.userExperimentRepository.create({
+        user,
+        experiment,
+      });
       newUserExperiment.stepsCompleted = {
         icf: false,
         pre: false,
@@ -23,6 +37,18 @@ export class UserExperiments2Service {
       const savedUserExperiment =
         await this.userExperimentRepository.save(newUserExperiment);
       return savedUserExperiment;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createMany(
+    userExperiments: UserExperiment[],
+  ): Promise<UserExperiment[]> {
+    try {
+      const savedUserExperiments =
+        await this.userExperimentRepository.save(userExperiments);
+      return savedUserExperiments;
     } catch (error) {
       throw error;
     }

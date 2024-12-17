@@ -2,12 +2,18 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserTask} from './entities/user-tasks.entity';
 import {Repository} from 'typeorm';
+import {CreateUserTaskDto} from './dto/create-userTask.dto';
+import {User2Service} from '../user2/user2.service';
+import {Task2Service} from '../task2/task2.service';
 
 @Injectable()
 export class UserTask2Service {
   constructor(
     @InjectRepository(UserTask)
     private readonly userTaskRepository: Repository<UserTask>,
+
+    private readonly userService: User2Service,
+    private readonly taskService: Task2Service,
   ) {}
   async findOne(id: string): Promise<UserTask> {
     try {
@@ -20,9 +26,24 @@ export class UserTask2Service {
       throw error;
     }
   }
-  async create(userTask: UserTask): Promise<UserTask> {
-    const newUserTask = this.userTaskRepository.create(userTask);
+  async create(createUserTaskDto: CreateUserTaskDto): Promise<UserTask> {
+    const {userId, taskId} = createUserTaskDto;
+    const user = await this.userService.findOne(userId);
+    const task = await this.taskService.findOne(taskId);
+    const newUserTask = this.userTaskRepository.create({
+      user,
+      task,
+    });
     return await this.userTaskRepository.save(newUserTask);
+  }
+
+  async createMany(userTasks: UserTask[]): Promise<UserTask[]> {
+    try {
+      const savedUserTasks = await this.userTaskRepository.save(userTasks);
+      return savedUserTasks;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findAll(): Promise<UserTask[]> {

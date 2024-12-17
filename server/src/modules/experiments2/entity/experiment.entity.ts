@@ -9,6 +9,18 @@ import {Column, Entity, OneToMany} from 'typeorm';
   OTHER = 'other',
 }*/
 
+export class TaskProps {
+  id: string;
+  toWhom: string = 'all';
+  required: boolean = true;
+}
+
+export class UserProps {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export enum StepsType {
   ICF = 'icf',
   PRE = 'pre',
