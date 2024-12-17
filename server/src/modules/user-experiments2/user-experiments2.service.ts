@@ -5,6 +5,7 @@ import {Repository} from 'typeorm';
 import {CreateUserExperimentDto} from './dto/create-userExperiment.dto';
 import {User2Service} from '../user2/user2.service';
 import {Experiments2Service} from '../experiments2/experiments2.service';
+import {UpdateUserExperimentDto} from './dto/update-userExperiment.dto';
 
 @Injectable()
 export class UserExperiments2Service {
@@ -78,9 +79,20 @@ export class UserExperiments2Service {
 
   async update(
     id: string,
-    userExperiment: UserExperiment,
+    updateUserExperimentDto: UpdateUserExperimentDto,
   ): Promise<UserExperiment> {
-    await this.userExperimentRepository.update({_id: id}, userExperiment);
+    const {userId, experimentId} = updateUserExperimentDto;
+    let user, experiment;
+    if (userId) {
+      user = await this.userService.findOne(userId);
+      if (!user) throw new Error('User not found');
+    }
+
+    if (experimentId) {
+      experiment = await this.experimentService.find(experimentId);
+      if (!experiment) throw new Error('Experiment not found');
+    }
+    await this.userExperimentRepository.update({_id: id}, {user, experiment});
     return await this.userExperimentRepository.findOne({
       where: {
         _id: id,

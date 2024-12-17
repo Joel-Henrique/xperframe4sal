@@ -1,4 +1,4 @@
-import {StepsType} from 'src/modules/experiments2/entity/experiment.entity';
+//import {StepsType} from 'src/modules/experiments2/entity/experiment.entity';
 
 export class CreateUserExperimentDto {
   userId: string;
