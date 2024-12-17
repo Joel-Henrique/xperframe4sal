@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import {ForgotPasswordDto, ResetPasswordDto} from 'src/model/user.dto';
 import * as crypto from 'crypto';
 import {MailerService} from '@nestjs-modules/mailer';
+import {CreateUserDto} from './dto/create-user.dto';
 
 const HOUR_1 = 3600000;
 @Injectable()
@@ -69,10 +70,16 @@ export class User2Service {
       throw error;
     }
   }
-  async create(user: User): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      user.password = await bcrypt.hash(user.password, 10);
-      const userSaved = await this.userRepository.save(user);
+      const {name, lastName, email, password} = createUserDto;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const userSaved = await this.userRepository.save({
+        name,
+        lastName,
+        email,
+        password: hashedPassword,
+      });
       //TODO create userExperiment
       return userSaved;
     } catch (error) {

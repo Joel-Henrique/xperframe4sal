@@ -17,6 +17,7 @@ import {
   ResetPasswordDto,
 } from 'src/model/user.dto';
 import {User} from './entity/user.entity';
+import {CreateUserDto} from './dto/create-user.dto';
 
 @Controller('users2')
 export class User2Controller {
@@ -43,12 +44,12 @@ export class User2Controller {
     }
   }
   @Post()
-  async create(@Body() user: User): Promise<GetUserDto> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<GetUserDto> {
     try {
-      user.name = user.name.trim();
-      user.lastName = user.lastName.trim();
-      user.email = user.email.trim();
-      const userDto = await this._userService.create(user);
+      createUserDto.name = createUserDto.name.trim();
+      createUserDto.lastName = createUserDto.lastName.trim();
+      createUserDto.email = createUserDto.email.trim();
+      const userDto = await this._userService.create(createUserDto);
       return {
         id: userDto._id,
         name: userDto.name,
