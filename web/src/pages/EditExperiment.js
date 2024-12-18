@@ -19,10 +19,14 @@ import { useParams } from 'react-router-dom';
 const EditExperiment = () => {
   const { t } = useTranslation();
   const { experimentId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
 
   const [activeStep, setActiveStep] = useState(0);
   const [step, setStep] = useState(0);
 
+  const [Experiment , setExperiment] = useState({});
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
@@ -33,32 +37,35 @@ const EditExperiment = () => {
     setActiveStep(step);
   }, [step]);
 
-  useEffect(() => {
-    const fetchExperimentData = async () => {
-      try {
-        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWF0IjoxNzM0NDYwNzM2LCJleHAiOjE3MzQ1NDcxMzZ9.HVcfvnAMXHmtnjqdgC-xuJyyfQy98YVBJLrMPN7AU0s
-        const response = await api.get(`tasks`, {
-          headers: { Authorization: `Bearer ${user.accessToken}` },
+  const fetchExperiment = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data } = await api.get(`/experiments/${experimentId}`, {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-        if (!response.ok) {
-          throw new Error('Failed to fetch experiment data');
-        }
-        const data = await response.json();
 
-        setExperimentTitle(data.title || '');
-        setExperimentType(data.type || '');
-        setBtypeExperiment(data.btype || '');
-        setExperimentDesc(data.description || '');
-        console.log("DEU CERTO")
-      } catch (error) {
-        console.error('Error fetching experiment data:', error);
-      }
-    };
-
-    if (experimentId) {
-      fetchExperimentData();
+      setExperiment(data);
+      setExperimentTitle(data.name || '');
+      setExperimentType(data.typeExperiment || '');
+      setBtypeExperiment(data.betweenExperimentType || '');
+      setExperimentDesc(data.summary || '');
+      
+      console.log("Experiment Title:", data.title);
+      console.log("Data fetched successfully");
+    } catch (err) {
+      console.error('Error fetching experiment data:', err);
+      setError('Error fetching the experiment');
+    } finally {
+      setIsLoading(false);
     }
-  }, [experimentId]);
+  };
+
+  useEffect(() => {
+      fetchExperiment();
+  }, [experimentId, user.accessToken]);
+  
   
   const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_5')];
 
