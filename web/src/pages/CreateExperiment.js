@@ -15,14 +15,8 @@ import StepContext from './components/CreateExperiment/context/StepContextCreate
 
 const CreateExperiment = () => {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(false);
-
-
   const [activeStep, setActiveStep] = useState(0);
-
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
-
-
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('within-subject');
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
@@ -30,13 +24,9 @@ const CreateExperiment = () => {
   const [step, setStep] = useState(0);
 
 
-
-
   useEffect(() => {
     setActiveStep(step);
   }, [step]);
-
-
 
   const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
 

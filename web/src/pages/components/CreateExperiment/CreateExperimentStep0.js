@@ -7,15 +7,13 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Snackbar,
-    Alert,
     styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import StepContext from './context/StepContextCreate';
 import 'react-quill/dist/quill.snow.css';
-
+import { useNavigate } from 'react-router-dom';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -50,10 +48,9 @@ const CreateExperimentStep0 = () => {
         ExperimentDesc,
         setExperimentDesc,
     } = useContext(StepContext);
-
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const [isValidTitleExp, setIsValidTitleExp] = useState(true);
-    const [isValidFormExperiment, setIsValidFormExperiment] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
 
     const ExperimentTypes = [
@@ -66,7 +63,7 @@ const CreateExperimentStep0 = () => {
         { value: 'score_based', label: t('score_based') },
         { value: 'manual', label: t('manual') },
     ];
-
+    const isValidFormExperiment = isValidTitleExp && ExperimentTitle;
     const handleNameChangeTitle = (e) => {
         const value = e.target.value;
         setExperimentTitle(value);
@@ -74,17 +71,12 @@ const CreateExperimentStep0 = () => {
     };
 
     const handleNextExperiment = () => {
-        if (!ExperimentTitle || !ExperimentType) {
-            setIsValidFormExperiment(false);
-            return;
-        }
         setStep(step + 1);
     };
 
     const handleBackResearcher = () => {
-        setStep(step - 1);
+        navigate('/experiments');
     };
-
 
 
     return (
