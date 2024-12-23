@@ -183,6 +183,7 @@
   "Access":"Access",
   "edit": "Edit",
   "researcher_label": "Researcher",
-  "normal_user_label": "Experiment Participant"
+  "normal_user_label": "Experiment Participant",
+  "save": "Save"
 
 }
