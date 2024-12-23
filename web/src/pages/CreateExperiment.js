@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CreateExperimentStep0 from './components/CreateExperiment/CreateExperimentStep0';
+import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimentStep1';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
 
 
@@ -21,6 +22,7 @@ const CreateExperiment = () => {
   const [ExperimentType, setExperimentType] = useState('within-subject');
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
   const [ExperimentDesc, setExperimentDesc] = useState('');
+  const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [step, setStep] = useState(0);
 
 
@@ -55,10 +57,12 @@ const CreateExperiment = () => {
           setBtypeExperiment,
           ExperimentDesc,
           setExperimentDesc,
+          ExperimentTasks,
+          setExperimentTasks,
         }}
       >
         {activeStep === 0 && <CreateExperimentStep0 />}
-
+        {activeStep === 1 && <CreateExperimentStep1 />}
       </StepContext.Provider>
 
     </>

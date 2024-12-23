@@ -11,6 +11,8 @@ const StepContextCreate = createContext({
     setBtypeExperiment: () => {},
     ExperimentDesc: '',
     setExperimentDesc: () => {},
+    ExperimentTasks: [],
+    setExperimentTasks: () => {},
 });
 
 

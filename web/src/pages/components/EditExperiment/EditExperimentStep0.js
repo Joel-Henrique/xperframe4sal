@@ -151,7 +151,7 @@ const EditExperimentStep0 = ({ }) => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => console.log('Voltar')}
+              
               sx={{ maxWidth: '150px' }}
             >
               {t('back')}
