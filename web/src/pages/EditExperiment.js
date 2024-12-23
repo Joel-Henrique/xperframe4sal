@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { api } from '../config/axios';
+import 'react-quill/dist/quill.snow.css';
+
 import {
   Typography,
   Stepper,
