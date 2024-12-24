@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { api } from '../config/axios';
+import { api } from '../config/axios'; 
 import {
   Typography,
   Stepper,
@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import CreateExperimentStep0 from './components/CreateExperiment/CreateExperimentStep0';
 import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimentStep1';
+import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
 
 
@@ -23,6 +24,7 @@ const CreateExperiment = () => {
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
+  const [ExperimentSurveys, setExperimentSurveys] = useState([]);
   const [step, setStep] = useState(0);
 
 
@@ -59,10 +61,13 @@ const CreateExperiment = () => {
           setExperimentDesc,
           ExperimentTasks,
           setExperimentTasks,
+          ExperimentSurveys,
+          setExperimentSurveys,
         }}
       >
         {activeStep === 0 && <CreateExperimentStep0 />}
         {activeStep === 1 && <CreateExperimentStep1 />}
+        {activeStep === 2 && <CreateExperimentStep2 />}
       </StepContext.Provider>
 
     </>
