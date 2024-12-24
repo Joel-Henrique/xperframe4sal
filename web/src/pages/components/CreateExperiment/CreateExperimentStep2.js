@@ -34,6 +34,8 @@ const CreateExperimentStep2 = () => {
     const {
         step,
         setStep,
+        selectedSurveys,
+        setSelectedSurveys,
     } = useContext(StepContext);
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
@@ -45,12 +47,13 @@ const CreateExperimentStep2 = () => {
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
     const [surveys, setSurveys] = useState([]);
-    const [selectedSurveys, setSelectedSurveys] = useState([]);
     const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
     const [questions, setQuestions] = useState([]);
-
+    const [isValidTitleSurvey, setIsValidTitleSurvey] = useState(true);
+    const [isValidDescSurvey, setIsValidDescSurvey] = useState(true);
+    const isValidFormSurvey = isValidTitleSurvey && title && isValidDescSurvey && description;
 
     const fetchSurveys = async () => {
         try {
@@ -167,17 +170,6 @@ const CreateExperimentStep2 = () => {
     };
 
 
-    const questionTypes = [
-        { value: 'open', label: t('open') },
-        { value: 'multiple-selection', label: t('multiple_selection') },
-        { value: 'multiple-choices', label: t('multiple_choices') },
-    ];
-    const surveyTypes = [
-        { value: 'pre', label: t('pre') },
-        { value: 'demo', label: t('demo') },
-        { value: 'post', label: t('post') }
-    ];
-
     const handleAddQuestion = () => {
         setQuestions([
             ...questions,
@@ -258,14 +250,6 @@ const CreateExperimentStep2 = () => {
         );
     };
 
-
-
-
-    const [isValidTitleSurvey, setIsValidTitleSurvey] = useState(true);
-    const [isValidDescSurvey, setIsValidDescSurvey] = useState(true);
-
-    const isValidFormSurvey = isValidTitleSurvey && title && isValidDescSurvey && description;
-
     const handleNameChangeTitleSurvey = (e) => {
         const inputName = e.target.value;
         setTitle(inputName);
@@ -277,7 +261,16 @@ const CreateExperimentStep2 = () => {
         setIsValidDescSurvey(inputName.trim() !== "");
     };
 
-
+    const questionTypes = [
+        { value: 'open', label: t('open') },
+        { value: 'multiple-selection', label: t('multiple_selection') },
+        { value: 'multiple-choices', label: t('multiple_choices') },
+    ];
+    const surveyTypes = [
+        { value: 'pre', label: t('pre') },
+        { value: 'demo', label: t('demo') },
+        { value: 'post', label: t('post') }
+    ];
 
 
     return (

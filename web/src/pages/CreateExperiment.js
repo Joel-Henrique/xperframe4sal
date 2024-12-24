@@ -25,6 +25,7 @@ const CreateExperiment = () => {
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
+  const [selectedSurveys, setSelectedSurveys] = useState([]);
   const [step, setStep] = useState(0);
 
 
@@ -63,6 +64,8 @@ const CreateExperiment = () => {
           setExperimentTasks,
           ExperimentSurveys,
           setExperimentSurveys,
+          selectedSurveys,
+          setSelectedSurveys,
         }}
       >
         {activeStep === 0 && <CreateExperimentStep0 />}
