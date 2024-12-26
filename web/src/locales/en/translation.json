@@ -184,6 +184,8 @@
   "edit": "Edit",
   "researcher_label": "Researcher",
   "normal_user_label": "Experiment Participant",
-  "save": "Save"
-
+  "save": "Save",
+  "confirm_delete": "Delete Confirmation",
+  "delete_confirmation_message": "Are you sure you want to delete this task? This action cannot be undone.",
+  "delete": "Delete"
 }

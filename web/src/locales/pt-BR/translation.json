@@ -182,9 +182,12 @@
   "researcher_experiments_title": "Experimentos Criados: ",
   "create_experiment_button": "Criar Novo Experimento",
   "view_experiment_button": "Visualizar Experimento",
-  "Access":"Acessar",
+  "Access": "Acessar",
   "edit": "Editar",
   "researcher_label": "Pesquisador",
   "normal_user_label": "Participante do Experimento",
-  "save": "Salvar"
+  "save": "Salvar",
+  "confirm_delete": "Confirmação de Exclusão",
+  "delete_confirmation_message": "Tem certeza de que deseja excluir esta tarefa? Esta ação não pode ser desfeita.",
+  "delete": "Excluir"
 }

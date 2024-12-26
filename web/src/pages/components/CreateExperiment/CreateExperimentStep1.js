@@ -17,7 +17,8 @@ import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import StepContext from './context/StepContextCreate';
 import 'react-quill/dist/quill.snow.css';
-import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon } from '@mui/icons-material';
+import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
     borderRadius: '8px',
@@ -51,7 +52,6 @@ const CreateExperimentStep1 = () => {
     const [taskTitle, setTaskTitle] = useState("");
     const [taskSummary, setTaskSummary] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
-    const [localTasks, setlocalTasks] = useState([]);
 
     const [editTaskIndex, setEditTaskIndex] = useState(null);
     const [taskTitleEdit, setTaskTitleEdit] = useState("");
@@ -63,6 +63,24 @@ const CreateExperimentStep1 = () => {
 
     const [isValidTitleTaskEdit, setIsValidTitleTaskEdit] = React.useState(true);
     const [isValidSumaryTaskEdit, setIsValidSumaryTaskEdit] = React.useState(true);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [taskToDeleteIndex, setTaskToDeleteIndex] = useState(null);
+
+
+    const handleOpenDeleteDialog = (index) => {
+        setTaskToDeleteIndex(index);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setIsDeleteDialogOpen(false);
+        setTaskToDeleteIndex(null);
+    };
+
+    const handleDeleteTask = () => {
+        setExperimentTasks((prev) => prev.filter((_, i) => i !== taskToDeleteIndex));
+        handleCloseDeleteDialog();
+    };
 
     const handleNameChangeTitleTask = (e) => {
         const value = e.target.value;
@@ -121,18 +139,6 @@ const CreateExperimentStep1 = () => {
         );
     };
 
-    const handleSelectTasks = (task) => {
-        setExperimentTasks((prev) => {
-            const taskExists = prev.some((t) => t.title === task.title);
-
-            if (taskExists) {
-                return prev.filter((t) => t.title !== task.title);
-            } else {
-                return [...prev, task];
-            }
-        });
-    };
-
     const handleCreateTask = (e) => {
         e.preventDefault();
         const newTask = {
@@ -140,7 +146,7 @@ const CreateExperimentStep1 = () => {
             summary: taskSummary,
             description: taskDescription
         };
-        setlocalTasks((prev) => [...prev, newTask]);
+        setExperimentTasks((prev) => [...prev, newTask]);
         toggleCreateTask();
         setTaskTitle("");
         setTaskSummary("");
@@ -154,7 +160,7 @@ const CreateExperimentStep1 = () => {
             summary: taskSummaryEdit,
             description: taskDescriptionEdit
         };
-        setlocalTasks((prev) => {
+        setExperimentTasks((prev) => {
             const updatedTasks = [...prev];
             updatedTasks[editTaskIndex] = updatedTask;
             return updatedTasks;
@@ -164,7 +170,7 @@ const CreateExperimentStep1 = () => {
 
     const handleEditTask = (index) => {
         setEditTaskIndex(index);
-        const task = localTasks[index];
+        const task = ExperimentTasks[index];
         setTaskTitleEdit(task.title);
         setTaskSummaryEdit(task.summary);
         setTaskDescriptionEdit(task.description);
@@ -216,8 +222,8 @@ const CreateExperimentStep1 = () => {
                                     overflowY: 'auto'
                                 }}
                             >
-                                {Array.isArray(localTasks) &&
-                                    localTasks.filter((task) =>
+                                {Array.isArray(ExperimentTasks) &&
+                                    ExperimentTasks.filter((task) =>
                                         task.title.toLowerCase().includes(searchTerm.toLowerCase())
                                     ).map((task, index) => (
                                         <Box
@@ -241,13 +247,16 @@ const CreateExperimentStep1 = () => {
                                                 }}
                                             >
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Checkbox
-                                                        checked={ExperimentTasks.some((t) => t.title === task.title)}
-                                                        onChange={() => handleSelectTasks(task)}
-                                                    />
                                                     <ListItemText primary={task.title} sx={{ ml: 1 }} />
                                                 </Box>
                                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <IconButton
+                                                        color="error"
+                                                        onClick={() => handleOpenDeleteDialog(index)}
+                                                        sx={{ ml: 1 }}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
                                                     <IconButton
                                                         color="primary"
                                                         onClick={() => handleEditTask(index)}
@@ -309,6 +318,69 @@ const CreateExperimentStep1 = () => {
                     </Box>
                 </Box>
             </Box>
+            <Dialog
+                open={isDeleteDialogOpen}
+                onClose={handleCloseDeleteDialog}
+                fullWidth
+                maxWidth="xs"
+                sx={{
+                    '& .MuiDialog-paper': {
+                        backgroundColor: '#f9fafb',
+                        borderRadius: '12px',
+                        boxShadow: 5,
+                        padding: 4,
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        fontSize: '1.25rem',
+                        fontWeight: 'bold',
+                        color: '#111827',
+                        textAlign: 'center',
+                        paddingBottom: '8px',
+                    }}
+                >
+                    {t('confirm_delete')}
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        textAlign: 'center',
+                        color: '#6b7280',
+                    }}
+                >
+                    <Box sx={{ marginBottom: 3 }}>
+                        <p style={{ margin: 0, fontSize: '1rem', lineHeight: 1.5 }}>
+                            {t('delete_confirmation_message')}
+                        </p>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                        <Button
+                            variant="outlined"
+                            onClick={handleCloseDeleteDialog}
+                            sx={{
+                                borderColor: '#d1d5db',
+                                color: '#374151',
+                                ':hover': {
+                                    backgroundColor: '#f3f4f6',
+                                },
+                            }}
+                        >
+                            {t('cancel')}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={handleDeleteTask}
+                            sx={{
+                                boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)',
+                            }}
+                        >
+                            {t('delete')}
+                        </Button>
+                    </Box>
+                </DialogContent>
+            </Dialog>
 
             <Dialog
                 open={isEditTaskOpen}
