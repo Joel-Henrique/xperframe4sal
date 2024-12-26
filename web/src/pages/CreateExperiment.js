@@ -64,8 +64,6 @@ const CreateExperiment = () => {
           setExperimentTasks,
           ExperimentSurveys,
           setExperimentSurveys,
-          selectedSurveys,
-          setSelectedSurveys,
         }}
       >
         {activeStep === 0 && <CreateExperimentStep0 />}

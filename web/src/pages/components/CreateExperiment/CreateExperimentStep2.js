@@ -9,8 +9,8 @@ import {
     Button,
     Typography,
     Box,
-    Checkbox,
     ListItemText,
+    DialogTitle,
     FormControl,
     Snackbar,
     Alert,
@@ -26,19 +26,15 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, Remove } from '@mui/icons-material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-
+import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 const CreateExperimentStep2 = () => {
     const {
         step,
         setStep,
-        selectedSurveys,
-        setSelectedSurveys,
+        ExperimentSurveys,
+        setExperimentSurveys,
     } = useContext(StepContext);
-    const navigate = useNavigate();
-    const [activeStep, setActiveStep] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
@@ -46,7 +42,7 @@ const CreateExperimentStep2 = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
-    const [surveys, setSurveys] = useState([]);
+    const [surveys, setSurveys] = useState([]);  //import
     const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
@@ -55,6 +51,7 @@ const CreateExperimentStep2 = () => {
     const [isValidDescSurvey, setIsValidDescSurvey] = useState(true);
     const isValidFormSurvey = isValidTitleSurvey && title && isValidDescSurvey && description;
 
+    /*
     const fetchSurveys = async () => {
         try {
             const response = await api.get(`surveys`, {
@@ -69,6 +66,23 @@ const CreateExperimentStep2 = () => {
     useEffect(() => {
         fetchSurveys();
     }, [user, t]);
+*/
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [SurveyToDeleteIndex, setSurveyToDeleteIndex] = useState(null);
+
+
+    const handleOpenDeleteDialog = (index) => {
+        setSurveyToDeleteIndex(index);
+        setIsDeleteDialogOpen(true);
+    };
+    const handleCloseDeleteDialog = () => {
+        setIsDeleteDialogOpen(false);
+        setSurveyToDeleteIndex(null);
+    };
+    const handleDeleteSurvey = () => {
+        setExperimentSurveys((prev) => prev.filter((_, i) => i !== SurveyToDeleteIndex));
+        handleCloseDeleteDialog();
+    };
 
     const handleNext = () => {
         setStep(step + 1);
@@ -78,12 +92,10 @@ const CreateExperimentStep2 = () => {
         setStep(step - 1);
     };
 
-
     const handleCreateSurvey = async (e) => {
         e.preventDefault();
-        const name = title;
         const payload = {
-            name,
+            name: title,
             title,
             description,
             type,
@@ -117,36 +129,14 @@ const CreateExperimentStep2 = () => {
                 return question;
             }),
         };
-        toggleCreateQuest();
-        fetchSurveys();
+        setExperimentSurveys((prev) => [...prev, payload]);
         setTitle("");
         setDescription("");
         setQuestions([]);
         setType('pre');
-        fetchSurveys();
-        try {
-            setIsLoadingSurvey(true);
-            const response = await api.post(`surveys`,
-                payload,
-                { 'headers': { Authorization: `Bearer ${user.accessToken}` } }
-            );
-
-            setIsLoadingSurvey(false);
-            setSnackbar({
-                open: true,
-                message: 'Questionnaire created successfully!',
-                severity: 'success',
-            });
-            fetchSurveys();
-        } catch (error) {
-            setIsLoadingSurvey(false);
-            setSnackbar({
-                open: true,
-                message: error.response?.data?.message || 'Error creating the questionnaire',
-                severity: 'error',
-            });
-        }
+        toggleCreateQuest();
     };
+
 
 
     const toggleSurveyDescription = (surveyId) => {
@@ -155,14 +145,6 @@ const CreateExperimentStep2 = () => {
         } else {
             setOpenSurveyIds([...openSurveyIds, surveyId]);
         }
-    };
-
-    const handleSelectSurvey = (id) => {
-        setSelectedSurveys((prevSelectedSurveys) =>
-            prevSelectedSurveys.includes(id)
-                ? prevSelectedSurveys.filter((selectedId) => selectedId !== id)
-                : [...prevSelectedSurveys, id]
-        );
     };
 
     const toggleCreateQuest = () => {
@@ -249,7 +231,9 @@ const CreateExperimentStep2 = () => {
             )
         );
     };
+    const handleEditSurvey = (index) => {
 
+    };
     const handleNameChangeTitleSurvey = (e) => {
         const inputName = e.target.value;
         setTitle(inputName);
@@ -312,13 +296,12 @@ const CreateExperimentStep2 = () => {
                         <CircularProgress />
                     ) : (
                         <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
-                            {surveys
-                                .filter((survey) =>
+                            {Array.isArray(ExperimentSurveys) &&
+                                ExperimentSurveys.filter((survey) =>
                                     survey.title.toLowerCase().includes(searchTerm.toLowerCase())
-                                )
-                                .map((survey) => (
+                                ).map((survey, index) => (
                                     <Box
-                                        key={survey._id}
+                                        key={index}
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'column',
@@ -330,24 +313,43 @@ const CreateExperimentStep2 = () => {
                                             '&:hover': { backgroundColor: '#e6f7ff' }
                                         }}
                                     >
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Checkbox
-                                                    checked={selectedSurveys.includes(survey._id)}
-                                                    onChange={() => handleSelectSurvey(survey._id)}
-                                                />
-                                                <ListItemText primary={survey.title} sx={{ ml: 1 }} />
-                                            </Box>
-                                            <IconButton
-                                                color="primary"
-                                                onClick={() => toggleSurveyDescription(survey._id)}
-                                                sx={{ ml: 2 }}
-                                            >
-                                                {openSurveyIds.includes(survey._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                            </IconButton>
-                                        </Box>
+    <Box
+                                                    sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <ListItemText primary={survey.title} sx={{ ml: 1 }} />
+                                                    </Box>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => handleOpenDeleteDialog(index)}
+                                                            sx={{ ml: 1 }}
+                                                        >
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            color="primary"
+                                                            onClick={() => handleEditSurvey(index)}
+                                                            sx={{ ml: 2 }}
+                                                        >
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            color="primary"
+                                                            onClick={() => toggleSurveyDescription(index)}
+                                                            sx={{ ml: 1 }}
+                                                        >
+                                                            {openSurveyIds.includes(index) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                        </IconButton>
+                                                    </Box>
+                                                </Box>
+                                            
 
-                                        {openSurveyIds.includes(survey._id) && (
+                                        {openSurveyIds.includes(index) && (
                                             <Box sx={{
                                                 mt: 1,
                                                 p: 1,
@@ -392,7 +394,69 @@ const CreateExperimentStep2 = () => {
                         </Box>
                     </Box>
                 </Box>
-
+                <Dialog
+                    open={isDeleteDialogOpen}
+                    onClose={handleCloseDeleteDialog}
+                    fullWidth
+                    maxWidth="xs"
+                    sx={{
+                        '& .MuiDialog-paper': {
+                            backgroundColor: '#f9fafb',
+                            borderRadius: '12px',
+                            boxShadow: 5,
+                            padding: 4,
+                        },
+                    }}
+                >
+                    <DialogTitle
+                        sx={{
+                            fontSize: '1.25rem',
+                            fontWeight: 'bold',
+                            color: '#111827',
+                            textAlign: 'center',
+                            paddingBottom: '8px',
+                        }}
+                    >
+                        {t('confirm_delete')}
+                    </DialogTitle>
+                    <DialogContent
+                        sx={{
+                            textAlign: 'center',
+                            color: '#6b7280',
+                        }}
+                    >
+                        <Box sx={{ marginBottom: 3 }}>
+                            <p style={{ margin: 0, fontSize: '1rem', lineHeight: 1.5 }}>
+                                {t('delete_confirmation_message')}
+                            </p>
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                            <Button
+                                variant="outlined"
+                                onClick={handleCloseDeleteDialog}
+                                sx={{
+                                    borderColor: '#d1d5db',
+                                    color: '#374151',
+                                    ':hover': {
+                                        backgroundColor: '#f3f4f6',
+                                    },
+                                }}
+                            >
+                                {t('cancel')}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="error"
+                                onClick={handleDeleteSurvey}
+                                sx={{
+                                    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)',
+                                }}
+                            >
+                                {t('delete')}
+                            </Button>
+                        </Box>
+                    </DialogContent>
+                </Dialog>
 
                 <Dialog
                     open={isCreateQuestOpen}
