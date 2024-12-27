@@ -1,8 +1,6 @@
 import React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
 import 'react-quill/dist/quill.snow.css';
-import { api } from '../../../config/axios';
 import StepContext from './context/StepContextCreate';
 import {
     TextField,

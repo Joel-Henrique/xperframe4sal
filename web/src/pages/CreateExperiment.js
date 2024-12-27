@@ -12,6 +12,7 @@ import CreateExperimentStep0 from './components/CreateExperiment/CreateExperimen
 import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimentStep1';
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
+import CreateExperimentStep3 from './components/CreateExperiment/CreateExperimentStep3';
 
 
 
@@ -25,7 +26,7 @@ const CreateExperiment = () => {
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
-  const [selectedSurveys, setSelectedSurveys] = useState([]);
+  const [ExperimentUsers, setExperimentUsers] = useState([]);
   const [step, setStep] = useState(0);
 
 
@@ -64,11 +65,14 @@ const CreateExperiment = () => {
           setExperimentTasks,
           ExperimentSurveys,
           setExperimentSurveys,
+          ExperimentUsers,
+          setExperimentUsers,
         }}
       >
         {activeStep === 0 && <CreateExperimentStep0 />}
         {activeStep === 1 && <CreateExperimentStep1 />}
         {activeStep === 2 && <CreateExperimentStep2 />}
+        {activeStep === 3 && <CreateExperimentStep3 />}
       </StepContext.Provider>
 
     </>
