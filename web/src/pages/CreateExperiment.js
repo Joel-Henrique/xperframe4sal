@@ -13,6 +13,7 @@ import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimen
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
 import CreateExperimentStep3 from './components/CreateExperiment/CreateExperimentStep3';
+import CreateExperimentStep4 from './components/CreateExperiment/CreateExperimentStep4';
 
 
 
@@ -73,6 +74,7 @@ const CreateExperiment = () => {
         {activeStep === 1 && <CreateExperimentStep1 />}
         {activeStep === 2 && <CreateExperimentStep2 />}
         {activeStep === 3 && <CreateExperimentStep3 />}
+        {activeStep === 4 && <CreateExperimentStep4 />}
       </StepContext.Provider>
 
     </>
