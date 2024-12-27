@@ -15,11 +15,8 @@ import StepContext from './components/CreateExperiment/context/StepContextCreate
 import CreateExperimentStep3 from './components/CreateExperiment/CreateExperimentStep3';
 import CreateExperimentStep4 from './components/CreateExperiment/CreateExperimentStep4';
 
-
-
 const CreateExperiment = () => {
   const { t } = useTranslation();
-  const [activeStep, setActiveStep] = useState(0);
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('within-subject');
@@ -28,6 +25,8 @@ const CreateExperiment = () => {
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
   const [ExperimentUsers, setExperimentUsers] = useState([]);
+  const [isLoadingExp, setIsLoadingExp] = useState(false);
+  const [ActiveStep, setActiveStep] = useState();
   const [step, setStep] = useState(0);
 
 
@@ -37,19 +36,57 @@ const CreateExperiment = () => {
 
   const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
 
+  const handleCreateExperiment = async () => {
+    try {
+      setIsLoadingExp(true);
+      await api.post(
+        `/experiments`,
+        {
+          ownerId: user.id,
+          name: ExperimentTitle,
+          summary: ExperimentDesc,
+          typeExperiment: ExperimentType,
+          betweenExperimentType: BtypeExperiment,
+          surveysProps: ExperimentSurveys,
+          tasksProps: ExperimentTasks,
+          userProps: ExperimentUsers,
+        },
+        { headers: { Authorization: `Bearer ${user.accessToken}` } }
+      );
+  
+      setExperimentTitle('');
+      setExperimentDesc('');
+      setExperimentTasks([]);
+      setExperimentSurveys([]);
+      setExperimentUsers([]);
+      setStep(0);  
+  
+    } catch (error) {
+      console.error(t('Error creating experiment'), error);
+    } finally {
+      setIsLoadingExp(false);
+    }
+  };
+  
+  useEffect(() => {
+    if (step === 5) {
+      handleCreateExperiment();
+    }
+  }, [step]);  
+  
   return (
     <>
       <Typography variant="h4" component="h1" gutterBottom align="center">
         {t('Experiment_create')}
       </Typography>
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper activeStep={step} alternativeLabel>
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-
+  
       <StepContext.Provider
         value={{
           step,
@@ -70,15 +107,15 @@ const CreateExperiment = () => {
           setExperimentUsers,
         }}
       >
-        {activeStep === 0 && <CreateExperimentStep0 />}
-        {activeStep === 1 && <CreateExperimentStep1 />}
-        {activeStep === 2 && <CreateExperimentStep2 />}
-        {activeStep === 3 && <CreateExperimentStep3 />}
-        {activeStep === 4 && <CreateExperimentStep4 />}
+        {step === 0 && <CreateExperimentStep0 />}
+        {step === 1 && <CreateExperimentStep1 />}
+        {step === 2 && <CreateExperimentStep2 />}
+        {step === 3 && <CreateExperimentStep3 />}
+        {step === 4 && <CreateExperimentStep4 />}
       </StepContext.Provider>
-
     </>
   );
 };
+
 
 export { CreateExperiment };
