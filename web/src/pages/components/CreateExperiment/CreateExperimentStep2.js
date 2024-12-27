@@ -311,41 +311,41 @@ const CreateExperimentStep2 = () => {
                                             '&:hover': { backgroundColor: '#e6f7ff' }
                                         }}
                                     >
-    <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center'
-                                                    }}
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <ListItemText primary={survey.title} sx={{ ml: 1 }} />
+                                            </Box>
+                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={() => handleOpenDeleteDialog(index)}
+                                                    sx={{ ml: 1 }}
                                                 >
-                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                        <ListItemText primary={survey.title} sx={{ ml: 1 }} />
-                                                    </Box>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                        <IconButton
-                                                            color="error"
-                                                            onClick={() => handleOpenDeleteDialog(index)}
-                                                            sx={{ ml: 1 }}
-                                                        >
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                        <IconButton
-                                                            color="primary"
-                                                            onClick={() => handleEditSurvey(index)}
-                                                            sx={{ ml: 2 }}
-                                                        >
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                        <IconButton
-                                                            color="primary"
-                                                            onClick={() => toggleSurveyDescription(index)}
-                                                            sx={{ ml: 1 }}
-                                                        >
-                                                            {openSurveyIds.includes(index) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                                        </IconButton>
-                                                    </Box>
-                                                </Box>
-                                            
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => handleEditSurvey(index)}
+                                                    sx={{ ml: 2 }}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => toggleSurveyDescription(index)}
+                                                    sx={{ ml: 1 }}
+                                                >
+                                                    {openSurveyIds.includes(index) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
+
 
                                         {openSurveyIds.includes(index) && (
                                             <Box sx={{
