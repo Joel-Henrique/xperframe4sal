@@ -3,12 +3,18 @@ import {Task} from 'src/modules/task2/entities/task.entity';
 import {UserExperiment} from 'src/modules/user-experiments2/entities/user-experiments.entity';
 import {Column, Entity, OneToMany} from 'typeorm';
 
-/*enum SurveyType {
+enum SurveyType {
   PRE = 'pre',
   POST = 'post',
   OTHER = 'other',
-}*/
+}
 
+export class SurveyProps {
+  id: string;
+  uniqueAnswer: boolean = false;
+  type: SurveyType = SurveyType.OTHER;
+  required: boolean = false;
+}
 export class TaskProps {
   id: string;
   toWhom: string = 'all';

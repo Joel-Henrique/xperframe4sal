@@ -1,8 +1,8 @@
-import React from 'react';
-import { useState, useContext, useEffect } from 'react';
-import 'react-quill/dist/quill.snow.css';
-import StepContext from './context/StepContextCreate';
-import { api } from '../../../config/axios';
+import React from "react";
+import { useState, useContext, useEffect } from "react";
+import "react-quill/dist/quill.snow.css";
+import StepContext from "./context/StepContextCreate";
+import { api } from "../../../config/axios";
 import {
     TextField,
     Button,
@@ -10,20 +10,16 @@ import {
     ListItemText,
     FormControl,
     CircularProgress,
-    Checkbox
-} from '@mui/material';
-import { useTranslation } from 'react-i18next';
+    Checkbox,
+} from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 const CreateExperimentStep3 = () => {
-    const {
-        step,
-        setStep,
-        ExperimentUsers,
-        setExperimentUsers,
-    } = useContext(StepContext);
-    const [user] = useState(JSON.parse(localStorage.getItem('user')));
+    const { step, setStep, ExperimentUsers, setExperimentUsers } =
+        useContext(StepContext);
+    const [user] = useState(JSON.parse(localStorage.getItem("user")));
     const { t } = useTranslation();
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState("");
     const [isLoadingUser, setIsLoadingUser] = useState(false);
     const [users, setUsers] = useState([]);
 
@@ -37,12 +33,12 @@ const CreateExperimentStep3 = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await api.get(`users`, {
+            const response = await api.get(`users2`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             setUsers(response.data);
         } catch (error) {
-            console.error(t('Error in Search'), error);
+            console.error(t("Error in Search"), error);
         }
     };
 
@@ -61,29 +57,29 @@ const CreateExperimentStep3 = () => {
     return (
         <Box
             sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
                 marginTop: 10,
             }}
         >
             <Box
                 sx={{
-                    width: '60%',
+                    width: "60%",
                     padding: 3,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#f9f9f9',
-                    borderRadius: '8px',
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "8px",
                     boxShadow: 4,
-                    mx: 'auto',
+                    mx: "auto",
                 }}
             >
                 <TextField
-                    label={t('search_user')}
+                    label={t("search_user")}
                     variant="outlined"
                     fullWidth
                     margin="normal"
@@ -95,32 +91,53 @@ const CreateExperimentStep3 = () => {
                 {isLoadingUser ? (
                     <CircularProgress />
                 ) : (
-                    <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                    <FormControl
+                        fullWidth
+                        sx={{ maxHeight: 200, overflowY: "auto" }}
+                    >
                         {users
                             .filter((user) =>
-                                `${user.name} ${user.lastName} ${user.email}`.toLowerCase().includes(searchTerm.toLowerCase())
+                                `${user.name} ${user.lastName} ${user.email}`
+                                    .toLowerCase()
+                                    .includes(searchTerm.toLowerCase())
                             )
 
                             .map((user) => (
                                 <Box
                                     key={user.id}
                                     sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
+                                        display: "flex",
+                                        flexDirection: "column",
                                         mb: 1,
                                         padding: 1,
-                                        backgroundColor: '#ffffff',
-                                        borderRadius: '4px',
+                                        backgroundColor: "#ffffff",
+                                        borderRadius: "4px",
                                         boxShadow: 1,
-                                        '&:hover': { backgroundColor: '#e6f7ff' }
+                                        "&:hover": {
+                                            backgroundColor: "#e6f7ff",
+                                        },
                                     }}
                                 >
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Checkbox
-                                                checked={ExperimentUsers.includes(user.id)}
-
-                                                onChange={() => handleSelectUser(user.id)}
+                                                checked={ExperimentUsers.includes(
+                                                    user.id
+                                                )}
+                                                onChange={() =>
+                                                    handleSelectUser(user.id)
+                                                }
                                             />
                                             <ListItemText
                                                 primary={`${user.name} ${user.lastName} - ${user.email}`}
@@ -133,14 +150,21 @@ const CreateExperimentStep3 = () => {
                     </FormControl>
                 )}
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        mt: 2,
+                        width: "100%",
+                    }}
+                >
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleBack}
-                        sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                        sx={{ maxWidth: 150, fontWeight: "bold", boxShadow: 2 }}
                     >
-                        {t('back')}
+                        {t("back")}
                     </Button>
 
                     <Button
@@ -149,7 +173,7 @@ const CreateExperimentStep3 = () => {
                         onClick={handleNext}
                         sx={{ maxWidth: 120 }}
                     >
-                        {t('next')}
+                        {t("next")}
                     </Button>
                 </Box>
             </Box>
