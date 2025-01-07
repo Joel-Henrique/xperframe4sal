@@ -16,8 +16,8 @@ import {
   GetUserDto,
   ResetPasswordDto,
 } from 'src/model/user.dto';
-import {User} from './entity/user.entity';
 import {CreateUserDto} from './dto/create-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
 
 @Controller('users2')
 export class User2Controller {
@@ -104,10 +104,10 @@ export class User2Controller {
   @Get(':id')
   async update(
     @Param('id') id: string,
-    @Body() user: User,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<GetUserDto> {
     //user.lastChangedAt = new Date();
-    const userDto = await this._userService.update(id, user);
+    const userDto = await this._userService.update(id, updateUserDto);
     return {
       id: userDto._id,
       name: userDto.name,

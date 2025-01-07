@@ -12,6 +12,7 @@ import {ForgotPasswordDto, ResetPasswordDto} from 'src/model/user.dto';
 import * as crypto from 'crypto';
 import {MailerService} from '@nestjs-modules/mailer';
 import {CreateUserDto} from './dto/create-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
 
 const HOUR_1 = 3600000;
 @Injectable()
@@ -140,14 +141,14 @@ export class User2Service {
       throw new Error(error.message);
     }
   }
-  async update(id: string, user: User): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     try {
-      if (user.password?.length > 0) {
-        user.password = await bcrypt.hash(user.password, 10);
+      if (updateUserDto.password?.length > 0) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       } else {
-        user.password = undefined;
+        updateUserDto.password = undefined;
       }
-      await this.userRepository.update({_id: id}, user);
+      await this.userRepository.update({_id: id}, updateUserDto);
       const result = await this.findOne(id);
       return result;
     } catch (error) {
