@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {User2Service} from './user2.service';
 import {
@@ -18,6 +19,7 @@ import {
 } from 'src/model/user.dto';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
+import {AuthGuard} from '@nestjs/passport';
 
 @Controller('users2')
 export class User2Controller {
@@ -55,12 +57,13 @@ export class User2Controller {
         name: userDto.name,
         lastName: userDto.lastName,
         email: userDto.email,
+        researcher: userDto.researcher,
       };
     } catch (error) {
       throw error;
     }
   }
-  //@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(
     @Query('email') email: string,
@@ -77,6 +80,7 @@ export class User2Controller {
           name: user.name,
           lastName: user.lastName,
           email: user.email,
+          researcher: user.researcher,
         };
       } catch (error) {
         if (error instanceof NotFoundException) {
@@ -94,6 +98,7 @@ export class User2Controller {
           name: user.name,
           lastName: user.lastName,
           email: user.email,
+          researcher: user.researcher,
         };
       });
     } catch (error) {
@@ -101,7 +106,7 @@ export class User2Controller {
     }
   }
 
-  //@UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<GetUserDto> {
     const user = await this._userService.findOne(id);
@@ -110,6 +115,7 @@ export class User2Controller {
       name: user.name,
       lastName: user.lastName,
       email: user.email,
+      researcher: user.researcher,
     };
   }
 
@@ -126,6 +132,7 @@ export class User2Controller {
       name: userDto.name,
       lastName: userDto.lastName,
       email: userDto.email,
+      researcher: userDto.researcher,
     };
   }
   //@UseGuards(AuthGuard('jwt'))

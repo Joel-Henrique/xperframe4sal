@@ -46,7 +46,7 @@ export class Task2Service {
 
   async remove(id: string) {
     const task = await this.findOne(id);
-    return await this.taskRepository.delete({_id: id});
+    await this.taskRepository.delete({_id: id});
     return task;
   }
 }
