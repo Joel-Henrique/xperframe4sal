@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../config/axios';
+import { api } from '../../config/axios';
 import {
   Accordion,
   AccordionDetails,
@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { LoadingIndicator } from '../components/LoadIndicator';
+import { LoadingIndicator } from '../../components/LoadIndicator';
 
 import { useTranslation } from 'react-i18next';
 
-const ExperimentList = () => {
+const NotResearcher = () => {
   const navigate = useNavigate();
   const [experiments, setExperiments] = useState(null);
   const [expanded, setExpanded] = useState(`panel-0`);
@@ -30,7 +30,6 @@ const ExperimentList = () => {
     const fetchExperimentData = async () => {
       setIsLoading(true);
       try {
-
         let response = await api.get(`user-experiments?userId=${user.id}`, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
         const userExperimentsData = response.data;
         let experimentList = [];
@@ -50,33 +49,27 @@ const ExperimentList = () => {
          */
       }
       setIsLoading(false);
-    }
+    };
 
-    fetchExperimentData()
+    fetchExperimentData();
+  }, [user?.id, user?.accessToken]);
 
-  }, [user?.id, user?.accessToken])
-
-  const handleClick = (e) => {
-    const userExperimentSelected = userExperiments.filter(ue => ue.experimentId === e)[0]
-    if (userExperimentSelected.stepsCompleted && userExperimentSelected.stepsCompleted["icf"]) {
-      navigate(`/experiments/${e}/surveys`);
-    } else {
-      navigate(`/experiments/${e}/icf`, { state: { data: userExperimentSelected } });
-    }
-  }
+  const handleClick = (experimentId) => {
+    navigate(`/experiments/${experimentId}/surveys`);
+  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-  }
+  };
 
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        {t('see_experiment_list_title')} 
+        {t('see_experiment_list_title')}
       </Typography>
 
       {!experiments && (
-        <Typography variant="body1">{t('loading_experiments')}</Typography> 
+        <Typography variant="body1">{t('loading_experiments')}</Typography>
       )}
 
       {!experiments && (isLoading && <LoadingIndicator size={70} />)}
@@ -118,15 +111,14 @@ const ExperimentList = () => {
                 style={{ margin: '16px' }}
                 onClick={() => handleClick(experiment._id)}
               >
-                {t('enter_label')} 
+                {t('Access')}
               </Button>
             </div>
           </AccordionDetails>
         </Accordion>
-
       ))}
     </>
-  )
-}
+  );
+};
 
-export { ExperimentList }
+export default NotResearcher;

@@ -173,5 +173,19 @@
   "step_3": "select surveys",
   "step_4": "select users",
   "step_5": "review and completion",
-  "typeExperiment1": "Type of Experiment"
+  "typeExperiment1": "Type of Experiment",
+  "invalid_name_message": "Required Field*",
+  "invalid_last_name_message": "Required Field*",
+  "invalid_email_message": "invalid email",
+  "researcher_experiments_title": "Created Experiments: ",
+  "create_experiment_button": "Create New Experiment",
+  "view_experiment_button": "View Experiment",
+  "Access":"Access",
+  "edit": "Edit",
+  "researcher_label": "Researcher",
+  "normal_user_label": "Experiment Participant",
+  "save": "Save",
+  "confirm_delete": "Delete Confirmation",
+  "delete_confirmation_message": "Are you sure you want to delete this task? This action cannot be undone.",
+  "delete": "Delete"
 }

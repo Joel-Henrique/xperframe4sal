@@ -71,14 +71,7 @@ export function PrivateRoutes(props) {
     navigate('/instructions');
     setAnchorEl(null);
   }
-  const handleGoCreateTasks = () => {
-    navigate('/createtasks');
-    setAnchorEl(null);
-  }
-  const handleGoCreateSurveys = () => {
-    navigate('/CreateSurveys');
-    setAnchorEl(null);
-  }
+
   const handleGoCreateExperiment = () => {
     navigate('/CreateExperiment');
     setAnchorEl(null);
@@ -117,18 +110,7 @@ export function PrivateRoutes(props) {
             <ListItemText primary={t('menu_instructions')} />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleGoCreateTasks}>
-            <MailIcon />
-            <ListItemText primary={t('menu_task')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleGoCreateSurveys}>
-            <MailIcon />
-            <ListItemText primary={t('menu_surveys')} />
-          </ListItemButton>
-        </ListItem>
+
 
         <ListItem disablePadding>
           <ListItemButton onClick={handleGoCreateExperiment}>
@@ -202,18 +184,7 @@ export function PrivateRoutes(props) {
             <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoInstruction}>
               {t('menu_instructions')}
             </Button>
-            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateTasks}>
-              {t('menu_task')}
-            </Button>
-            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateSurveys}>
-              {t('menu_surveys')}
-            </Button>
-            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoCreateExperiment}>
-              {t('menu_experiments')}
-            </Button>
-            <Button sx={{ color: '#fff', display: 'flex', alignItems: 'center' }} onClick={handleGoExperimentList}>
-              {t('menu_experimentlist')}
-            </Button>
+            
             <Button sx={{ color: '#fff', width: '85px' }} onClick={handleGoContact}>
               {t('menu_contact')}
             </Button>

@@ -48,8 +48,14 @@ export class UserProps {
 
 @Schema()
 export class Experiment extends BaseEntity {
+  @Prop({required: true})
+  ownerId: string;
   @Prop({ required: true })
   name: string;
+  @Prop({required: true})
+  typeExperiment: string;
+  @Prop()
+  betweenExperimentType: string;
   @Prop()
   summary: string;
   @Prop()
