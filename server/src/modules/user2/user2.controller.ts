@@ -100,8 +100,21 @@ export class User2Controller {
       throw error;
     }
   }
+
   //@UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  async findOne(@Param('id') id: string): Promise<GetUserDto> {
+    const user = await this._userService.findOne(id);
+    return {
+      id: user._id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+    };
+  }
+
+  //@UseGuards(AuthGuard('jwt'))
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,

@@ -4,6 +4,7 @@ import {Task} from './entities/task.entity';
 import {Repository} from 'typeorm';
 import {CreateTaskDto} from './dto/create-task.dto';
 import {Experiments2Service} from '../experiments2/experiments2.service';
+import {UpdateTaskDto} from './dto/update-task.dto';
 
 @Injectable()
 export class Task2Service {
@@ -38,8 +39,8 @@ export class Task2Service {
     return await this.taskRepository.findOneBy({_id: id});
   }
 
-  async update(id: string, task: Task): Promise<Task> {
-    await this.taskRepository.update({_id: id}, task);
+  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    await this.taskRepository.update({_id: id}, updateTaskDto);
     return await this.findOne(id);
   }
 

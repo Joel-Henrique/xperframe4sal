@@ -7,6 +7,7 @@ import {CreateExperimentDto} from './dto/create-experiment.dto';
 import {UserExperiment} from '../user-experiments2/entities/user-experiments.entity';
 import {UserExperiments2Service} from '../user-experiments2/user-experiments2.service';
 import {UserTask2Service} from '../user-task2/user-task2.service';
+import {UpdateExperimentDto} from './dto/update-experiment.dto';
 
 @Injectable()
 export class Experiments2Service {
@@ -65,9 +66,12 @@ export class Experiments2Service {
     return await this.experimentRepository.findOneBy({name});
   }
 
-  async update(id: string, experiment: Experiment): Promise<Experiment> {
+  async update(
+    id: string,
+    updateExperimentDto: UpdateExperimentDto,
+  ): Promise<Experiment> {
     try {
-      await this.experimentRepository.update({_id: id}, experiment);
+      await this.experimentRepository.update({_id: id}, updateExperimentDto);
       const result = await this.find(id);
       return result;
     } catch (error) {

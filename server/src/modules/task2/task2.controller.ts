@@ -10,6 +10,7 @@ import {
 import {Task2Service} from './task2.service';
 import {Task} from './entities/task.entity';
 import {CreateTaskDto} from './dto/create-task.dto';
+import {UpdateTaskDto} from './dto/update-task.dto';
 
 @Controller('task2')
 export class Task2Controller {
@@ -31,10 +32,13 @@ export class Task2Controller {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() task: Task): Promise<Task> {
+  async update(
+    @Param('id') id: string,
+    @Body() updateTaskDto: UpdateTaskDto,
+  ): Promise<Task> {
     //TODO
     //task.lastChangedAt = new Date();
-    return await this.taskService.update(id, task);
+    return await this.taskService.update(id, updateTaskDto);
   }
 
   @Delete('id')

@@ -10,6 +10,7 @@ import {
 import {Experiments2Service} from './experiments2.service';
 import {Experiment} from './entity/experiment.entity';
 import {CreateExperimentDto} from './dto/create-experiment.dto';
+import {UpdateExperimentDto} from './dto/update-experiment.dto';
 
 @Controller('experiments2')
 export class Experiments2Controller {
@@ -37,11 +38,11 @@ export class Experiments2Controller {
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() experiment: Experiment,
+    @Body() updateExperimentDto: UpdateExperimentDto,
   ): Promise<Experiment> {
     //TODO
     //experiment.lastChangeAt = new Date()
-    return await this.experimentService.update(id, experiment);
+    return await this.experimentService.update(id, updateExperimentDto);
   }
 
   @Delete(':id')
