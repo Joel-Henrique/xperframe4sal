@@ -875,7 +875,7 @@ const CreateExperimentStep2 = () => {
                                         {t('cancel')}
                                     </Button>
                                     <Button type="submit" variant="contained" color="primary">
-                                        {t('saveChanges')}
+                                        {t('save')}
                                     </Button>
                                 </Box>
                             </form>
