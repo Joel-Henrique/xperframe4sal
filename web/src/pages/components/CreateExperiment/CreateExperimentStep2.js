@@ -35,12 +35,12 @@ const CreateExperimentStep2 = () => {
     } = useContext(StepContext);
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const { t } = useTranslation();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
-    const [surveys, setSurveys] = useState([]);  //import
     const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
@@ -48,26 +48,10 @@ const CreateExperimentStep2 = () => {
     const [isValidTitleSurvey, setIsValidTitleSurvey] = useState(true);
     const [isValidDescSurvey, setIsValidDescSurvey] = useState(true);
     const isValidFormSurvey = isValidTitleSurvey && title && isValidDescSurvey && description;
-
-    /*
-    const fetchSurveys = async () => {
-        try {
-            const response = await api.get(`surveys`, {
-                headers: { Authorization: `Bearer ${user.accessToken}` },
-            });
-            setSurveys(response.data);
-        } catch (error) {
-            console.error(t('Error in Search'), error);
-        }
-    };
-
-    useEffect(() => {
-        fetchSurveys();
-    }, [user, t]);
-*/
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [SurveyToDeleteIndex, setSurveyToDeleteIndex] = useState(null);
-
+    const [editedSurvey, setEditedSurvey] = useState(null);
+    const [IndexId, setIndexId] = useState(null);
 
     const handleOpenDeleteDialog = (index) => {
         setSurveyToDeleteIndex(index);
@@ -148,7 +132,89 @@ const CreateExperimentStep2 = () => {
     const toggleCreateQuest = () => {
         setIsCreateQuestOpen((prev) => !prev);
     };
+    const toggleEditQuest = () => {
+        setIsEditDialogOpen((prev) => !prev);
+    };
 
+    const handleEditQuestion = (questionId, field, value) => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId ? { ...q, [field]: value } : q
+            ),
+        }));
+    };
+
+    const handleEditOption = (questionId, optionId, field, value) => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: q.options.map((opt) =>
+                            opt.id === optionId ? { ...opt, [field]: value } : opt
+                        ),
+                    }
+                    : q
+            ),
+        }));
+    };
+
+    const handleAddQuestionEdit = () => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: [
+                ...prev.questions,
+                {
+                    id: Date.now(),
+                    statement: '',
+                    type: 'open',
+                    required: false,
+                    options: [],
+                    subQuestions: [],
+                },
+            ],
+        }));
+    };
+
+    const handleRemoveQuestionEdit = (id) => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: prev.questions.filter((q) => q.id !== id),
+        }));
+    };
+
+    const handleAddOptionEdit = (questionId) => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: [
+                            ...q.options,
+                            { id: Date.now(), statement: '', score: 0, subQuestion: null },
+                        ],
+                    }
+                    : q
+            ),
+        }));
+    };
+
+    const handleRemoveOptionEdit = (questionId, optionId) => {
+        setEditedSurvey((prev) => ({
+            ...prev,
+            questions: prev.questions.map((q) =>
+                q.id === questionId
+                    ? {
+                        ...q,
+                        options: q.options.filter((opt) => opt.id !== optionId),
+                    }
+                    : q
+            ),
+        }));
+    };
 
     const handleAddQuestion = () => {
         setQuestions([
@@ -229,9 +295,28 @@ const CreateExperimentStep2 = () => {
             )
         );
     };
-    const handleEditSurvey = (index) => {
 
+    const handleEditSurveysave = (event) => {
+        event.preventDefault();
+
+        setExperimentSurveys((prev) => {
+            const updatedSurveys = [...prev];
+            updatedSurveys[IndexId] = editedSurvey;
+            return updatedSurveys;
+        });
+
+        toggleEditQuest();
     };
+
+    const handleEditSurvey = (index) => {
+        setIndexId(index);
+        const surveyToEdit = ExperimentSurveys[index];
+        if (surveyToEdit) {
+            setEditedSurvey(surveyToEdit);
+            setIsEditDialogOpen(true);
+        }
+    };
+
     const handleNameChangeTitleSurvey = (e) => {
         const inputName = e.target.value;
         setTitle(inputName);
@@ -634,6 +719,169 @@ const CreateExperimentStep2 = () => {
                         </Box>
                     </DialogContent>
                 </Dialog>
+
+                {isEditDialogOpen &&
+                    <Dialog
+                        open={isEditDialogOpen}
+                        onClose={toggleEditQuest}
+                        fullWidth
+                        maxWidth="lg"
+                    >
+                        <DialogContent sx={{ backgroundColor: '#f9f9f9', padding: 3 }}>
+                            <Typography variant="h4" gutterBottom align="center">
+                                {t('editSurvey')}
+                            </Typography>
+                            <form onSubmit={handleEditSurveysave}>
+                                <TextField
+                                    label={t('surveyTitle')}
+                                    value={editedSurvey.title}
+                                    onChange={(e) => setEditedSurvey({ ...editedSurvey, title: e.target.value })}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                />
+                                <TextField
+                                    label={t('surveyDescription')}
+                                    value={editedSurvey.description}
+                                    onChange={(e) => setEditedSurvey({ ...editedSurvey, description: e.target.value })}
+                                    fullWidth
+                                    multiline
+                                    rows={4}
+                                    required
+                                    margin="normal"
+                                />
+                                <FormControl fullWidth margin="normal">
+                                    <InputLabel>{t('surveyType')}</InputLabel>
+                                    <Select
+                                        value={editedSurvey.type}
+                                        onChange={(e) => setEditedSurvey({ ...editedSurvey, type: e.target.value })}
+                                        label={t('surveyType')}
+                                    >
+                                        {surveyTypes.map((stype) => (
+                                            <MenuItem key={stype.value} value={stype.value}>
+                                                {stype.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                <Box sx={{ mt: 4 }}>
+                                    <Typography variant="h5" gutterBottom>
+                                        {t('questions')}
+                                    </Typography>
+                                    {editedSurvey.questions.map((q, index) => (
+                                        <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
+                                            <Grid container spacing={2} alignItems="center">
+                                                <Grid item xs={11}>
+                                                    <TextField
+                                                        label={t('questionStatement', { index: index + 1 })}
+                                                        value={q.statement}
+                                                        onChange={(e) =>
+                                                            handleEditQuestion(q.id, 'statement', e.target.value)
+                                                        }
+                                                        fullWidth
+                                                        required
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={1}>
+                                                    <IconButton color="error" onClick={() => handleRemoveQuestionEdit(q.id)}>
+                                                        <Remove />
+                                                    </IconButton>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <FormControl fullWidth>
+                                                        <InputLabel>{t('questionType')}</InputLabel>
+                                                        <Select
+                                                            value={q.type}
+                                                            onChange={(e) => handleEditQuestion(q.id, 'type', e.target.value)}
+                                                            label={t('questionType')}
+                                                        >
+                                                            {questionTypes.map((qt) => (
+                                                                <MenuItem key={qt.value} value={qt.value}>
+                                                                    {qt.label}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <FormControl fullWidth>
+                                                        <InputLabel>{t('required')}</InputLabel>
+                                                        <Select
+                                                            value={q.required}
+                                                            onChange={(e) => handleEditQuestion(q.id, 'required', e.target.value)}
+                                                            label={t('required')}
+                                                        >
+                                                            <MenuItem value={false}>{t('no')}</MenuItem>
+                                                            <MenuItem value={true}>{t('yes')}</MenuItem>
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+
+                                                {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
+                                                    <Grid item xs={12}>
+                                                        <Typography variant="subtitle1">{t('options')}</Typography>
+                                                        {q.options.map((opt, optIndex) => (
+                                                            <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                                                                <TextField
+                                                                    label={t('option', { index: optIndex + 1 })}
+                                                                    value={opt.statement}
+                                                                    onChange={(e) =>
+                                                                        handleEditOption(q.id, opt.id, 'statement', e.target.value)
+                                                                    }
+                                                                    fullWidth
+                                                                    required
+                                                                />
+                                                                {q.type === 'multiple-choices' && (
+                                                                    <TextField
+                                                                        label={t('weight')}
+                                                                        type="number"
+                                                                        value={opt.score}
+                                                                        onChange={(e) =>
+                                                                            handleEditOption(q.id, opt.id, 'score', Number(e.target.value))
+                                                                        }
+                                                                        sx={{ width: 100, ml: 2 }}
+                                                                        required
+                                                                    />
+                                                                )}
+                                                                <IconButton
+                                                                    color="error"
+                                                                    onClick={() => handleRemoveOptionEdit(q.id, opt.id)}
+                                                                    sx={{ ml: 2 }}
+                                                                >
+                                                                    <Remove />
+                                                                </IconButton>
+                                                            </Box>
+                                                        ))}
+                                                        <Button
+                                                            variant="outlined"
+                                                            startIcon={<Add />}
+                                                            onClick={() => handleAddOptionEdit(q.id)}
+                                                        >
+                                                            {t('addOption')}
+                                                        </Button>
+                                                    </Grid>
+                                                )}
+                                            </Grid>
+                                        </Paper>
+                                    ))}
+                                    <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestionEdit}>
+                                        {t('addQuestion')}
+                                    </Button>
+                                </Box>
+
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+                                    <Button variant="outlined" onClick={toggleEditQuest}>
+                                        {t('cancel')}
+                                    </Button>
+                                    <Button type="submit" variant="contained" color="primary">
+                                        {t('saveChanges')}
+                                    </Button>
+                                </Box>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                }
             </Box>
         </Box>
     )
