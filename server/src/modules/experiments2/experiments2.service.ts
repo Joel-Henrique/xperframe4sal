@@ -8,6 +8,8 @@ import {UserExperiment} from '../user-experiments2/entities/user-experiments.ent
 import {UserExperiments2Service} from '../user-experiments2/user-experiments2.service';
 import {UserTask2Service} from '../user-task2/user-task2.service';
 import {UpdateExperimentDto} from './dto/update-experiment.dto';
+import {User2Service} from '../user2/user2.service';
+import {Task2Service} from '../task2/task2.service';
 
 @Injectable()
 export class Experiments2Service {
@@ -17,20 +19,27 @@ export class Experiments2Service {
     @Inject(forwardRef(() => UserExperiments2Service))
     private readonly userExperimentService: UserExperiments2Service,
     private readonly userTaskService: UserTask2Service,
+    private readonly userService: User2Service,
+    private readonly taskService: Task2Service,
   ) {}
 
   //TODO
 
   async create(createExperimentDto: CreateExperimentDto): Promise<any> {
-    const {name, summary, tasksProps, userProps} = createExperimentDto;
-
-    const experiment = await this.experimentRepository.create({name, summary});
+    const {name, ownerId, summary, tasksProps, userProps} = createExperimentDto;
+    const owner = await this.userService.findOne(ownerId);
+    const experiment = await this.experimentRepository.create({
+      name,
+      summary,
+      ownerId,
+      owner,
+    });
     const savedExperiment = await this.experimentRepository.save(experiment);
 
     //UserExperiment
-    const userExperimentPromises = Object.keys(userProps).map((userId) => {
+    const userExperimentPromises = userProps.map((user) => {
       return this.userExperimentService.create({
-        userId,
+        userId: user.id,
         experimentId: savedExperiment._id,
       });
     });
@@ -40,12 +49,24 @@ export class Experiments2Service {
     );
     await this.userExperimentService.createMany(userExperiments);
 
-    //UserTask
-    const userTasksPromises = Object.keys(tasksProps).flatMap((taskId) => {
-      return Object.keys(userProps).map((userId) => {
+    //Create Task
+    const newTasks = [];
+    for (const task of tasksProps) {
+      const result = await this.taskService.create({
+        title: task.title,
+        summary: task.summary,
+        description: task.description,
+        experimentId: savedExperiment._id,
+      });
+      newTasks.push(result);
+    }
+
+    //Create UserTask
+    const userTasksPromises = newTasks.flatMap((task) => {
+      return userProps.map((user) => {
         return this.userTaskService.create({
-          userId,
-          taskId,
+          userId: user.id,
+          taskId: task.id,
         });
       });
     });

@@ -1,7 +1,8 @@
 import {BaseEntity} from 'src/model/base_entity2';
 import {Task} from 'src/modules/task2/entities/task.entity';
 import {UserExperiment} from 'src/modules/user-experiments2/entities/user-experiments.entity';
-import {Column, Entity, OneToMany} from 'typeorm';
+import {User} from 'src/modules/user2/entity/user.entity';
+import {Column, Entity, ManyToOne, OneToMany} from 'typeorm';
 
 enum SurveyType {
   PRE = 'pre',
@@ -17,6 +18,9 @@ export class SurveyProps {
 }
 export class TaskProps {
   id: string;
+  title: string;
+  summary: string;
+  description: string;
   toWhom: string = 'all';
   required: boolean = true;
 }
@@ -37,6 +41,10 @@ export enum StepsType {
 export class Experiment extends BaseEntity {
   @Column()
   name: string;
+  @Column({nullable: true})
+  ownerId: string;
+  @ManyToOne(() => User)
+  owner: User;
   @Column()
   summary: string;
   @OneToMany(() => Task, (task) => task.experiment)

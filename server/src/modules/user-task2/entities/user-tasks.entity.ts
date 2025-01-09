@@ -13,7 +13,7 @@ export class UserTask extends BaseEntity {
   hasFinishedTask: boolean = false;
   @Column({default: false})
   isPaused: boolean = false;
-  @Column()
+  @Column({default: null})
   startTime: Date = null;
   //TODO verificar como fazer isso no TypeORM
   //@Column({type: [Date]})
@@ -21,6 +21,6 @@ export class UserTask extends BaseEntity {
   //TODO verificar como fazer isso no TypeORM
   //@Column({type: [Date]})
   //resumeTImeTime: Date[] = [];
-  @Column()
+  @Column({default: null})
   endTime: Date = null;
 }

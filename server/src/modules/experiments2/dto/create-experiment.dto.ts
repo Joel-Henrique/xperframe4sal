@@ -3,10 +3,11 @@ import {SurveyProps, TaskProps} from '../entity/experiment.entity';
 
 export class CreateExperimentDto {
   name: string;
+  ownerId: string;
   summary: string;
   //TODO Ver como fazer a relação
   //tasks: Task[];
-  tasksProps: Record<string, TaskProps>;
-  userProps: Record<string, UserProps>;
+  tasksProps: TaskProps[];
+  userProps: UserProps[];
   surveyProps: Record<string, SurveyProps>;
 }
