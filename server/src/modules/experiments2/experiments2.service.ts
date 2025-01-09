@@ -26,13 +26,23 @@ export class Experiments2Service {
   //TODO
 
   async create(createExperimentDto: CreateExperimentDto): Promise<any> {
-    const {name, ownerId, summary, tasksProps, userProps} = createExperimentDto;
+    const {
+      name,
+      ownerId,
+      summary,
+      tasksProps,
+      userProps,
+      typeExperiment,
+      betweenExperimentType,
+    } = createExperimentDto;
     const owner = await this.userService.findOne(ownerId);
     const experiment = await this.experimentRepository.create({
       name,
       summary,
       ownerId,
       owner,
+      typeExperiment,
+      betweenExperimentType,
     });
     const savedExperiment = await this.experimentRepository.save(experiment);
 

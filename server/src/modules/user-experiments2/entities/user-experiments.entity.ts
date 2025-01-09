@@ -19,6 +19,10 @@ export class UserExperiment extends BaseEntity {
 
   @ManyToOne(() => Experiment, (experiment) => experiment.userExperiments)
   experiment: Experiment;
+  @Column({default: false})
+  hasFinished: boolean = false;
   @Column({type: 'jsonb', default: {}})
   stepsCompleted: Record<StepsType, boolean>;
+
+  //TODO logs
 }

@@ -25,4 +25,6 @@ export class User extends BaseEntity {
   userExperiments: UserExperiment[];
   @OneToMany(() => UserTask, (userTask) => userTask.user)
   userTasks: UserTask[];
+
+  //TODO role
 }

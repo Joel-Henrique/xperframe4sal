@@ -47,6 +47,10 @@ export class Experiment extends BaseEntity {
   owner: User;
   @Column()
   summary: string;
+  @Column()
+  typeExperiment: string;
+  @Column()
+  betweenExperimentType: string;
   @OneToMany(() => Task, (task) => task.experiment)
   tasks: Task[];
   @OneToMany(
@@ -54,4 +58,7 @@ export class Experiment extends BaseEntity {
     (userExperiment) => userExperiment.experiment,
   )
   userExperiments: UserExperiment[];
+
+  //TODO icfID
+  //TODO steps
 }

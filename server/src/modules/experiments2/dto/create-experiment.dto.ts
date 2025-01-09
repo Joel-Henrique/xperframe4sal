@@ -5,6 +5,8 @@ export class CreateExperimentDto {
   name: string;
   ownerId: string;
   summary: string;
+  typeExperiment: string;
+  betweenExperimentType: string;
   //TODO Ver como fazer a relação
   //tasks: Task[];
   tasksProps: TaskProps[];
