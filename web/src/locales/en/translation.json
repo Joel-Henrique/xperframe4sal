@@ -188,5 +188,9 @@
   "confirm_delete": "Delete Confirmation",
   "delete_confirmation_message": "Are you sure you want to delete this task? This action cannot be undone.",
   "delete": "Delete",
-  "editSurvey": "Editar Questionário"
+  "editSurvey": "Edit Survey",
+  "edit_experiment": "Edit Experiment",
+  "edit_form": "Edit form",
+  "edit_task": "Edit Task",
+  "edit_survey": "Edit Survey"
 }

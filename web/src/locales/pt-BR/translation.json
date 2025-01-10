@@ -190,6 +190,10 @@
   "confirm_delete": "Confirmação de Exclusão",
   "delete_confirmation_message": "Tem certeza de que deseja excluir esta tarefa? Esta ação não pode ser desfeita.",
   "delete": "Excluir",
-  "editSurvey": "Editar Questionário"
+  "editSurvey": "Editar Questionário",
+  "edit_experiment": "Editar Experimento",
+  "edit_form": "Editar formulário",
+  "edit_task": "Editar Tarefa",
+  "edit_survey": "Editar Questionário"
 
 }
