@@ -94,17 +94,6 @@ const CreateExperimentStep2 = () => {
                         if (q.type === 'multiple-choices') {
                             option.score = opt.score;
                         }
-                        if (opt.subQuestion) {
-                            option.subQuestion = {
-                                statement: opt.subQuestion.statement,
-                                type: opt.subQuestion.type,
-                                required: opt.subQuestion.required,
-                                options: opt.subQuestion.options.map((subOpt) => ({
-                                    statement: subOpt.statement,
-                                    score: subOpt.score,
-                                })),
-                            };
-                        }
                         return option;
                     });
                 }
@@ -172,7 +161,6 @@ const CreateExperimentStep2 = () => {
                     type: 'open',
                     required: false,
                     options: [],
-                    subQuestions: [],
                 },
             ],
         }));
@@ -194,7 +182,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subQuestion: null },
+                            { id: Date.now(), statement: '', score: 0},
                         ],
                     }
                     : q
@@ -225,7 +213,6 @@ const CreateExperimentStep2 = () => {
                 type: 'open',
                 required: false,
                 options: [],
-                subQuestions: [],
             },
         ]);
     };
@@ -255,7 +242,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subQuestion: null },
+                            { id: Date.now(), statement: '', score: 0 },
                         ],
                     }
                     : q
