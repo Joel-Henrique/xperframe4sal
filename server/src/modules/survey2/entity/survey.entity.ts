@@ -10,4 +10,6 @@ export class Survey extends BaseEntity {
   @Column()
   description: string;
   //TODO questions
+  @Column({type: 'jsonb'})
+  questions: any[];
 }
