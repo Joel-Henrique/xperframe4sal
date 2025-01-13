@@ -20,11 +20,14 @@ import {
     Grid,
     Paper,
     Dialog,
-    DialogContent
+    DialogContent,
+    Checkbox,
+    FormControlLabel
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, Remove } from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+
 
 const CreateExperimentStep2 = () => {
     const {
@@ -91,6 +94,9 @@ const CreateExperimentStep2 = () => {
                 if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
                     question.options = q.options.map((opt) => {
                         const option = { statement: opt.statement };
+
+                        option.subquestion = opt.subquestion;
+
                         if (q.type === 'multiple-choices') {
                             option.score = opt.score;
                         }
@@ -182,7 +188,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0},
+                            { id: Date.now(), statement: '', score: 0, subquestion: null },
                         ],
                     }
                     : q
@@ -242,7 +248,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0 },
+                            { id: Date.now(), statement: '', score: 0, subquestion: null },
                         ],
                     }
                     : q
@@ -632,37 +638,74 @@ const CreateExperimentStep2 = () => {
 
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                                     <Grid item xs={12}>
-                                                        <Typography variant="subtitle1">{t('options')}</Typography>
+                                                        <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
+                                                            {t('options')}
+                                                        </Typography>
                                                         {q.options.map((opt, optIndex) => (
-                                                            <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                                                <TextField
-                                                                    label={t('option', { index: optIndex + 1 })}
-                                                                    value={opt.statement}
-                                                                    onChange={(e) =>
-                                                                        handleOptionChange(q.id, opt.id, 'statement', e.target.value)
-                                                                    }
-                                                                    fullWidth
-                                                                    required
-                                                                />
-                                                                {q.type === 'multiple-choices' && (
+                                                            <Box key={opt.id} sx={{ mb: 2 }}>
+
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                                     <TextField
-                                                                        label={t('weight')}
-                                                                        type="number"
-                                                                        value={opt.score}
+                                                                        label={t('option', { index: optIndex + 1 })}
+                                                                        value={opt.statement}
                                                                         onChange={(e) =>
-                                                                            handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                            handleOptionChange(q.id, opt.id, 'statement', e.target.value)
                                                                         }
-                                                                        sx={{ width: 100, ml: 2 }}
+                                                                        fullWidth
                                                                         required
                                                                     />
-                                                                )}
-                                                                <IconButton
-                                                                    color="error"
-                                                                    onClick={() => handleRemoveOption(q.id, opt.id)}
-                                                                    sx={{ ml: 2 }}
-                                                                >
-                                                                    <Remove />
-                                                                </IconButton>
+
+                                                                    {q.type === 'multiple-choices' && (
+                                                                        <TextField
+                                                                            label={t('weight')}
+                                                                            type="number"
+                                                                            value={opt.score || 0}
+                                                                            onChange={(e) =>
+                                                                                handleOptionChange(q.id, opt.id, 'score', Number(e.target.value))
+                                                                            }
+                                                                            sx={{ width: 100, ml: 2 }}
+                                                                            required
+                                                                        />
+                                                                    )}
+
+                                                                    <IconButton
+                                                                        color="error"
+                                                                        onClick={() => handleRemoveOption(q.id, opt.id)}
+                                                                        sx={{ ml: 2 }}
+                                                                    >
+                                                                        <Remove />
+                                                                    </IconButton>
+                                                                </Box>
+
+
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
+                                                                    <FormControlLabel
+                                                                        control={
+                                                                            <Checkbox
+                                                                                checked={opt.subquestion !== null}
+                                                                                onChange={(e) =>
+                                                                                    handleOptionChange(q.id, opt.id, 'subquestion', e.target.checked ? '' : null)
+                                                                                }
+                                                                            />
+                                                                        }
+                                                                        label={t('hasSubquestion')}
+                                                                    />
+
+
+                                                                    {opt.subquestion !== null && (
+                                                                        <TextField
+                                                                            label={t('subquestion')}
+                                                                            value={opt.subquestion}
+                                                                            onChange={(e) =>
+                                                                                handleOptionChange(q.id, opt.id, 'subquestion', e.target.value)
+                                                                            }
+                                                                            fullWidth
+                                                                            required
+                                                                            sx={{ flex: 1, ml: 2 }}
+                                                                        />
+                                                                    )}
+                                                                </Box>
                                                             </Box>
                                                         ))}
                                                         <Button
@@ -807,39 +850,69 @@ const CreateExperimentStep2 = () => {
 
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                                     <Grid item xs={12}>
-                                                        <Typography variant="subtitle1">{t('options')}</Typography>
+                                                        <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>{t('options')}</Typography>
+
                                                         {q.options.map((opt, optIndex) => (
-                                                            <Box key={opt.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                                                <TextField
-                                                                    label={t('option', { index: optIndex + 1 })}
-                                                                    value={opt.statement}
-                                                                    onChange={(e) =>
-                                                                        handleEditOption(q.id, opt.id, 'statement', e.target.value)
-                                                                    }
-                                                                    fullWidth
-                                                                    required
-                                                                />
-                                                                {q.type === 'multiple-choices' && (
+                                                            <Box key={opt.id} sx={{ mb: 2 }}>
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                                     <TextField
-                                                                        label={t('weight')}
-                                                                        type="number"
-                                                                        value={opt.score}
+                                                                        label={t('option', { index: optIndex + 1 })}
+                                                                        value={opt.statement}
                                                                         onChange={(e) =>
-                                                                            handleEditOption(q.id, opt.id, 'score', Number(e.target.value))
+                                                                            handleEditOption(q.id, opt.id, 'statement', e.target.value)
                                                                         }
-                                                                        sx={{ width: 100, ml: 2 }}
+                                                                        fullWidth
                                                                         required
                                                                     />
-                                                                )}
-                                                                <IconButton
-                                                                    color="error"
-                                                                    onClick={() => handleRemoveOptionEdit(q.id, opt.id)}
-                                                                    sx={{ ml: 2 }}
-                                                                >
-                                                                    <Remove />
-                                                                </IconButton>
+                                                                    {q.type === 'multiple-choices' && (
+                                                                        <TextField
+                                                                            label={t('weight')}
+                                                                            type="number"
+                                                                            value={opt.score || 0}
+                                                                            onChange={(e) =>
+                                                                                handleEditOption(q.id, opt.id, 'score', Number(e.target.value))
+                                                                            }
+                                                                            sx={{ width: 100, ml: 2 }}
+                                                                            required
+                                                                        />
+                                                                    )}
+                                                                    <IconButton
+                                                                        color="error"
+                                                                        onClick={() => handleRemoveOptionEdit(q.id, opt.id)}
+                                                                        sx={{ ml: 2 }}
+                                                                    >
+                                                                        <Remove />
+                                                                    </IconButton>
+                                                                </Box>
+
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                    <FormControlLabel
+                                                                        control={
+                                                                            <Checkbox
+                                                                                checked={opt.subquestion !== null}
+                                                                                onChange={(e) =>
+                                                                                    handleEditOption(q.id, opt.id, 'subquestion', e.target.checked ? '' : null)
+                                                                                }
+                                                                            />
+                                                                        }
+                                                                        label={t('hasSubquestion')}
+                                                                    />
+                                                                    {opt.subquestion !== null && (
+                                                                        <TextField
+                                                                            label={t('subquestion')}
+                                                                            value={opt.subquestion}
+                                                                            onChange={(e) =>
+                                                                                handleEditOption(q.id, opt.id, 'subquestion', e.target.value)
+                                                                            }
+                                                                            fullWidth
+                                                                            required
+                                                                            sx={{ flex: 1, ml: 2 }}
+                                                                        />
+                                                                    )}
+                                                                </Box>
                                                             </Box>
                                                         ))}
+
                                                         <Button
                                                             variant="outlined"
                                                             startIcon={<Add />}
