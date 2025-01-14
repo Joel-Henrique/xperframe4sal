@@ -4,12 +4,13 @@ import {Experiment} from './entity/experiment.entity';
 import {Repository} from 'typeorm';
 import {CreateExperimentDto} from './dto/create-experiment.dto';
 //import {Task} from '../task2/entities/task.entity';
-import {UserExperiment} from '../user-experiments2/entities/user-experiments.entity';
+//import {UserExperiment} from '../user-experiments2/entities/user-experiments.entity';
 import {UserExperiments2Service} from '../user-experiments2/user-experiments2.service';
 import {UserTask2Service} from '../user-task2/user-task2.service';
 import {UpdateExperimentDto} from './dto/update-experiment.dto';
 import {User2Service} from '../user2/user2.service';
 import {Task2Service} from '../task2/task2.service';
+import {Survey2Service} from '../survey2/survey2.service';
 
 @Injectable()
 export class Experiments2Service {
@@ -21,6 +22,7 @@ export class Experiments2Service {
     private readonly userTaskService: UserTask2Service,
     private readonly userService: User2Service,
     private readonly taskService: Task2Service,
+    private readonly surveyService: Survey2Service,
   ) {}
 
   //TODO
@@ -32,9 +34,12 @@ export class Experiments2Service {
       summary,
       tasksProps,
       userProps,
+      surveyProps,
       typeExperiment,
       betweenExperimentType,
     } = createExperimentDto;
+    console.log('Survey Props:');
+    console.log(surveyProps);
     const owner = await this.userService.findOne(ownerId);
     const experiment = await this.experimentRepository.create({
       name,
@@ -54,10 +59,7 @@ export class Experiments2Service {
       });
     });
 
-    const userExperiments: UserExperiment[] = await Promise.all(
-      userExperimentPromises,
-    );
-    await this.userExperimentService.createMany(userExperiments);
+    await Promise.all(userExperimentPromises);
 
     //Create Task
     const newTasks = [];
@@ -80,8 +82,18 @@ export class Experiments2Service {
         });
       });
     });
-    const userTaks = await Promise.all(userTasksPromises);
-    await this.userTaskService.createMany(userTaks);
+    await Promise.all(userTasksPromises);
+
+    //Create Surveys
+    const SurveysPromises = surveyProps.map((survey) => {
+      return this.surveyService.create({
+        description: survey.description,
+        name: survey.name,
+        title: survey.title,
+        questions: survey.questions,
+      });
+    });
+    await Promise.all(SurveysPromises);
     return savedExperiment;
   }
 

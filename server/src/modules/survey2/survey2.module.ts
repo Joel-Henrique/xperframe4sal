@@ -8,5 +8,6 @@ import {Survey} from './entity/survey.entity';
   imports: [TypeOrmModule.forFeature([Survey])],
   controllers: [Survey2Controller],
   providers: [Survey2Service],
+  exports: [Survey2Service],
 })
 export class Survey2Module {}
