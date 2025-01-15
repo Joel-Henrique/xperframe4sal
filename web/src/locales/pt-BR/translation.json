@@ -194,6 +194,7 @@
   "edit_experiment": "Editar Experimento",
   "edit_form": "Editar formulário",
   "edit_task": "Editar Tarefa",
-  "edit_survey": "Editar Questionário"
-
+  "edit_survey": "Editar Questionário",
+  "Success": "Sucesso",
+  "Experiment saved successfully!": "Experiência salva com sucesso!"
 }
