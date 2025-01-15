@@ -101,8 +101,7 @@ const EditExperimentStep2 = () => {
                 //params: { Experimentid: experimentId }, 
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
-            const filteredsurveys = response.data;
-            //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
+            const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
             setExperimentSurveys(filteredsurveys);
         } catch (error) {
             console.error(t('Error in Search'), error);

@@ -171,8 +171,7 @@ const EditExperimentStep1 = () => {
         //params: { Experimentid: experimentId },    talvez seja uma boa melhorar o get, podendo usar parametros  
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-      const filteredTasks = response.data;
-      //const filteredTasks = response.data.filter(task => task.Experimentid === ExperimentId); 
+      const filteredTasks = response.data.filter(task => task.Experimentid === ExperimentId); 
       setTasks(filteredTasks);
     } catch (error) {
       console.error(t('Error in Search'), error);
