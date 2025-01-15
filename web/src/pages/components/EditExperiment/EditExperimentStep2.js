@@ -493,35 +493,24 @@ const EditExperimentStep2 = () => {
                         </FormControl>
                     )}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            mt: 2,
+                            width: '100%',
+                        }}
+                    >
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleBack}
-                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                            onClick={toggleCreateQuest}
+                            sx={{ mr: 2 }}
                         >
-                            {t('back')}
+                            {t('create_survey')}
                         </Button>
-
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={toggleCreateQuest}
-                                sx={{ mr: 2 }}
-                            >
-                                {t('create_survey')}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleNext}
-                                sx={{ maxWidth: 120 }}
-                            >
-                                {t('next')}
-                            </Button>
-                        </Box>
                     </Box>
+
                 </Box>
                 <Dialog
                     open={isDeleteDialogOpen}
