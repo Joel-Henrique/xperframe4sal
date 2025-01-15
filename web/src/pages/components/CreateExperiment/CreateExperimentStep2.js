@@ -426,15 +426,20 @@ const CreateExperimentStep2 = () => {
 
 
                                         {openSurveyIds.includes(index) && (
-                                            <Box sx={{
-                                                mt: 1,
-                                                p: 1,
-                                                backgroundColor: '#e8f5e9',
-                                                borderRadius: '4px'
-                                            }}>
-                                                <Typography variant="body2">{survey.description}</Typography>
-                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    marginTop: 0,
+                                                    padding: 1,
+                                                    backgroundColor: '#E8E8E8',
+                                                    borderRadius: '4px',
+                                                    maxHeight: '150px',
+                                                    overflowY: 'auto',
+                                                    wordBreak: 'break-word',
+                                                }}
+                                                dangerouslySetInnerHTML={{ __html: survey.description }}
+                                            />
                                         )}
+
                                     </Box>
                                 ))}
                         </FormControl>

@@ -276,10 +276,13 @@ const CreateExperimentStep1 = () => {
                                             {openTaskIds.includes(index) && (
                                                 <Box
                                                     sx={{
-                                                        marginTop: 1,
+                                                        marginTop: 0,
                                                         padding: 1,
-                                                        backgroundColor: '#e8f5e9',
-                                                        borderRadius: '4px'
+                                                        backgroundColor: '#E8E8E8',
+                                                        borderRadius: '4px',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                        wordBreak: 'break-word',
                                                     }}
                                                     dangerouslySetInnerHTML={{ __html: task.description }}
                                                 />
