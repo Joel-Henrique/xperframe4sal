@@ -8,11 +8,15 @@ import {
   Select,
   MenuItem,
   styled,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import StepContext from './context/StepContext';
-
+import { api } from '../../../config/axios';
 const CustomContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#fafafa',
   borderRadius: '8px',
@@ -39,7 +43,7 @@ const EditExperimentStep0 = ({ }) => {
   const [isValidTitleExp, setIsValidTitleExp] = useState(true);
   const [isValidFormExperiment, setIsValidFormExperiment] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [
     step,
     setStep,
@@ -51,7 +55,12 @@ const EditExperimentStep0 = ({ }) => {
     setBtypeExperiment,
     ExperimentDesc,
     setExperimentDesc,
+    ExperimentId
   ] = useContext(StepContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
 
   const ExperimentTypes = [
@@ -64,6 +73,25 @@ const EditExperimentStep0 = ({ }) => {
     { value: 'manual', label: t('manual') },
   ];
 
+  const handleEditExperimentSubmit = async (e) => {
+    e.preventDefault();
+
+    const updatedExperiment = {
+      name: ExperimentTitle,
+      summary: ExperimentDesc,
+      typeExperiment: ExperimentType,
+      betweenExperimentType: BtypeExperiment,
+    };
+
+    try {
+      const response = await api.patch(`/experiments/${ExperimentId}`, updatedExperiment, {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+      });
+      setIsDialogOpen(true);
+    } catch (error) {
+      console.error('Erro na atualização da tarefa:', error);
+    }
+  };
 
   return (
     <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
@@ -146,28 +174,29 @@ const EditExperimentStep0 = ({ }) => {
             </CustomContainer>
           </div>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              
-              sx={{ maxWidth: '150px' }}
-            >
-              {t('back')}
-            </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto', width: '100%' }}>
 
             <Button
               variant="contained"
               color="primary"
-              onClick={() => setStep(step + 1)} 
+              onClick={handleEditExperimentSubmit}
               sx={{ maxWidth: '150px' }}
             >
-              {t('next')}
+              {t('save')}
             </Button>
 
           </Box>
         </Box>
       </Box>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>{t('Success')}</DialogTitle>
+        <DialogContent>{t('Experiment saved successfully!')}</DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            {t('close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

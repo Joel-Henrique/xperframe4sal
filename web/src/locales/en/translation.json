@@ -192,5 +192,7 @@
   "edit_experiment": "Edit Experiment",
   "edit_form": "Edit form",
   "edit_task": "Edit Task",
-  "edit_survey": "Edit Survey"
+  "edit_survey": "Edit Survey",
+  "Success": "Success",
+  "Experiment saved successfully!": "Experiment saved successfully!"
 }
