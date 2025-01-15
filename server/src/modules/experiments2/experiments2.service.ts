@@ -34,12 +34,12 @@ export class Experiments2Service {
       summary,
       tasksProps,
       userProps,
-      surveyProps,
+      surveysProps,
       typeExperiment,
       betweenExperimentType,
     } = createExperimentDto;
     console.log('Survey Props:');
-    console.log(surveyProps);
+    console.log(surveysProps);
     const owner = await this.userService.findOne(ownerId);
     const experiment = await this.experimentRepository.create({
       name,
@@ -85,12 +85,13 @@ export class Experiments2Service {
     await Promise.all(userTasksPromises);
 
     //Create Surveys
-    const SurveysPromises = surveyProps.map((survey) => {
+    const SurveysPromises = surveysProps.map((survey) => {
       return this.surveyService.create({
         description: survey.description,
         name: survey.name,
         title: survey.title,
         questions: survey.questions,
+        type: survey.type,
       });
     });
     await Promise.all(SurveysPromises);

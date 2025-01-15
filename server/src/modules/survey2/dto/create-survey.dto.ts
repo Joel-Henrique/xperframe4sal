@@ -1,3 +1,5 @@
+import {SurveyType} from '../entity/survey.entity';
+
 enum QuestionType {
   MULTIPLE_CHOICES = 'multiple-choices',
   OPEN = 'open',
@@ -25,5 +27,6 @@ export class CreateSurveyDto {
   name: string;
   title: string;
   description: string;
+  type: SurveyType;
   questions: QuestionDTO[];
 }

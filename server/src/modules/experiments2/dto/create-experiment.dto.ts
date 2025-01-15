@@ -12,5 +12,5 @@ export class CreateExperimentDto {
   //tasks: Task[];
   tasksProps: TaskProps[];
   userProps: UserProps[];
-  surveyProps: CreateSurveyDto[];
+  surveysProps: CreateSurveyDto[];
 }
