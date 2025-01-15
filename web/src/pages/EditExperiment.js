@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import EditExperimentStep0 from './components/EditExperiment/EditExperimentStep0';
 import EditExperimentStep1 from './components/EditExperiment/EditExperimentStep1';
 import EditExperimentStep2 from './components/EditExperiment/EditExperimentStep2';
+import EditUserStep3 from './components/EditExperiment/EditUserStep3';
 import StepContext from './components/EditExperiment/context/StepContext';
 import { useParams } from 'react-router-dom';
 
@@ -39,7 +40,8 @@ const EditExperiment = () => {
   const steps = [
     { label: t('edit_form'), icon: '📝' },
     { label: t('edit_task'), icon: '📋' },
-    { label: t('edit_survey'), icon: '❔' },
+    { label: t('edit_survey'), icon: '❓' },
+    { label: t('edit_user'), icon: '👤' },
   ];
 
   const fetchExperiment = async () => {
@@ -147,6 +149,8 @@ const EditExperiment = () => {
         {activeStep === 1 && <EditExperimentStep1 />}
         {/* questionario */}
         {activeStep === 2 && <EditExperimentStep2 />}
+        {/* user */}
+        {activeStep === 3 && <EditUserStep3 />}
       </StepContext.Provider>
     </>
   );
