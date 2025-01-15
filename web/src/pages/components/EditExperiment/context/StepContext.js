@@ -1,5 +1,17 @@
 import React, { createContext } from 'react';
+const StepContext = createContext({
+    step: 0,
+    setStep: () => {},
+    ExperimentTitle: '',
+    setExperimentTitle: () => {},
+    ExperimentType: '',
+    setExperimentType: () => {},
+    BtypeExperiment: '',
+    setBtypeExperiment: () => {},
+    ExperimentDesc: '',
+    setExperimentDesc: () => {},
+    ExperimentId: '',
+});
 
-const StepContext = createContext([0, () => {}, '', () => {},'', () => {},'', () => {}, '', () => {} ]);
 
 export default StepContext;
