@@ -73,7 +73,7 @@ const EditExperiment = () => {
 
   return (
     <>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+      <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5}>
         {t('edit_experiment')}
       </Typography>
 
