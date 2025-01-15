@@ -87,14 +87,6 @@ const EditExperimentStep2 = () => {
         }
     };
 
-    const handleNext = () => {
-        setStep(step + 1);
-    };
-
-    const handleBack = () => {
-        setStep(step - 1);
-    };
-
     const fetchSurvey = async () => {
         try {
             const response = await api.get(`surveys`, {
