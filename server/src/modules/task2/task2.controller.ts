@@ -31,6 +31,13 @@ export class Task2Controller {
     return await this.taskService.findOne(id);
   }
 
+  @Get('/experiment/:experimentId')
+  async findByExperimentId(
+    @Param('experimentId') experimentId: string,
+  ): Promise<Task[]> {
+    return await this.taskService.findByExperimentId(experimentId);
+  }
+
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -41,7 +48,7 @@ export class Task2Controller {
     return await this.taskService.update(id, updateTaskDto);
   }
 
-  @Delete('id')
+  @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.taskService.remove(id);
   }

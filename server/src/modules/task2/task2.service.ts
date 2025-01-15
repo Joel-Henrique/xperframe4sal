@@ -39,6 +39,14 @@ export class Task2Service {
     return await this.taskRepository.findOneBy({_id: id});
   }
 
+  async findByExperimentId(experimentId: string): Promise<Task[]> {
+    return await this.taskRepository.find({
+      where: {
+        experiment: {_id: experimentId},
+      },
+    });
+  }
+
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
     await this.taskRepository.update({_id: id}, updateTaskDto);
     return await this.findOne(id);
