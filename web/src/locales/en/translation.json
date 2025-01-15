@@ -194,5 +194,10 @@
   "edit_task": "Edit Task",
   "edit_survey": "Edit Survey",
   "Success": "Success",
-  "Experiment saved successfully!": "Experiment saved successfully!"
+  "Experiment saved successfully!": "Experiment saved successfully!",
+  "edit_user": "Edit User",
+  "no_users_found": "No users found.",
+  "search_by_name_or_email": "Search by name or email",
+  "users_in_experiment": "Users Enrolled in the Experiment",
+  "all_users": "Users"
 }
