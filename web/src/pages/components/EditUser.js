@@ -1,38 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
-import StepContext from './context/StepContext';
-import { api } from '../../../config/axios';
-import AddIcon from '@mui/icons-material/Add';
-import Button from '@mui/material/Button';
+import { api } from '../../config/axios';
+import {
+    Button,
+    IconButton,
+    Typography
+} from '@mui/material';
+import {
+    Add as AddIcon,
+    Remove as RemoveIcon
+} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import IconButton from '@mui/material/IconButton';
-import RemoveIcon from '@mui/icons-material/Remove';
-const EditUserComponent = () => {
-    const [
-        step,
-        setStep,
-        ExperimentTitle,
-        setExperimentTitle,
-        ExperimentType,
-        setExperimentType,
-        BtypeExperiment,
-        setBtypeExperiment,
-        ExperimentDesc,
-        setExperimentDesc,
-        ExperimentId
-    ] = useContext(StepContext);
+
+const EditUser = (ExperimentId) => {
+    console.log(ExperimentId)
+    const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const { t } = useTranslation();
-    const [user, setUser] = useState(null);
     const [usersInExperiment, setUsersInExperiment] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        } else {
-            console.error('Usuário não autenticado.');
-        }
-    }, []);
 
     useEffect(() => {
         fetchData();
@@ -40,7 +24,7 @@ const EditUserComponent = () => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`experiments/${ExperimentId}/`, {
+            const response = await api.get(`experiments/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const usersInExperimentIds = response.data.userProps;
@@ -87,53 +71,60 @@ const EditUserComponent = () => {
                 { userIds: usersInExperiment.map((usr) => usr.id) },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
-            alert('Alterações salvas com sucesso!');
         } catch (error) {
             console.error('Erro ao salvar alterações:', error);
-            alert('Erro ao salvar alterações.');
         }
     };
 
     return (
-        <div style={{ marginTop: 50, justifyContent: 'center' }}>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '20px',
-                    flexDirection: 'row',
-                }}
-            >
-                <UserList
-                    title={t('all_users')}
-                    users={allUsers}
-                    buttonAction={addUserToExperiment}
-                    icon={<AddIcon />}
-                    buttonType="add"
-                />
-                <UserList
-                    title={t('users_in_experiment')}
-                    users={usersInExperiment}
-                    buttonAction={removeUserFromExperiment}
-                    icon={<RemoveIcon />}
-                    buttonType="delete"
-                />
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '30px',
-                }}
-            >
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={saveChanges}
-                    sx={{ width: '200px' }}
-                >
-                    {t('save')}
-                </Button>
+        <div>
+            <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5} marginTop={5}>
+                {t('edit_user')}
+            </Typography>
+            <div style={{ marginTop: 50, justifyContent: 'center', justifyContent: 'space-between', display: 'flex', flexDirection: "row", width: "100%" }}>
+                <div style={{ width: "20%" }}> </div>
+                <div style={{ width: "60%" }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: '20px',
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <UserList
+                            title={t('all_users')}
+                            users={allUsers}
+                            buttonAction={addUserToExperiment}
+                            icon={<AddIcon />}
+                            buttonType="add"
+                        />
+                        <UserList
+                            title={t('users_in_experiment')}
+                            users={usersInExperiment}
+                            buttonAction={removeUserFromExperiment}
+                            icon={<RemoveIcon />}
+                            buttonType="delete"
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            marginTop: '30px',
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={saveChanges}
+                            sx={{ width: '200px' }}
+                        >
+                            {t('save')}
+                        </Button>
+                    </div>
+                </div>
+                <div style={{ width: "20%" }}> </div>
             </div>
         </div>
     );
@@ -229,4 +220,4 @@ const UserList = ({ title, users, buttonAction, buttonType }) => {
     );
 };
 
-export default EditUserComponent;
+export default EditUser;
