@@ -112,7 +112,7 @@ const Researcher = () => {
                 const ownedExperiments = [];
 
                 allExperiments.forEach((experiment) => {
-                    if (experiment.ownerId === user.id) {
+                    if (experiment.owner_id === user.id) {
                         ownedExperiments.push(experiment);
                     } else if (experiment.userProps?.includes(user.id)) {
                         participatedExperiments.push(experiment);

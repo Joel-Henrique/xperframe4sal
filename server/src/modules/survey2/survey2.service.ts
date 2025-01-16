@@ -1,21 +1,39 @@
-import {Injectable} from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Survey} from './entity/survey.entity';
 import {Repository} from 'typeorm';
 import {CreateSurveyDto} from './dto/create-survey.dto';
 import {UpdateSurveyDto} from './dto/update-survey.dto';
+import {Experiments2Service} from '../experiments2/experiments2.service';
 
 @Injectable()
 export class Survey2Service {
   constructor(
     @InjectRepository(Survey)
     private readonly surveyRepository: Repository<Survey>,
+    @Inject(forwardRef(() => Experiments2Service))
+    private readonly experimentService: Experiments2Service,
   ) {}
 
   async create(createSurveyDto: CreateSurveyDto): Promise<Survey> {
     try {
-      const newSurvey = await this.surveyRepository.save(createSurveyDto);
-      return newSurvey;
+      console.log('passou por aqui 1');
+      const {name, title, description, type, questions, experimentId} =
+        createSurveyDto;
+      const experiment = await this.experimentService.find(experimentId);
+      console.log('passou por aqui 2');
+      const newSurvey = await this.surveyRepository.create({
+        name,
+        title,
+        description,
+        type,
+        questions,
+        experiment,
+        //TODO comentei para teste
+        //experiment_id: experimentId,
+      });
+      console.log('passou por aqui 3');
+      return await this.surveyRepository.save(newSurvey);
     } catch (error) {
       throw error;
     }

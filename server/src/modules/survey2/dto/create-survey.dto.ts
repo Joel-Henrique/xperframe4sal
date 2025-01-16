@@ -29,4 +29,5 @@ export class CreateSurveyDto {
   description: string;
   type: SurveyType;
   questions: QuestionDTO[];
+  experimentId: string;
 }

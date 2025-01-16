@@ -44,7 +44,7 @@ export class Experiments2Service {
     const experiment = await this.experimentRepository.create({
       name,
       summary,
-      ownerId,
+      owner_id: ownerId,
       owner,
       typeExperiment,
       betweenExperimentType,
@@ -92,6 +92,7 @@ export class Experiments2Service {
         title: survey.title,
         questions: survey.questions,
         type: survey.type,
+        experimentId: survey.experimentId,
       });
     });
     await Promise.all(SurveysPromises);

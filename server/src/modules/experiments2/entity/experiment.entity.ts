@@ -1,4 +1,5 @@
 import {BaseEntity} from 'src/model/base_entity2';
+import {Survey} from 'src/modules/survey2/entity/survey.entity';
 import {Task} from 'src/modules/task2/entities/task.entity';
 import {UserExperiment} from 'src/modules/user-experiments2/entities/user-experiments.entity';
 import {User} from 'src/modules/user2/entity/user.entity';
@@ -42,7 +43,7 @@ export class Experiment extends BaseEntity {
   @Column()
   name: string;
   @Column({nullable: true})
-  ownerId: string;
+  owner_id: string;
   @ManyToOne(() => User)
   owner: User;
   @Column()
@@ -58,7 +59,8 @@ export class Experiment extends BaseEntity {
     (userExperiment) => userExperiment.experiment,
   )
   userExperiments: UserExperiment[];
-
+  @OneToMany(() => Survey, (survey) => survey.experiment)
+  surveys: Survey[];
   //TODO icfID
   //TODO steps
 }
