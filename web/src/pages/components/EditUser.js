@@ -1,18 +1,24 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../config/axios';
 import {
     Button,
     IconButton,
-    Typography
+    Typography,
+    Box
 } from '@mui/material';
 import {
     Add as AddIcon,
     Remove as RemoveIcon
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { Messages } from 'primereact/messages';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 
 const EditUser = (ExperimentId) => {
-    console.log(ExperimentId)
+    const msgs = useRef(null);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const { t } = useTranslation();
     const [usersInExperiment, setUsersInExperiment] = useState([]);
@@ -67,31 +73,43 @@ const EditUser = (ExperimentId) => {
     const saveChanges = async () => {
         try {
             await api.patch(
-                `experiments/${ExperimentId}`,
+                `experiments/${ExperimentId.experimentId}`,
                 { userIds: usersInExperiment.map((usr) => usr.id) },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
+            if (msgs.current) {
+                msgs.current.clear();
+                setTimeout(() => {
+                    msgs.current.show({
+                        severity: 'success',
+                        summary: t('Success'),
+                        life: 3000,
+                    });
+                }, 100);
+            }
         } catch (error) {
+            msgs.current.clear();
+            if (msgs.current) {
+                msgs.current.show({
+                    severity: 'error',
+                    summary: t('error'),
+                    life: 3000,
+                });
+            }
             console.error('Erro ao salvar alterações:', error);
         }
     };
 
     return (
+
         <div>
             <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5} marginTop={5}>
                 {t('edit_user')}
             </Typography>
             <div style={{ marginTop: 50, justifyContent: 'center', justifyContent: 'space-between', display: 'flex', flexDirection: "row", width: "100%" }}>
-                <div style={{ width: "20%" }}> </div>
+                <div style={{ width: "20%" }} />
                 <div style={{ width: "60%" }}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: '20px',
-                            flexDirection: 'row',
-                        }}
-                    >
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexDirection: 'row' }}>
                         <UserList
                             title={t('all_users')}
                             users={allUsers}
@@ -107,13 +125,7 @@ const EditUser = (ExperimentId) => {
                             buttonType="delete"
                         />
                     </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            marginTop: '30px',
-                        }}
-                    >
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -124,9 +136,19 @@ const EditUser = (ExperimentId) => {
                         </Button>
                     </div>
                 </div>
-                <div style={{ width: "20%" }}> </div>
+                <div style={{ width: "20%" }} />
             </div>
-        </div>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    bottom: 16,
+                    right: 16,
+                    zIndex: 1000,
+                }}
+            >
+                <Messages ref={msgs} />
+            </Box>
+        </div >
     );
 };
 

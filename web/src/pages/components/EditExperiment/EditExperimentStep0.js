@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import {
   Box,
   TextField,
@@ -8,15 +8,16 @@ import {
   Select,
   MenuItem,
   styled,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import StepContext from './context/StepContext';
 import { api } from '../../../config/axios';
+import { Messages } from 'primereact/messages';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
 const CustomContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#fafafa',
   borderRadius: '8px',
@@ -39,6 +40,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 
 
 const EditExperimentStep0 = ({ }) => {
+  const msgs = useRef(null);
   const { t } = useTranslation();
   const [isValidTitleExp, setIsValidTitleExp] = useState(true);
   const [isValidFormExperiment, setIsValidFormExperiment] = useState(true);
@@ -57,10 +59,6 @@ const EditExperimentStep0 = ({ }) => {
     setExperimentDesc,
     ExperimentId
   ] = useContext(StepContext);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-  };
 
 
   const ExperimentTypes = [
@@ -87,35 +85,62 @@ const EditExperimentStep0 = ({ }) => {
       const response = await api.patch(`/experiments/${ExperimentId}`, updatedExperiment, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
-      setIsDialogOpen(true);
+      if (msgs.current) {
+        msgs.current.clear();
+        setTimeout(() => {
+          msgs.current.show({
+            severity: 'success',
+            summary: t('Success'),
+            life: 3000,
+          });
+        }, 100);
+      }
     } catch (error) {
+      msgs.current.clear();
+      if (msgs.current) {
+        msgs.current.show({
+          severity: 'error',
+          summary: t('error'),
+          life: 3000,
+        });
+      }
       console.error('Erro na atualização da tarefa:', error);
     }
   };
-
   return (
-    <Box sx={{ flexDirection: 'column', justifyContent: 'space-between', margin: 0 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        margin: 0,
+        marginTop: 2,
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
+          justifyContent: 'space-between',
+          width: '100%',
           marginTop: 3,
         }}
       >
+        <Box sx={{ width: '20%' }} />
+
         <Box
           sx={{
             width: '60%',
             padding: 2,
             display: 'flex',
+            margin: 2,
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#f9f9f9',
             borderRadius: '8px',
             boxShadow: 4,
-            mx: 'auto',
           }}
         >
           <TextField
@@ -125,17 +150,16 @@ const EditExperimentStep0 = ({ }) => {
             variant="outlined"
             fullWidth
             margin="normal"
-            value={ExperimentTitle} 
-            onChange={(e) => setExperimentTitle(e.target.value)} 
+            value={ExperimentTitle}
+            onChange={(e) => setExperimentTitle(e.target.value)}
             required
           />
-
 
           <FormControl fullWidth margin="normal">
             <InputLabel>{t('Experiment_Type')}</InputLabel>
             <Select
-              value={ExperimentType} 
-              onChange={(e) => setExperimentType(e.target.value)} 
+              value={ExperimentType}
+              onChange={(e) => setExperimentType(e.target.value)}
               label={t('ExperimentTypes')}
             >
               {ExperimentTypes.map((stype) => (
@@ -144,13 +168,13 @@ const EditExperimentStep0 = ({ }) => {
                 </MenuItem>
               ))}
             </Select>
-
           </FormControl>
+
           {ExperimentType === 'between-subject' && (
             <FormControl fullWidth margin="normal">
               <InputLabel>{t('Group_Separation_Method')}</InputLabel>
               <Select
-                value={BtypeExperiment} 
+                value={BtypeExperiment}
                 onChange={(e) => setBtypeExperiment(e.target.value)}
                 label={t('ExperimentTypesbetween')}
               >
@@ -167,15 +191,21 @@ const EditExperimentStep0 = ({ }) => {
             <CustomContainer>
               <ReactQuill
                 theme="snow"
-                value={ExperimentDesc} 
-                onChange={setExperimentDesc} 
+                value={ExperimentDesc}
+                onChange={setExperimentDesc}
                 placeholder={t('Experiment_Desc1')}
               />
             </CustomContainer>
           </div>
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto', width: '100%' }}>
-
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: 'auto',
+              width: '100%',
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -184,20 +214,23 @@ const EditExperimentStep0 = ({ }) => {
             >
               {t('save')}
             </Button>
-
           </Box>
         </Box>
+
+        <Box sx={{ width: '20%' }} />
       </Box>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>{t('Success')}</DialogTitle>
-        <DialogContent>{t('Experiment saved successfully!')}</DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            {t('close')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+          zIndex: 1000,
+        }}
+      >
+        <Messages ref={msgs} />
+      </Box>
     </Box>
+
   );
 };
 
