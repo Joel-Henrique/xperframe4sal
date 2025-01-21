@@ -39,7 +39,7 @@ const EditExperiment = () => {
   const steps = [
     { label: t('edit_form'), icon: '📝' },
     { label: t('edit_task'), icon: '📋' },
-    { label: t('edit_survey'), icon: '❔' },
+    { label: t('edit_survey'), icon: '❓' },
   ];
 
   const fetchExperiment = async () => {

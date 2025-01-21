@@ -196,5 +196,12 @@
   "edit_task": "Editar Tarefa",
   "edit_survey": "Editar Questionário",
   "Success": "Sucesso",
-  "Experiment saved successfully!": "Experiência salva com sucesso!"
+  "Experiment saved successfully!": "Experiência salva com sucesso!",
+  "edit_user": "Editar Usuários",
+  "no_users_found": "Nenhum usuário encontrado.",
+  "search_by_name_or_email": "Pesquisar por nome ou e-mail",
+  "users_in_experiment": "Usuários Inscritos no Experimento",
+  "all_users": "Usuários",
+  "hasSubquestion":"SubQuestão",
+  "subquestion": "SubQuestão"
 }

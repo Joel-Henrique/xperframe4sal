@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
+import EditUser from "./EditUser";
 
 const ExperimentAccordion = ({
     experiment,
@@ -19,6 +20,7 @@ const ExperimentAccordion = ({
     onChange,
     onAccess,
     onEdit,
+    onEdituser,
     isOwner,
     t,
 }) => (
@@ -52,6 +54,18 @@ const ExperimentAccordion = ({
                     gap: "16px",
                 }}
             >
+                {isOwner && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ margin: "2px" }}
+                        onClick={() => {
+                            onEdituser(experiment._id);
+                        }}
+                    >
+                        {t("edit_user")}
+                    </Button>
+                )}
                 {isOwner && (
                     <Button
                         variant="contained"
@@ -95,6 +109,7 @@ const Researcher = () => {
     const [expanded, setExpanded] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [editingUser, setEditingUser] = useState(null);
     const user = JSON.parse(localStorage.getItem("user"));
     const { t } = useTranslation();
 
@@ -151,6 +166,14 @@ const Researcher = () => {
         setExpanded(isExpanded ? panel : null);
     };
 
+    const handleEditUser = (experimentId) => {
+        setEditingUser(experimentId);
+    };
+
+    if (editingUser) {
+        return <EditUser experimentId={editingUser} />;
+    }
+
     return (
         <>
             <div
@@ -194,6 +217,7 @@ const Researcher = () => {
                           onChange={handleChange(`panel-owner-${index}`)}
                           onAccess={handleAccessExperiment}
                           onEdit={handleEditExperiment}
+                          onEdituser={handleEditUser}
                           isOwner={true}
                           t={t}
                       />
@@ -213,6 +237,7 @@ const Researcher = () => {
                           onChange={handleChange(`panel-${index}`)}
                           onAccess={handleAccessExperiment}
                           onEdit={handleEditExperiment}
+                          onEdituser={handleEditUser}
                           isOwner={false}
                           t={t}
                       />
