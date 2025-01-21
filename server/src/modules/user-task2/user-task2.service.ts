@@ -5,8 +5,8 @@ import {Repository} from 'typeorm';
 import {CreateUserTaskDto} from './dto/create-userTask.dto';
 import {User2Service} from '../user2/user2.service';
 import {Task2Service} from '../task2/task2.service';
-import {PauseAndResumeDto} from './dto/pauseAndResume.dto';
 import {UpdateUserTaskDto} from './dto/update-userTask.dto';
+import {TimeEditUserTaskDto} from './dto/timeEditUserTaskDTO';
 
 @Injectable()
 export class UserTask2Service {
@@ -101,19 +101,23 @@ export class UserTask2Service {
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 
-  async start(id: string, userTask: UserTask): Promise<UserTask> {
-    userTask.isPaused = false;
-    userTask.startTime = new Date();
-    await this.update(id, userTask);
+  async start(
+    id: string,
+    timeEditUserTaskDTO: TimeEditUserTaskDto,
+  ): Promise<UserTask> {
+    let {isPaused, startTime} = timeEditUserTaskDTO;
+    isPaused = false;
+    startTime = new Date();
+    await this.update(id, {isPaused, startTime});
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 
   //TODO finalizar depois de finalizar entity userTask(tabelas de TIME)
   async pause(
     id: string,
-    pauseAndResumeDto: PauseAndResumeDto,
+    timeEditUserTaskDto: TimeEditUserTaskDto,
   ): Promise<UserTask> {
-    let {isPaused, pauseTime} = pauseAndResumeDto;
+    let {isPaused, pauseTime} = timeEditUserTaskDto;
     isPaused = true;
     if (!pauseTime) {
       pauseTime = [];
@@ -124,9 +128,9 @@ export class UserTask2Service {
 
   async resume(
     id: string,
-    pauseAndResumeDto: PauseAndResumeDto,
+    timeEditUserTaskDTO: TimeEditUserTaskDto,
   ): Promise<UserTask> {
-    let {isPaused, resumeTime} = pauseAndResumeDto;
+    let {isPaused, resumeTime} = timeEditUserTaskDTO;
     isPaused = false;
     if (!resumeTime) {
       resumeTime = [];
@@ -135,10 +139,14 @@ export class UserTask2Service {
     return await this.update(id, {isPaused, resumeTime});
   }
 
-  async finish(id: string, userTaks: UserTask): Promise<UserTask> {
-    userTaks.hasFinishedTask = true;
-    userTaks.endTime = new Date();
-    await this.update(id, userTaks);
+  async finish(
+    id: string,
+    timeEditUserTaskDTO: TimeEditUserTaskDto,
+  ): Promise<UserTask> {
+    let {hasFinishedTask, endTime} = timeEditUserTaskDTO;
+    hasFinishedTask = true;
+    endTime = new Date();
+    await this.update(id, {hasFinishedTask, endTime});
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 }

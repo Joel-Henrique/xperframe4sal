@@ -20,7 +20,7 @@ export class UserTask extends BaseEntity {
   pauseTime: Date[] = [];
   //TODO verificar como fazer isso no TypeORM
   @Column('date', {array: true})
-  resumeTImeTime: Date[] = [];
+  resumeTime: Date[] = [];
   @Column({default: null})
   endTime: Date = null;
 }
