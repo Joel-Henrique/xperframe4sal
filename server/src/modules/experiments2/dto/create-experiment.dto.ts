@@ -8,7 +8,7 @@ export class CreateExperimentDto {
   summary: string;
   typeExperiment: string;
   betweenExperimentType: string;
-  //TODO Ver como fazer a relação
+  //Ver como fazer a relação
   //tasks: Task[];
   tasksProps: TaskProps[];
   userProps: UserProps[];

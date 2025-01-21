@@ -95,7 +95,7 @@ export class UserTask2Controller {
     const userTask = await this.userTaskService.findOne(id);
     const isPaused = userTask.isPaused;
     const resumeTime = userTask.resumeTime;
-    return await this.userTaskService.start(id, {isPaused, resumeTime});
+    return await this.userTaskService.resume(id, {isPaused, resumeTime});
   }
 
   @Patch(':id/finish')
@@ -103,6 +103,6 @@ export class UserTask2Controller {
     const userTask = await this.userTaskService.findOne(id);
     const hasFinishedTask = userTask.hasFinishedTask;
     const endTime = userTask.endTime;
-    return await this.userTaskService.start(id, {hasFinishedTask, endTime});
+    return await this.userTaskService.finish(id, {hasFinishedTask, endTime});
   }
 }

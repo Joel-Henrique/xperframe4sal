@@ -43,8 +43,6 @@ export class Task2Controller {
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<Task> {
-    //TODO
-    //task.lastChangedAt = new Date();
     return await this.taskService.update(id, updateTaskDto);
   }
 

@@ -16,7 +16,6 @@ export class Task2Service {
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     try {
-      //TODO implentar criação do relacionamento com experiment
       const {title, summary, description, experimentId} = createTaskDto;
       const experiment = await this.experimentService.find(experimentId);
       const newTask = await this.taskRepository.create({

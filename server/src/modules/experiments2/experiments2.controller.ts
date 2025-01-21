@@ -16,7 +16,6 @@ import {UpdateExperimentDto} from './dto/update-experiment.dto';
 export class Experiments2Controller {
   constructor(private readonly experimentService: Experiments2Service) {}
 
-  //TODO
   @Post()
   async create(
     @Body() createExperimentDto: CreateExperimentDto,
@@ -40,8 +39,6 @@ export class Experiments2Controller {
     @Param('id') id: string,
     @Body() updateExperimentDto: UpdateExperimentDto,
   ): Promise<Experiment> {
-    //TODO
-    //experiment.lastChangeAt = new Date()
     return await this.experimentService.update(id, updateExperimentDto);
   }
 

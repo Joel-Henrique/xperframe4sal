@@ -25,8 +25,6 @@ export class Experiments2Service {
     private readonly surveyService: Survey2Service,
   ) {}
 
-  //TODO
-
   async create(createExperimentDto: CreateExperimentDto): Promise<any> {
     const {
       name,

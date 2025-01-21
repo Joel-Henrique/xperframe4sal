@@ -29,8 +29,6 @@ export class Survey2Service {
         type,
         questions,
         experiment,
-        //TODO comentei para teste
-        //experiment_id: experimentId,
       });
       console.log('passou por aqui 3');
       return await this.surveyRepository.save(newSurvey);

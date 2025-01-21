@@ -15,10 +15,8 @@ export class UserTask extends BaseEntity {
   isPaused: boolean = false;
   @Column({default: null})
   startTime: Date = null;
-  //TODO verificar como fazer isso no TypeORM
   @Column('date', {array: true})
   pauseTime: Date[] = [];
-  //TODO verificar como fazer isso no TypeORM
   @Column('date', {array: true})
   resumeTime: Date[] = [];
   @Column({default: null})

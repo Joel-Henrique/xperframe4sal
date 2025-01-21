@@ -81,7 +81,6 @@ export class User2Service {
         email,
         password: hashedPassword,
       });
-      //TODO create userExperiment
       return userSaved;
     } catch (error) {
       throw error;

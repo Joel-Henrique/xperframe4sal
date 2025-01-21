@@ -112,7 +112,6 @@ export class UserTask2Service {
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 
-  //TODO finalizar depois de finalizar entity userTask(tabelas de TIME)
   async pause(
     id: string,
     timeEditUserTaskDto: TimeEditUserTaskDto,

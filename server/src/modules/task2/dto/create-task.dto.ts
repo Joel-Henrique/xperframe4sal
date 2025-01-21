@@ -3,6 +3,4 @@ export class CreateTaskDto {
   summary: string;
   description: string;
   experimentId: string;
-  //TODO
-  //?userTask
 }
