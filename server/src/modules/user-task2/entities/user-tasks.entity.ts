@@ -16,11 +16,11 @@ export class UserTask extends BaseEntity {
   @Column({default: null})
   startTime: Date = null;
   //TODO verificar como fazer isso no TypeORM
-  //@Column({type: [Date]})
-  //pauseTime: Date[] = [];
+  @Column('date', {array: true})
+  pauseTime: Date[] = [];
   //TODO verificar como fazer isso no TypeORM
-  //@Column({type: [Date]})
-  //resumeTImeTime: Date[] = [];
+  @Column('date', {array: true})
+  resumeTImeTime: Date[] = [];
   @Column({default: null})
   endTime: Date = null;
 }

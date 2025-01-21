@@ -5,6 +5,8 @@ import {Repository} from 'typeorm';
 import {CreateUserTaskDto} from './dto/create-userTask.dto';
 import {User2Service} from '../user2/user2.service';
 import {Task2Service} from '../task2/task2.service';
+import {PauseAndResumeDto} from './dto/pauseAndResume.dto';
+import {UpdateUserTaskDto} from './dto/update-userTask.dto';
 
 @Injectable()
 export class UserTask2Service {
@@ -91,8 +93,11 @@ export class UserTask2Service {
     return result;
   }
 
-  async update(id: string, userTask: UserTask): Promise<UserTask> {
-    await this.userTaskRepository.update({_id: id}, userTask);
+  async update(
+    id: string,
+    updateUserTaskDto: UpdateUserTaskDto,
+  ): Promise<UserTask> {
+    await this.userTaskRepository.update({_id: id}, updateUserTaskDto);
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 
@@ -103,12 +108,32 @@ export class UserTask2Service {
     return await this.userTaskRepository.findOne({where: {_id: id}});
   }
 
-  /*TODO finalizar depois de finalizar entity userTask(tabelas de TIME)
-  async pause(id: string, userTask: UserTask): Promise<UserTask> {
-    
+  //TODO finalizar depois de finalizar entity userTask(tabelas de TIME)
+  async pause(
+    id: string,
+    pauseAndResumeDto: PauseAndResumeDto,
+  ): Promise<UserTask> {
+    let {isPaused, pauseTime} = pauseAndResumeDto;
+    isPaused = true;
+    if (!pauseTime) {
+      pauseTime = [];
+    }
+    pauseTime.push(new Date());
+    return await this.update(id, {isPaused, pauseTime});
   }
 
-  async resume(id: string, userTask: UserTask): Promise<UserTask> {}*/
+  async resume(
+    id: string,
+    pauseAndResumeDto: PauseAndResumeDto,
+  ): Promise<UserTask> {
+    let {isPaused, resumeTime} = pauseAndResumeDto;
+    isPaused = false;
+    if (!resumeTime) {
+      resumeTime = [];
+    }
+    resumeTime.push(new Date());
+    return await this.update(id, {isPaused, resumeTime});
+  }
 
   async finish(id: string, userTaks: UserTask): Promise<UserTask> {
     userTaks.hasFinishedTask = true;
