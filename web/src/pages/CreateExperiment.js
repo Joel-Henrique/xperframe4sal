@@ -70,6 +70,7 @@ const CreateExperiment = () => {
     useEffect(() => {
         if (step === 5) {
             handleCreateExperiment();
+            //console.log(ExperimentUsers);
         }
     }, [step]);
 

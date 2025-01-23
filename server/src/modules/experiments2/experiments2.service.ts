@@ -52,7 +52,7 @@ export class Experiments2Service {
     //UserExperiment
     const userExperimentPromises = userProps.map((user) => {
       return this.userExperimentService.create({
-        userId: user.id,
+        userId: user,
         experimentId: savedExperiment._id,
       });
     });
@@ -75,7 +75,7 @@ export class Experiments2Service {
     const userTasksPromises = newTasks.flatMap((task) => {
       return userProps.map((user) => {
         return this.userTaskService.create({
-          userId: user.id,
+          userId: user,
           taskId: task.id,
         });
       });

@@ -45,6 +45,13 @@ export class Survey2Service {
       where: {_id: id},
     });
   }
+  async findByExperimentId(experimentId: string): Promise<Survey[]> {
+    return await this.surveyRepository.find({
+      where: {
+        experiment: {_id: experimentId},
+      },
+    });
+  }
   async update(id: string, updateSurveyDto: UpdateSurveyDto): Promise<Survey> {
     try {
       await this.surveyRepository.update({_id: id}, updateSurveyDto);

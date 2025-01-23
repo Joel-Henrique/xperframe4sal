@@ -1,4 +1,4 @@
-import {UserProps} from 'src/model/experiment.entity';
+//import {UserProps} from 'src/model/experiment.entity';
 import {TaskProps} from '../entity/experiment.entity';
 import {CreateSurveyDto} from 'src/modules/survey2/dto/create-survey.dto';
 
@@ -11,6 +11,6 @@ export class CreateExperimentDto {
   //Ver como fazer a relação
   //tasks: Task[];
   tasksProps: TaskProps[];
-  userProps: UserProps[];
+  userProps: string[];
   surveysProps: CreateSurveyDto[];
 }

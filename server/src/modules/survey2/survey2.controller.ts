@@ -32,6 +32,14 @@ export class Survey2Controller {
     return await this.surveyService.findOne(id);
   }
   //@UseGuards(AuthGuard('jwt'))
+  @Get('/experiment/:experimentId')
+  async findByExperimentId(
+    @Param('experimentId') experimentId: string,
+  ): Promise<Survey[]> {
+    return await this.surveyService.findByExperimentId(experimentId);
+  }
+
+  //@UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(
     @Param('id') id: string,
