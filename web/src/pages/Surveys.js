@@ -14,7 +14,7 @@ import { CustomSnackbar } from '../components/CustomSnackbar';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
 
-
+import { useTranslation } from 'react-i18next';
 import { ExperimentTemplate, mountSteps } from './ExperimentTemplate';
 
 const SurveyType = {
@@ -24,7 +24,7 @@ const SurveyType = {
 }
 
 const Surveys = () => {
-
+  const { t } = useTranslation(); 
   const navigate = useNavigate()
   const { experimentId } = useParams();
 
@@ -160,12 +160,10 @@ const Surveys = () => {
 
 
   return (
-    <ExperimentTemplate headerTitle="Veja a seguir a lista de questionários disponíveis para você:" steps={steps}>
+    <ExperimentTemplate headerTitle={t('questionnaire_list_header')} steps={steps}>
       <CustomSnackbar open={open} time={1500} message={message} severity={severity} />
       <div style={{ display: 'flex', marginBottom: 10 }}>
-        {showWarning && <ErrorMessage style={{
-          flex: 1,
-        }} message={"Atenção: responda todos os questionários antes de ir para as tarefas."} messageType={'warning'} />}
+        {showWarning && <ErrorMessage style={{ flex: 1 }} message={t('attention_message')} messageType={'warning'} />}
         {!showWarning && !hasFinishedTasks && <Button
           variant="contained"
           color="primary"
@@ -173,12 +171,12 @@ const Surveys = () => {
           onClick={handleEnterTasks}
           disabled={!shouldActivateTask}
         >
-          Ir para tarefas
+          {t('go_to_tasks')}
         </Button>}
       </div>
-      {!surveys && (<Typography variant="body1">Carregando questionários...</Typography>)}
+      {!surveys && (<Typography variant="body1">{t('loading_surveys')}</Typography>)}
       {!surveys && (isLoading && <LoadingIndicator size={70} />)}
-      {surveys?.length === 0 && (<Typography variant="body1">No momento você não foi inscrito em nenhum questionário. Obrigad@!</Typography>)}
+      {surveys?.length === 0 && (<Typography variant="body1">{t('no_surveys')}</Typography>)}
 
       <div>
         {preSurveys?.map((survey, index) => (

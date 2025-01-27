@@ -3,10 +3,14 @@ let UserProfile = (function() {
   let answredICF = false;
   let email = "";
   let userName = email;
+  let researcher = false;
   let token = "";
 
   let user = {}
 
+  let getResearcher = function() {
+    return researcher;
+  };
 
   let getName = function() {
     return name;
@@ -14,6 +18,9 @@ let UserProfile = (function() {
 
   let setName = function(userName) {
     name = userName;
+  };
+  let setResearcher = function(researcher) {
+    researcher = researcher;
   };
 
   let getEmail = function() {
@@ -48,12 +55,14 @@ let UserProfile = (function() {
     answredICF = userAnswredICF;
   };
 
-  let setUser = function({name, email, answredICF, token}) {
-    setName(name); 
+
+  let setUser = function({name, researcher: researcher, email, answredICF, token}) {
+    setResearcher(researcher);
+    setName(name);
     setEmail(email);
     setAnswredICF(answredICF);
     setToken(token);
-    user = {name: name, email: email, answredICF: answredICF, token: token}
+    user = {name: name, researcher:researcher, email: email, answredICF: answredICF, token: token}
   }
 
   let getUser = function() {
@@ -62,6 +71,8 @@ let UserProfile = (function() {
 
 
   return {
+    getResearcher : getResearcher,
+    setResearcher: setResearcher,
     getName: getName,
     setName: setName,
     getAnswredICF: getAnswredICF,

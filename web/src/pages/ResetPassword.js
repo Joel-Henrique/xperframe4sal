@@ -1,25 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';  
 
 import { api } from "../config/axios.js";
-
-import {
-  Container,
-  Paper,
-  TextField,
-  Button,
-  InputAdornment,
-  IconButton,
-  Box,
-} from '@mui/material';
-
+import { Container, Paper, TextField, Button, InputAdornment, IconButton, Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-
 import { ErrorMessage } from '../components/ErrorMessage.js';
 import { LoadingIndicator } from '../components/LoadIndicator.js';
 
-
 const ResetPassword = () => {
+  const { t } = useTranslation();  
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -45,7 +35,7 @@ const ResetPassword = () => {
     const inputPassword = e.target.value;
     setRepeatPassword(inputPassword);
     setDifferentPasswords(password !== inputPassword);
-  }
+  };
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -53,17 +43,13 @@ const ResetPassword = () => {
 
   const handleEdit = async () => {
     if (!isValidPassword) {
-      setAlertMessage(`Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua:
-       - letras maiúsculas
-       - letras minúsculas
-       - números e 
-       - caracteres especiais.`)
+      setAlertMessage(t('invalid_password_message'));  
       setMessageType('fail');
       return;
     }
 
     if (differentPasswords) {
-      setAlertMessage(`Senhas diferentes. Por favor, assegure-se de que os campos a seguir tenham a mesma senha.`)
+      setAlertMessage(t('passwords_dont_match'));  
       setMessageType('fail');
     }
 
@@ -73,15 +59,14 @@ const ResetPassword = () => {
     try {
       await api.post(`/users/reset-password`, userData);
       setIsLoading(false);
-      setAlertMessage("Sua senha foi alterada com sucesso!.")
+      setAlertMessage(t('loading_message'));  
       setMessageType('success');
     } catch (error) {
       setIsLoading(false);
-      setAlertMessage(`Não foi possível alterar o cadastro ${error.response.data.message}`);
+      setAlertMessage(`${t('error_message')} ${error.response.data.message}`);
       setMessageType('fail');
     }
   };
-
 
   return (
     <>
@@ -95,12 +80,12 @@ const ResetPassword = () => {
       }}>
         <Paper elevation={3} sx={{ padding: 2 }}>
           {isLoading && <LoadingIndicator size={50} />}
-          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />} {/* Pass onClose callback */}
+          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />}
           <Box component="form" disabled={isLoading}>
             <TextField
-              label="Senha"
+              label={t('password')}  
               error={!isValidPassword}
-              helperText={!isValidPassword ? 'Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.' : ''}
+              helperText={!isValidPassword ? t('password_helper') : ''}  
               fullWidth
               margin="normal"
               autoComplete="current-password"
@@ -110,10 +95,7 @@ const ResetPassword = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleTogglePasswordVisibility}
-                      edge="end"
-                    >
+                    <IconButton onClick={handleTogglePasswordVisibility} edge="end">
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
@@ -121,12 +103,12 @@ const ResetPassword = () => {
               }}
             />
             <TextField
-              label="Repita a senha"
+              label={t('repeat_password')}  
               error={differentPasswords}
-              helperText={differentPasswords ? 'Insira a mesma senha digitada no campo anterior.' : ''}
+              helperText={differentPasswords ? t('different_passwords') : ''}  
               fullWidth
               margin="normal"
-              type='password'
+              type="password"
               value={repeatPassword}
               onChange={handleRepeatPasswordChange}
             />
@@ -138,7 +120,7 @@ const ResetPassword = () => {
               style={{ margin: '16px 0' }}
               disabled={isLoading || !isValidPassword || differentPasswords || (password.length === 0 && repeatPassword.length === 0)}
             >
-              Alterar Senha
+              {t('change_password')}
             </Button>
             <Button onClick={() => navigate('/')} style={{
               cursor: 'pointer',
@@ -146,11 +128,10 @@ const ResetPassword = () => {
               backgroundColor: 'transparent',
               textAlign: 'right',
               padding: '2px 3px',
-
             }}
               sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
             >
-              Entre com sua conta aqui
+              {t('login_with_account')}  
             </Button>
           </Box>
         </Paper>

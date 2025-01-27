@@ -22,6 +22,8 @@ import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -31,15 +33,13 @@ const Login = () => {
   const [messageType, setMessageType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { t } = useTranslation();
-
   const isAuthenticated = !!(user && user.expirationTime && new Date().getTime() < user.expirationTime);
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/experiments");
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate]);
 
   const handleEmailChange = (e) => {
     const inputEmail = e.target.value;
@@ -61,24 +61,23 @@ const Login = () => {
   const handleEmailLogin = async () => {
     setIsLoading(true);
     try {
-      let response = await api.post("/login", { username: email, password: password })
+      let response = await api.post("/login", { username: email, password: password });
       setIsLoading(false);
       if (response.data) {
         let user = response.data;
         user.email = email;
         const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
         localStorage.setItem('user', JSON.stringify({ ...user, expirationTime }));
-        setUser(user)
-        navigate("/experiments")
-      }
-      else {
-        setAlertMessage('Não foi possível recuperar os seus dados. Por favor, entre em contato com administrador do serviço.');
-        setMessageType('fail')
+        setUser(user);
+        navigate("/experiments");
+      } else {
+        setAlertMessage(t('data_retrieval_error'));
+        setMessageType('fail');
       }
     } catch (e) {
       setIsLoading(false);
-      setAlertMessage('Dados incorretos ou não existentes. Verifique o e-mail e a senha e tente novamente.');
-      setMessageType('fail')
+      setAlertMessage(t('login_error'));
+      setMessageType('fail');
     }
   };
 
@@ -88,7 +87,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    navigate('/forgot-password')
+    navigate('/forgot-password');
   };
 
   const isValidForm = isValid && email && password;
@@ -141,7 +140,7 @@ const Login = () => {
             value={email}
             onChange={handleEmailChange}
             error={!isValid && (email.length > 0)}
-            helperText={!isValid && email ? 'E-mail inválido.' : ''}
+            helperText={!isValid && email ? t('invalid_email') : ''}
             margin='normal'
           />
           <TextField
@@ -186,7 +185,6 @@ const Login = () => {
             marginTop: 50,
             width: '100%',
           }}>
-
             <Button
               onClick={handleEmailLogin}
               variant="contained"
@@ -217,4 +215,5 @@ const Login = () => {
     </Container>
   )
 };
+
 export { Login }

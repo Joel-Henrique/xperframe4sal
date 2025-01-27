@@ -11,7 +11,6 @@ import { UserSurveysModule } from './modules/survey-answers/survey-answers.modul
 import { UserTasksModule } from './modules/user-tasks/user-tasks.module';
 import { HttpModule } from './modules/http/http.module';
 import { GoogleModule } from './modules/search-engines/google/google.module';
-import { PuppeteerModule } from './modules/puppeteer/puppeteer.module';
 import { UserTaskSessionModule } from './modules/user-task-session/user-task-session.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 
@@ -28,7 +27,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
     UserTaskSessionModule,
     HttpModule,
     GoogleModule,
-    PuppeteerModule,
     SurveysModule,
     MongooseModule.forRoot(process.env.MONGO ? process.env.MONGO : 'mongodb://localhost:27017',
       {

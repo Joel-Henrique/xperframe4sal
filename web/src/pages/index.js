@@ -3,7 +3,7 @@ import { Login } from './Login';
 import { Account } from './Account';
 import { Contact } from './Contact';
 import { Instructions } from './Instructions';
-import { CreateTasks } from './CreateTasks';
+import { CreateExperiment } from './CreateExperiment';
 import { Surveys } from './Surveys';
 import { Survey } from './Survey';
 import { Task } from './Task';
@@ -13,6 +13,7 @@ import { Register } from './Register';
 import { ForgotPassword } from './ForgotPassword';
 import { NotFoundPage } from './NotFoundPage';
 import { ResetPassword } from './ResetPassword';
+import { EditExperiment } from './EditExperiment';
 
 export {
   ICF,
@@ -28,6 +29,9 @@ export {
   Account,
   Contact,
   ResetPassword,
-  CreateTasks,
-  Instructions
+  CreateExperiment,
+  Instructions,
+
+  EditExperiment,
+  
 }

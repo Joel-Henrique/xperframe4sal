@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { api } from "../config/axios.js";
-
 import {
   Container,
   Paper,
@@ -11,16 +10,15 @@ import {
   Box,
 } from '@mui/material';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
-
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-
 import { ErrorMessage } from '../components/ErrorMessage.js';
 import { LoadingIndicator } from '../components/LoadIndicator.js';
 import { CustomSnackbar } from '../components/CustomSnackbar';
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 
 const Account = () => {
+  const { t } = useTranslation(); 
   const storedUser = localStorage.getItem('user');
   const navigate = useNavigate();
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
@@ -43,7 +41,6 @@ const Account = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [enableEditButton, setEnableEditButton] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
 
   useEffect(() => {
     if (user) {
@@ -101,35 +98,31 @@ const Account = () => {
 
   const handleEdit = async () => {
     if (!isValidEmail) {
-      setAlertMessage("E-mail inválido. Verifique e tente novamente.")
+      setAlertMessage(t('E-mail inválido. Verifique e tente novamente.'));
       setMessageType('fail');
       return;
     }
     if (!isValidName) {
-      setAlertMessage("Preecha seu nome.")
+      setAlertMessage(t('Preencha seu nome.'));
       setMessageType('fail');
       return;
     }
     if (!isValidLastName) {
-      setAlertMessage("Preecha seu sobrenome.")
+      setAlertMessage(t('Preencha seu sobrenome.'));
       setMessageType('fail');
       return;
     }
     if (!isValidPassword) {
-      setAlertMessage(`Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua:
-       - letras maiúsculas
-       - letras minúsculas
-       - números e 
-       - caracteres especiais.`)
+      setAlertMessage(t('isValidPassword'));
       setMessageType('fail');
       return;
     }
 
-    name = name.trim()
+    name = name.trim();
     setName(name);
-    lastName = lastName.trim()
+    lastName = lastName.trim();
     setLastName(lastName);
-    email = email.trim()
+    email = email.trim();
     setEmail(email);
 
     let userData = { name, lastName, email, password };
@@ -144,22 +137,20 @@ const Account = () => {
       setUser({ ...userData, expirationTime });
       localStorage.setItem('user', JSON.stringify({ ...userData, expirationTime }));
       if (response.data) {
-        setAlertMessage("Seu cadastro foi atualizado com sucesso!.")
+        setAlertMessage(t('Seu cadastro foi atualizado com sucesso!'));
         setMessageType('success');
-        setEnableEditButton(false)
+        setEnableEditButton(false);
       }
     } catch (e) {
       setIsLoading(false);
-      setAlertMessage('Não foi possível atualizar o cadastro. Por favor, verifique todos os campos e tente novamente. Caso o erro persista entre em contato com o administrador deste serviço em "marcelo.oc.machado@gmail.com"');
+      setAlertMessage(t('Não foi possível atualizar o cadastro. Verifique todos os campos e tente novamente.'));
       setMessageType('fail');
     }
   };
 
   const handleDeleteAllData = async () => {
     try {
-
       setConfirmDialogOpen(false);
-
       await api.patch(`users/${user.id}/delete-data`);
       setShowSnackBar(true);
       setIsSuccess(true);
@@ -200,12 +191,12 @@ const Account = () => {
         open={confirmDialogOpen}
         onClose={closeDeleteDialog}
         onConfirm={handleDeleteAllData}
-        title="Tem certeza?"
-        content="Você terá todos os seus dados de experimentos apagados."
+        title={t('Tem certeza?')}
+        content={t('Você terá todos os seus dados de experimentos apagados.')}
       />
       <Box sx={{ flexFlow: 1, textAlign: 'right' }}>
         <Button color='error' variant='contained' onClick={openDeleteDialog}>
-          Apagar todos meus dados
+          {t('Apagar todos meus dados')}
         </Button>
       </Box>
       <Container maxWidth="xs" style={{
@@ -218,13 +209,12 @@ const Account = () => {
       }}>
         <Paper elevation={3} sx={{ padding: 2 }}>
           {isLoading && <LoadingIndicator size={50} />}
-          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />} {/* Pass onClose callback */}
+          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />}
           <form onSubmit={handleEdit} disabled={isLoading}>
-
             <TextField
-              label="Nome"
+              label={t('Nome')}
               error={!isValidName}
-              helperText={!isValidName ? 'Preencha o campo nome.' : ''}
+              helperText={!isValidName ? t('Preencha o campo nome.') : ''}
               fullWidth
               margin="normal"
               variant="outlined"
@@ -232,9 +222,9 @@ const Account = () => {
               onChange={handleNameChange}
             />
             <TextField
-              label="Sobrenome"
+              label={t('Sobrenome')}
               error={!isValidLastName}
-              helperText={!isValidLastName ? 'Preencha o campo sobrenome.' : ''}
+              helperText={!isValidLastName ? t('Preencha o campo sobrenome.') : ''}
               fullWidth
               margin="normal"
               variant="outlined"
@@ -242,11 +232,11 @@ const Account = () => {
               onChange={handleLastNameChange}
             />
             <TextField
-              label="E-mail"
+              label={t('E-mail')}
               type="email"
               autoComplete="email"
               error={!isValidEmail}
-              helperText={!isValidEmail ? 'E-mail inválido.' : ''}
+              helperText={!isValidEmail ? t('E-mail inválido.') : ''}
               fullWidth
               margin="normal"
               variant="outlined"
@@ -254,9 +244,9 @@ const Account = () => {
               onChange={handleEmailChange}
             />
             <TextField
-              label="Senha"
+              label={t('Senha')}
               error={!isValidPassword}
-              helperText={!isValidPassword ? 'Por favor, assegure-se de que sua senha seja composta por, no mínimo, 6 caracteres e inclua letras maiúsculas, letras minúsculas, números e caracteres especiais.' : ''}
+              helperText={!isValidPassword ? t('isValidPassword') : ''}
               fullWidth
               margin="normal"
               autoComplete="current-password"

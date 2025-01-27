@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { api } from "../config/axios.js";
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next'; 
 
 import {
   Container,
@@ -16,16 +16,15 @@ import {
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingIndicator } from '../components/LoadIndicator';
 
-
-
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); 
+
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null);
   const [messageType, setMessageType] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
 
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -44,12 +43,12 @@ const ForgotPassword = () => {
       const response = await api.post(`users/forgot-password`, { email: email });
       setIsLoading(false);
       setMessageType('success');
-      setAlertMessage("Acesse seu e-mail e siga as instruções para definir uma nova senha.");
+      setAlertMessage(t('reset_success_message')); 
     } catch (error) {
       setIsLoading(false);
-      setMessageType('fail')
+      setMessageType('fail');
       if (error?.response?.data) {
-        setAlertMessage(error?.response?.data.message)
+        setAlertMessage(error?.response?.data.message);
       }
     }
   };
@@ -65,7 +64,6 @@ const ForgotPassword = () => {
     }}>
       <Paper elevation={3} sx={{
         padding: '48px 40px 36px',
-        // minHeight: 350,
         minWidth: 500,
         width: '100%',
         overflowY: 'hidden',
@@ -78,7 +76,7 @@ const ForgotPassword = () => {
             fontWeight: 500,
             color: 'rgb(103,99,99)'
           }}>
-          Esqueceu a senha?
+          {t('forgot_password_title')} 
         </Typography>
         {isLoading && <LoadingIndicator size={50} />}
         {alertMessage && <ErrorMessage
@@ -89,7 +87,7 @@ const ForgotPassword = () => {
         <Divider style={{ margin: '16px 0' }} />
         <Box component="form">
           <TextField
-            label="E-mail cadastrado"
+            label={t('email_label')} 
             variant="outlined"
             type="email"
             autoComplete="email"
@@ -98,7 +96,7 @@ const ForgotPassword = () => {
             required
             onChange={handleEmailChange}
             error={!isValid && (email.length > 0)}
-            helperText={!isValid && email ? 'E-mail inválido.' : ''}
+            helperText={!isValid && email ? t('invalid_email') : ''} 
             margin="normal"
           />
           <Button
@@ -109,7 +107,7 @@ const ForgotPassword = () => {
             style={{ margin: '16px 0' }}
             disabled={!isValid}
           >
-            Recuperar
+            {t('recover_button')} 
           </Button>
           <Button onClick={() => navigate('/')} style={{
             cursor: 'pointer',
@@ -117,11 +115,10 @@ const ForgotPassword = () => {
             backgroundColor: 'transparent',
             textAlign: 'right',
             padding: '2px 3px',
-
           }}
             sx={{ fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
           >
-            Entre com sua conta aqui
+            {t('login_link')} 
           </Button>
         </Box>
       </Paper>

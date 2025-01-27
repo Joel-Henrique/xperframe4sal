@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Navigate, useLocation } from 'react-router-dom'
 import { api } from '../config/axios'
 import { Typography, Container, Paper, Button, FormControlLabel, Checkbox, Link } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const ICF = () => {
 
@@ -13,7 +14,7 @@ const ICF = () => {
   const [icf, setICF] = useState(null)
   const [accepted, setAccepted] = useState(false);
   const [userExperiment, setUserExperiment] = useState(location?.state?.data[0]);
-
+  const { t } = useTranslation(); 
   const isAuthenticated = !!(user && user.expirationTime && new Date().getTime() < user.expirationTime);
 
   if (!isAuthenticated) {
@@ -70,11 +71,12 @@ const ICF = () => {
     return (
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: '16px' }}>
-          <Typography variant="body1">Carregando Termo de Consentimento e Livre Esclarecimento.</Typography>
+          <Typography variant="body1">{t('loading_icf')}</Typography>
         </Paper>
       </Container>
     );
   }
+
   return isAuthenticated ? (
     <Paper elevation={3} style={{ padding: '16px' }}>
       <Container elevation={3} maxWidth="md">
@@ -88,7 +90,7 @@ const ICF = () => {
           </Typography>
 
           <Typography variant="h6" gutterBottom>
-            Pesquisadores:
+            {t('researchers_title')} 
           </Typography>
 
           {icf.researchers.map((r, index) => (
@@ -98,11 +100,13 @@ const ICF = () => {
           ))}
 
           <Typography variant="body1" gutterBottom dangerouslySetInnerHTML={{ __html: icf.icfText }} />
-          <Typography variant="body1" paragraph>Para visualizar o documento na íntegra, assinado digitalmente pelo pesquisador, clique <Link target="_blank" href='https://drive.google.com/file/d/1_SdcAhNBvnLjamilScjOkHJAP4q5_-em/view?usp=sharing'>aqui</Link>.</Typography>
+          <Typography variant="body1" paragraph>
+            {t('view_signed_document')} <Link target="_blank" href='https://drive.google.com/file/d/1_SdcAhNBvnLjamilScjOkHJAP4q5_-em/view?usp=sharing'>{t('click_here')}</Link>
+          </Typography>
           <Typography variant="body1" gutterBottom dangerouslySetInnerHTML={{ __html: icf.agreementStatement }} />
           <FormControlLabel
             control={<Checkbox checked={accepted} onChange={() => setAccepted(!accepted)} />}
-            label="Eu li e aceito os termos e condições."
+            label={t('accept_terms')}
           />
           <Button
             variant="contained"
@@ -110,12 +114,12 @@ const ICF = () => {
             onClick={handleChange}
             disabled={!accepted} // Disable button until terms are accepted
           >
-            Aceitar
+            {t('accept_button')} 
           </Button>
         </Paper>
       </Container>
     </Paper>
-  ) : <Navigate to="/" />
-}
+  ) : <Navigate to="/" />;
+};
 
-export { ICF }
+export { ICF };

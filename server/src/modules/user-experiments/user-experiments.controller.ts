@@ -29,6 +29,7 @@ export class UserExperimentsController {
     @Query('userId') userId: string,
     @Query('experimentId') experimentId: string,
   ): Promise<UserExperiment[] | UserExperiment> {
+    
     if (userId) {
       if (experimentId) {
         return await this._userExperimentsService.findByUserIdAndExperimentId(userId, experimentId);

@@ -2,11 +2,67 @@
 
 This repository contains the source code for the Xper4SAL, a framework for instantiating experiments on Cognitive Biases in Search as Learning.
 
-The `/server` folder contains the source code of the backend developed in NestJS. The `/web` folder contains the frontend developed in ReactJS.
+The code is divided into two parts. The `/server` folder contains the source code of the backend developed in NestJS. The `/web` folder contains the frontend developed in ReactJS.
 
-## Dependences
+## Cloning the Repository
+
+### To get started, follow these steps:
+```bash
+git clone https://github.com/sal-research-group/xperframe4sal.git
+cd xperframe4sal
+```
+
+## Installing Dependences
 
 We recommend the version **_v18.9.0_** of **_node_** and the **_pnpm_** packager manager to execute the code. Before running the commands to start the API or the interface, run the command **_pnpm install_** inside the directories **_server_** and **_web_** to install the necessary dependences.
+
+### Backend (Server) ###
+1. Navigate to the server directory:
+```bash
+cd server
+```
+
+2. Install backend dependencies:
+```bash
+pnpm install
+```
+
+3. Set SECRET environment variable with your [JWT secret key](https://jwt.io/introduction).
+To set it for current shell and all processes started from current shell:
+```bash
+export SECRET="your_secure_jwt_secret"
+```
+
+
+### Frontend (web) ###
+
+1. Enter the `web` directory:
+```bash
+cd web
+```
+
+2. Install frontend dependencies:
+```bash
+pnpm install
+```
+
+## Database Configuration
+
+1. Install MongoDB:
+
+    From Docker image:
+
+    Pull MongoDB image:
+    ```bash
+    docker pull mongo
+    ```
+
+    Run:
+    ```bash
+    docker run --name some-name -d mongo:latest
+    ```
+
+    Create a database named `cbf`
 
 ## To run the API
 

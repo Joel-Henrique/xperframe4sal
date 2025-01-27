@@ -15,7 +15,7 @@ import { ReactComponent as GoogleLogo } from './../assets/search-engines-logos/G
 import { ErrorMessage } from '../components/ErrorMessage';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
 import { CustomSnackbar } from '../components/CustomSnackbar';
-
+import { useTranslation } from 'react-i18next';
 
 async function updateUserExperimentStatus(userExperiment, user, api) {
   try {
@@ -27,6 +27,7 @@ async function updateUserExperimentStatus(userExperiment, user, api) {
 }
 
 const Task = () => {
+  const { t } = useTranslation();
   const [result, setResult] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
@@ -145,7 +146,7 @@ const Task = () => {
       setShowSnackBar(true);
       setIsSuccess(true);
       setSeverity('success');
-      setMessage('Tarefa de busca finalizada com sucesso.');
+      setMessage(t('taks_busc_sucess'));
     } catch (error) {
       throw new Error(error.message);
     }
@@ -271,21 +272,29 @@ const Task = () => {
           height: '100%',
           background: 'rgba(0, 0, 0, 0.8)',
           zIndex: 2,
-        }}
-        />
+        }} />
       )}
       <Box sx={{ display: "flex" }}>
-        <CustomSnackbar open={showSnackBar} handleClose={handleCloseSuccessSnackbar} time={1500} message={message} severity={severity} slide={true} variant="filled" showLinear={true} />
-
+        <CustomSnackbar 
+          open={showSnackBar} 
+          handleClose={handleCloseSuccessSnackbar} 
+          time={1500} 
+          message={message} 
+          severity={severity} 
+          slide={true} 
+          variant="filled" 
+          showLinear={true} 
+        />
+  
         <Box sx={{ flexGrow: 1, marginBottom: 2, zIndex: 2 }}>
-          {(userTask?.isPaused || paused) && <ErrorMessage message={"Atenção: Tarefa pausada, aperte o botão iniciar para retomar a tarefa."} messageType={'warning'} />}
+          {(userTask?.isPaused || paused) && <ErrorMessage message={t("task_paused")} messageType={'warning'} />}
         </Box>
         <Box sx={{ paddingLeft: 2, paddingTop: 0.5 }}>
-          {userTask?.isPaused || paused ?
-            <Tooltip title="Iniciar" placement="bottom-start">
+          {userTask?.isPaused || paused ? (
+            <Tooltip title={t("iniciar")} placement="bottom-start">
               <IconButton
                 size='large'
-                style={{ backgroundColor: 'white', marginRight: 5, border: '2px solid #dfe1e5', }}
+                style={{ backgroundColor: 'white', marginRight: 5, border: '2px solid #dfe1e5' }}
                 sx={{ zIndex: 2 }}
                 color="success"
                 onClick={handleResumeTask}
@@ -294,26 +303,26 @@ const Task = () => {
                 <PlayArrow color='success' />
               </IconButton>
             </Tooltip>
-            :
-            <Tooltip title="Pausar" placement="bottom-start">
+          ) : (
+            <Tooltip title={t("pausar")} placement="bottom-start">
               <IconButton
                 size='large'
                 sx={{ zIndex: 2 }}
                 color="primary"
-                style={{ backgroundColor: 'white', marginRight: 5, border: '2px solid #dfe1e5', }}
+                style={{ backgroundColor: 'white', marginRight: 5, border: '2px solid #dfe1e5' }}
                 onClick={handlePauseTask}
                 disabled={false}
               >
                 <Pause />
               </IconButton>
             </Tooltip>
-          }
-          <Tooltip title="Finalizar" placement="bottom-start">
+          )}
+          <Tooltip title={t("finalizar")} placement="bottom-start">
             <IconButton
               size='large'
               color="secondary"
               sx={{ zIndex: 2 }}
-              style={{ backgroundColor: 'white', border: '2px solid #dfe1e5', }}
+              style={{ backgroundColor: 'white', border: '2px solid #dfe1e5' }}
               onClick={openFinishDialog}
             >
               <Stop />
@@ -324,10 +333,10 @@ const Task = () => {
           open={confirmDialogOpen}
           onClose={closeFinishDialog}
           onConfirm={handleFinishTask}
-          title="Tem certeza?"
-          content="Ao finalizar a tarefa você não terá mais acesso a ela e será redirecionado para responder os questionários finais."
+          title={t("tem_certeza")}
+          content={t("finalizar_tarefa")}
         />
-      </Box >
+      </Box>
       <div sx={{ marginBottom: '45px', marginTop: '20px' }}>
         <GoogleLogo alt="Google" style={{
           position: 'relative',
@@ -336,17 +345,15 @@ const Task = () => {
           margin: '0 auto',
           paddingBottom: '10px'
         }} />
-        {
-          showSearchBar ?
-            <SearchBar userId={user._id} taskId={taskId} handleSearch={search} defaultQuery={defaultQuery} />
-            : null
-        }
-      </div >
+        {showSearchBar ? (
+          <SearchBar userId={user._id} taskId={taskId} handleSearch={search} defaultQuery={defaultQuery} />
+        ) : null}
+      </div>
       {isLoading && <LoadingIndicator size={50} />}
-      {!isLoading && <div>
+      {!isLoading && (
         <div>
-          {
-            result && result.items?.length > 0 && result.items.map((searchResult, index) =>
+          <div>
+            {result && result.items?.length > 0 && result.items.map((searchResult, index) => (
               <SearchResult
                 userId={user._id}
                 key={index}
@@ -357,40 +364,39 @@ const Task = () => {
                 openModalHandle={openModal}
                 taskId={taskId}
               />
-            )
-          }
+            ))}
+          </div>
+          <div>
+            {result && result.items?.length > 0 && (
+              <Box mt={3} display="flex" justifyContent="center">
+                <Pagination
+                  count={Math.ceil(totalResults / resultsPerPage)}
+                  page={currentPage}
+                  onChange={(event, page) => {
+                    setCurrentPage(page);
+                    search(query, ((page - 1) * resultsPerPage) + 1);
+                  }}
+                  variant="outlined"
+                  shape="rounded"
+                  size="medium"
+                  color="primary"
+                />
+              </Box>
+            )}
+          </div>
         </div>
-        <div>
-          {
-            result && result.items?.length > 0 &&
-            <Box mt={3} display="flex" justifyContent="center">
-              <Pagination
-                count={Math.ceil(totalResults / resultsPerPage)}
-                page={currentPage}
-                onChange={(event, page) => {
-                  setCurrentPage(page);
-                  search(query, ((page - 1) * resultsPerPage) + 1);
-                }}
-                variant="outlined"
-                shape="rounded"
-                size="medium"
-                color="primary"
-              />
-            </Box>
-          }
-        </div>
-      </div>}
-
-      {isShowingResultModal &&
-        (<ResultModal
+      )}
+  
+      {isShowingResultModal && (
+        <ResultModal
           show={isShowingResultModal}
           onClose={closeModal}
           pageUrl={urlResultModal}
           title={titleResultModal}
-        />)}
-
-    </div >
-  )
+        />
+      )}
+    </div>
+  );  
 }
 
 export { Task };
