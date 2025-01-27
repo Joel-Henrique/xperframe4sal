@@ -60,7 +60,7 @@ const EditExperimentStep0 = ({ }) => {
     ExperimentId
   ] = useContext(StepContext);
 
-
+  const isValidFormTask = isValidTitleExp && ExperimentTitle;
   const ExperimentTypes = [
     { value: 'between-subject', label: t('between-subject') },
     { value: 'within-subject', label: t('within-subject') },
@@ -70,7 +70,11 @@ const EditExperimentStep0 = ({ }) => {
     { value: 'score_based', label: t('score_based') },
     { value: 'manual', label: t('manual') },
   ];
-
+  const handleTitleChange = (e) => {
+    const value = e.target.value;
+    setExperimentTitle(value);
+    setIsValidTitleExp(value.trim().length > 0);
+  };
   const handleEditExperimentSubmit = async (e) => {
     e.preventDefault();
 
@@ -151,7 +155,7 @@ const EditExperimentStep0 = ({ }) => {
             fullWidth
             margin="normal"
             value={ExperimentTitle}
-            onChange={(e) => setExperimentTitle(e.target.value)}
+            onChange={handleTitleChange}
             required
           />
 
@@ -211,6 +215,7 @@ const EditExperimentStep0 = ({ }) => {
               color="primary"
               onClick={handleEditExperimentSubmit}
               sx={{ maxWidth: '150px' }}
+              disabled={!isValidFormTask}
             >
               {t('save')}
             </Button>

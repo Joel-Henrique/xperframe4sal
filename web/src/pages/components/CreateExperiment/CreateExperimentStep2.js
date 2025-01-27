@@ -386,6 +386,7 @@ const CreateExperimentStep2 = () => {
                                             backgroundColor: '#ffffff',
                                             borderRadius: '4px',
                                             boxShadow: 1,
+                                            wordBreak: 'break-word',
                                             '&:hover': { backgroundColor: '#e6f7ff' }
                                         }}
                                     >
@@ -393,7 +394,7 @@ const CreateExperimentStep2 = () => {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'space-between',
-                                                alignItems: 'center'
+                                                alignItems: 'center',
                                             }}
                                         >
                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>

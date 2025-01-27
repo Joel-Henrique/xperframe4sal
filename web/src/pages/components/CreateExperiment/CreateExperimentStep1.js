@@ -235,6 +235,7 @@ const CreateExperimentStep1 = () => {
                                                 backgroundColor: '#ffffff',
                                                 borderRadius: '4px',
                                                 boxShadow: 1,
+                                                wordBreak: 'break-word',
                                                 '&:hover': { backgroundColor: '#e6f7ff' }
                                             }}
                                         >

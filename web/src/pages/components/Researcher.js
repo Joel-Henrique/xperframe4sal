@@ -26,6 +26,7 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
       aria-controls={`${experiment._id}-content`}
       id={`${experiment._id}-header`}
       sx={{
+        wordBreak: 'break-word',
         '&:hover': {
           backgroundColor: 'lightgray',
         },
@@ -35,16 +36,19 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
     </AccordionSummary>
     <Divider />
     <AccordionDetails>
-      <Typography dangerouslySetInnerHTML={{ __html: experiment.summary }} />
+      <Typography
+        style={{ wordBreak: 'break-word' }}
+        dangerouslySetInnerHTML={{ __html: experiment.summary }}
+      />
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
         {isOwner && (
           <Button
             variant="contained"
             color="primary"
             style={{ margin: '2px' }}
-        
+
             onClick={() => {
-            
+
               onEdituser(experiment._id)
             }}
           >
@@ -89,7 +93,7 @@ const Researcher = () => {
   const [expanded, setExpanded] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [editingUser, setEditingUser] = useState(null); 
+  const [editingUser, setEditingUser] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
   const { t } = useTranslation();
 
@@ -147,11 +151,11 @@ const Researcher = () => {
   };
 
   const handleEditUser = (experimentId) => {
-    setEditingUser(experimentId); 
+    setEditingUser(experimentId);
   };
 
   if (editingUser) {
-    return <EditUser experimentId={editingUser}/>;
+    return <EditUser experimentId={editingUser} />;
   }
 
   return (
