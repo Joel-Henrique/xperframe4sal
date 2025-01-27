@@ -11,17 +11,12 @@ import { UserSurveysModule } from './modules/survey-answers/survey-answers.modul
 import { UserTasksModule } from './modules/user-tasks/user-tasks.module';
 import { HttpModule } from './modules/http/http.module';
 import { GoogleModule } from './modules/search-engines/google/google.module';
-import { PuppeteerModule } from './modules/puppeteer/puppeteer.module';
 import { UserTaskSessionModule } from './modules/user-task-session/user-task-session.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
     ExperimentsModule,
-    ConfigModule.forRoot({   //isso é para o funcionamento do set SECRET no .env
-      isGlobal: true,
-    }),
     IcfModule,
     TasksModule,
     UserModule,
@@ -32,7 +27,6 @@ import { ConfigModule } from '@nestjs/config'
     UserTaskSessionModule,
     HttpModule,
     GoogleModule,
-    PuppeteerModule,
     SurveysModule,
     MongooseModule.forRoot(process.env.MONGO ? process.env.MONGO : 'mongodb://localhost:27017',
       {
