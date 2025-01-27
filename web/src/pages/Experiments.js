@@ -12,7 +12,7 @@ const Experiments = () => {
   }, []);
 
   const renderContent = () => {
-    if (user?.pesquisador) {
+    if (user?.researcher) {
       return <Researcher />;
     }
     return <NotResearcher />;
