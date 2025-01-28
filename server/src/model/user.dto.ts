@@ -12,7 +12,6 @@ export interface GetRecoveryPasswordDto {
   recoveryPasswordTokenExpirationDate: Date;
 }
 
-
 export interface ForgotPasswordDto {
   email: string;
 }

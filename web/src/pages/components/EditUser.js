@@ -40,8 +40,8 @@ const EditUser = (ExperimentId) => {
                 (usr) =>
                     !usersInExperimentData.some((user) => user.id === usr.id)
             );
-            console.log(usersInExperimentData);
-            console.log(usersNotInExperiment);
+            //console.log(usersInExperimentData);
+            //console.log(usersNotInExperiment);
 
             setAllUsers(usersNotInExperiment);
             setUsersInExperiment(usersInExperimentData);
