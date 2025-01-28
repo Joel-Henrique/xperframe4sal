@@ -8,18 +8,19 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { ExperimentsService } from './experiments.service';
-import { Experiment } from '../../model/experiment.entity';
-import { AuthGuard } from '@nestjs/passport';
+import {ExperimentsService} from './experiments.service';
+import {Experiment} from '../../model/experiment.entity';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiExcludeController} from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('experiments')
 export class ExperimentsController {
-  constructor(private readonly experimentService: ExperimentsService) { }
+  constructor(private readonly experimentService: ExperimentsService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() experiment: Experiment): Promise<Experiment> {
-    
     return await this.experimentService.create(experiment);
   }
 

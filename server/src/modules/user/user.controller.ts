@@ -19,12 +19,14 @@ import {
   GetUserDto,
   ResetPasswordDto,
 } from 'src/model/user.dto';
+import {ApiExcludeController} from '@nestjs/swagger';
 
 export class LoginDto {
   email: string;
   password: string;
 }
 
+@ApiExcludeController()
 @Controller('users')
 export class UserController {
   constructor(private readonly _userService: UserService) {}

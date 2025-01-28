@@ -1,4 +1,4 @@
-export interface GetUserDto {
+export class GetUserDto {
   id: string;
   name: string;
   lastName: string;
@@ -6,17 +6,17 @@ export interface GetUserDto {
   researcher: boolean;
 }
 
-export interface GetRecoveryPasswordDto {
+export class GetRecoveryPasswordDto {
   id: string;
   recoveryPasswordToken: string;
   recoveryPasswordTokenExpirationDate: Date;
 }
 
-export interface ForgotPasswordDto {
+export class ForgotPasswordDto {
   email: string;
 }
 
-export interface ResetPasswordDto {
+export class ResetPasswordDto {
   email: string;
   token: string;
   password: string;

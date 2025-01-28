@@ -20,12 +20,15 @@ import {
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {AuthGuard} from '@nestjs/passport';
+import {ApiOperation, ApiQuery, ApiParam, ApiBody} from '@nestjs/swagger';
 
 @Controller('users2')
 export class User2Controller {
   constructor(private readonly _userService: User2Service) {}
 
   @Post('forgot-password')
+  @ApiOperation({summary: 'Request password recovery'})
+  @ApiBody({type: ForgotPasswordDto})
   async forgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<void> {
@@ -35,7 +38,10 @@ export class User2Controller {
       throw new Error(error.message);
     }
   }
+
   @Post('reset-password')
+  @ApiOperation({summary: 'Reset a user’s password'})
+  @ApiBody({type: ResetPasswordDto})
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<void> {
@@ -45,7 +51,10 @@ export class User2Controller {
       throw new Error(error.message);
     }
   }
+
   @Post()
+  @ApiOperation({summary: 'Create a new user'})
+  @ApiBody({type: CreateUserDto})
   async create(@Body() createUserDto: CreateUserDto): Promise<GetUserDto> {
     try {
       createUserDto.name = createUserDto.name.trim();
@@ -63,8 +72,15 @@ export class User2Controller {
       throw error;
     }
   }
+
   @UseGuards(AuthGuard('jwt'))
   @Get()
+  @ApiOperation({summary: 'Get all users'})
+  @ApiQuery({
+    name: 'email',
+    required: false,
+    description: 'Filter users by email',
+  })
   async findAll(
     @Query('email') email: string,
   ): Promise<
@@ -84,7 +100,7 @@ export class User2Controller {
         };
       } catch (error) {
         if (error instanceof NotFoundException) {
-          return {error: 'Usuário não encontrado', statusCode: 404};
+          return {error: 'User not found', statusCode: 404};
         } else {
           throw error;
         }
@@ -108,6 +124,8 @@ export class User2Controller {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @ApiOperation({summary: 'Get a user by ID'})
+  @ApiParam({name: 'id', type: String, description: 'User ID'})
   async findOne(@Param('id') id: string): Promise<GetUserDto> {
     const user = await this._userService.findOne(id);
     return {
@@ -119,13 +137,14 @@ export class User2Controller {
     };
   }
 
-  //@UseGuards(AuthGuard('jwt'))
   @Patch(':id')
+  @ApiOperation({summary: "Update a user's data"})
+  @ApiParam({name: 'id', type: String, description: 'User ID'})
+  @ApiBody({type: UpdateUserDto})
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<GetUserDto> {
-    //user.lastChangedAt = new Date();
     const userDto = await this._userService.update(id, updateUserDto);
     return {
       id: userDto._id,
@@ -135,13 +154,21 @@ export class User2Controller {
       researcher: userDto.researcher,
     };
   }
-  //@UseGuards(AuthGuard('jwt'))
+
   @Delete(':id')
+  @ApiOperation({summary: 'Delete a user'})
+  @ApiParam({name: 'id', type: String, description: 'User ID'})
   async remove(@Param('id') id: string) {
     return await this._userService.remove(id);
   }
-  //@UseGuards(AuthGuard('jwt'))
+
   @Patch()
+  @ApiOperation({summary: 'Add password recovery token'})
+  @ApiQuery({
+    name: 'email',
+    required: true,
+    description: 'User email to send the token',
+  })
   async addChangesPasswordToken(
     @Query('email') email: string,
   ): Promise<GetRecoveryPasswordDto> {

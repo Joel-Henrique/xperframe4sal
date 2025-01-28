@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { Task } from '../../model/task.entity';
+import {TasksService} from './tasks.service';
+import {Task} from '../../model/task.entity';
+import {ApiExcludeController} from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) { }
+  constructor(private readonly tasksService: TasksService) {}
 
   @Post()
   async create(@Body() task: Task): Promise<Task> {

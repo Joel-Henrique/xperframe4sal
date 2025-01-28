@@ -1,11 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { SurveysService } from './surveys.service';
-import { Survey } from 'src/model/survey.entity';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import {SurveysService} from './surveys.service';
+import {Survey} from 'src/model/survey.entity';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiExcludeController} from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('surveys')
 export class SurveysController {
-  constructor(private readonly surveysService: SurveysService) { }
+  constructor(private readonly surveysService: SurveysService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
@@ -27,7 +38,10 @@ export class SurveysController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() survey: Survey): Promise<Survey> {
+  async update(
+    @Param('id') id: string,
+    @Body() survey: Survey,
+  ): Promise<Survey> {
     survey.lastChangedAt = new Date();
     return await this.surveysService.update(id, survey);
   }
