@@ -1,4 +1,4 @@
-import {IntersectionType, PartialType} from '@nestjs/mapped-types';
+import {IntersectionType, PartialType} from '@nestjs/swagger';
 import {CreateUserTaskDto} from './create-userTask.dto';
 import {TimeEditUserTaskDto} from './timeEditUserTaskDTO';
 
