@@ -7,6 +7,7 @@ import {User2Service} from '../user2/user2.service';
 import {Experiments2Service} from '../experiments2/experiments2.service';
 import {UpdateUserExperimentDto} from './dto/update-userExperiment.dto';
 import {User} from '../user2/entity/user.entity';
+import {Experiment} from '../experiments2/entity/experiment.entity';
 
 @Injectable()
 export class UserExperiments2Service {
@@ -72,6 +73,14 @@ export class UserExperiments2Service {
       relations: ['user'],
     });
     return userExperiments.map((userExperiments) => userExperiments.user);
+  }
+
+  async findExperimentsByUserId(userId: string): Promise<Experiment[]> {
+    const userExperiments = await this.userExperimentRepository.find({
+      where: {user: {_id: userId}},
+      relations: ['experiment'],
+    });
+    return userExperiments.map((userExperiments) => userExperiments.experiment);
   }
 
   async findByUserAndExperimentId(

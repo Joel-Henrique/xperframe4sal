@@ -13,6 +13,7 @@ import {CreateUserExperimentDto} from './dto/create-userExperiment.dto';
 import {UserExperiment} from './entities/user-experiments.entity';
 import {UpdateUserExperimentDto} from './dto/update-userExperiment.dto';
 import {GetUserDto} from 'src/model/user.dto';
+import {Experiment} from '../experiments2/entity/experiment.entity';
 
 @Controller('user-experiments2')
 export class UserExperiments2Controller {
@@ -61,6 +62,15 @@ export class UserExperiments2Controller {
         researcher: user.researcher,
       };
     });
+  }
+
+  @Get('/user/:userId')
+  async findExperimentsByUserId(
+    @Param('userId') userId,
+  ): Promise<Experiment[]> {
+    const experiments =
+      await this.userExperimentService.findExperimentsByUserId(userId);
+    return experiments;
   }
 
   //@UseGuards(AuthGuard('jwt'))

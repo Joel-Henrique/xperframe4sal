@@ -16,9 +16,13 @@ export class UserExperiment extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.userExperiments)
   user: User;
+  @Column()
+  user_id: string;
 
   @ManyToOne(() => Experiment, (experiment) => experiment.userExperiments)
   experiment: Experiment;
+  @Column()
+  experiment_id: string;
   @Column({default: false})
   hasFinished: boolean = false;
   @Column({type: 'jsonb', default: {}})
