@@ -1,6 +1,7 @@
 import {BaseEntity} from 'src/model/base_entity2';
 import {Experiment} from 'src/modules/experiments2/entity/experiment.entity';
-import {Column, Entity, ManyToOne} from 'typeorm';
+import {SurveyAnswer} from 'src/modules/survey-answer2/entity/survey-answer.entity';
+import {Column, Entity, ManyToOne, OneToMany} from 'typeorm';
 
 export enum SurveyType {
   PRE = 'pre',
@@ -27,4 +28,6 @@ export class Survey extends BaseEntity {
   experiment_id: string;
   @ManyToOne(() => Experiment, (experiment) => experiment.surveys)
   experiment: Experiment;
+  @OneToMany(() => SurveyAnswer, (surveyAnswer) => surveyAnswer.survey)
+  surveyAnswers: SurveyAnswer[];
 }
