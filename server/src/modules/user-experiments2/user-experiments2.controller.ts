@@ -15,6 +15,7 @@ import {UserExperiment} from './entities/user-experiments.entity';
 import {UpdateUserExperimentDto} from './dto/update-userExperiment.dto';
 import {GetUserDto} from 'src/model/user.dto';
 import {Experiment} from '../experiments2/entity/experiment.entity';
+import {User} from '../user2/entity/user.entity';
 
 @ApiTags('user-experiments2')
 @Controller('user-experiments2')
@@ -102,6 +103,15 @@ export class UserExperiments2Controller {
       updateUserExperimentDto,
     );
     return result;
+  }
+
+  @Patch('/update-users/:id')
+  async updateExperimentUsers(
+    @Param('id') id: string,
+    @Body() body: {newUsersId: string[]},
+  ): Promise<User[]> {
+    const {newUsersId} = body;
+    return this.userExperimentService.updateExperimentUsers(id, newUsersId);
   }
 
   @Delete()

@@ -73,8 +73,8 @@ const EditUser = (ExperimentId) => {
     const saveChanges = async () => {
         try {
             await api.patch(
-                `experiments/${ExperimentId.experimentId}`,
-                { userIds: usersInExperiment.map((usr) => usr.id) },
+                `user-experiments2/update-users/${ExperimentId.experimentId}`,
+                { newUsersId: usersInExperiment.map((usr) => usr.id) },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
             if (msgs.current) {

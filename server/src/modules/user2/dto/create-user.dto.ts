@@ -21,5 +21,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  //@ApiProperty()
+  //@IsNotEmpty()
+  //@IsString()
+  //researcher: string;
+
   //birthDate: Date;
 }

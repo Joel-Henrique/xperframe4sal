@@ -1,7 +1,7 @@
 import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserExperiment} from './entities/user-experiments.entity';
-import {Repository} from 'typeorm';
+import {In, Repository} from 'typeorm';
 import {CreateUserExperimentDto} from './dto/create-userExperiment.dto';
 import {User2Service} from '../user2/user2.service';
 import {Experiments2Service} from '../experiments2/experiments2.service';
@@ -25,7 +25,6 @@ export class UserExperiments2Service {
     try {
       const {userId, experimentId} = createUserExperimentDto;
       const user = await this.userService.findOne(userId);
-      //return user;
       const experiment = await this.experimentService.find(experimentId);
       const newUserExperiment = this.userExperimentRepository.create({
         user,
@@ -116,6 +115,44 @@ export class UserExperiments2Service {
         _id: id,
       },
     });
+  }
+
+  async updateExperimentUsers(
+    experimentId: string,
+    newUsersId: string[],
+  ): Promise<User[]> {
+    const currentUsersInExperiment =
+      await this.findUsersByExperimentId(experimentId);
+    const currentUsersId = currentUsersInExperiment.map((user) => user._id);
+    const usersToRemove = currentUsersId.filter(
+      (user) => !newUsersId.includes(user),
+    );
+    const userToAdd = newUsersId.filter(
+      (user) => !currentUsersId.includes(user),
+    );
+
+    if (usersToRemove.length !== 0) {
+      await this.userExperimentRepository.delete({
+        experiment_id: experimentId,
+        user_id: In(usersToRemove),
+      });
+    }
+
+    if (userToAdd.length !== 0) {
+      const newUserExperiments = userToAdd.map((userId) => ({
+        userId,
+        experimentId,
+      }));
+      await Promise.all(
+        newUserExperiments.map((newUserExperiment) => {
+          this.create(newUserExperiment);
+        }),
+      );
+    }
+
+    return currentUsersInExperiment.filter((user) =>
+      newUsersId.includes(user._id),
+    );
   }
 
   async removeByUserIdAndExperimentId(userId: string, experimentId: string) {
