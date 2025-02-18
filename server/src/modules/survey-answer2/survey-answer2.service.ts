@@ -44,8 +44,8 @@ export class SurveyAnswer2Service {
   async findByUserIdAndSurveyId(
     userId: string,
     surveyId: string,
-  ): Promise<SurveyAnswer[]> {
-    return await this.surveyAnswerRepository.find({
+  ): Promise<SurveyAnswer> {
+    return await this.surveyAnswerRepository.findOne({
       where: {user_id: userId, survey_id: surveyId},
     });
   }

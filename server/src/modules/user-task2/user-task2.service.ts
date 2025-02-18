@@ -7,6 +7,7 @@ import {User2Service} from '../user2/user2.service';
 import {Task2Service} from '../task2/task2.service';
 import {UpdateUserTaskDto} from './dto/update-userTask.dto';
 import {TimeEditUserTaskDto} from './dto/timeEditUserTaskDTO';
+import {SurveyAnswer2Service} from '../survey-answer2/survey-answer2.service';
 
 @Injectable()
 export class UserTask2Service {
@@ -16,6 +17,7 @@ export class UserTask2Service {
 
     private readonly userService: User2Service,
     private readonly taskService: Task2Service,
+    private readonly surveyAnswer: SurveyAnswer2Service,
   ) {}
   async findOne(id: string): Promise<UserTask> {
     try {
@@ -39,6 +41,31 @@ export class UserTask2Service {
     return await this.userTaskRepository.save(newUserTask);
   }
 
+  //TODO receeber mais de um survey e verificar para cada um
+
+  async createByScore(
+    userId: string,
+    taskId: string,
+    surveyId: string,
+    score: number,
+  ): Promise<UserTask> {
+    const userAnswer = await this.surveyAnswer.findByUserIdAndSurveyId(
+      userId,
+      surveyId,
+    );
+    if (userAnswer.score >= score) {
+      const newUserTask = await this.create({userId: userId, taskId: taskId});
+      return newUserTask;
+    }
+    return null;
+  }
+  async createRandom(userId: string, taskIds: string[]): Promise<UserTask> {
+    const randomIndex = Math.floor(Math.random() * taskIds.length);
+    const selectTaskId = taskIds[randomIndex];
+
+    return await this.create({userId: userId, taskId: selectTaskId});
+  }
+
   async createMany(userTasks: UserTask[]): Promise<UserTask[]> {
     try {
       const savedUserTasks = await this.userTaskRepository.save(userTasks);
@@ -55,6 +82,14 @@ export class UserTask2Service {
     return await this.userTaskRepository.find({
       where: {
         user: {_id: userId},
+      },
+    });
+  }
+
+  async findByTaskId(taskId: string): Promise<UserTask[]> {
+    return await this.userTaskRepository.find({
+      where: {
+        task: {_id: taskId},
       },
     });
   }
