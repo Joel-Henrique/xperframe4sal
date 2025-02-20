@@ -32,6 +32,6 @@ export class CreateExperimentDto {
   //Ver como fazer a relação
   //tasks: Task[];
   tasksProps: TaskProps[];
-  userProps: string[];
+  //;userProps: string[];
   surveysProps: CreateSurveyDto[];
 }

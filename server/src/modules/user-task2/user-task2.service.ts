@@ -41,7 +41,7 @@ export class UserTask2Service {
     return await this.userTaskRepository.save(newUserTask);
   }
 
-  //TODO receeber mais de um survey e verificar para cada um
+  //TODO receber mais de um survey e verificar para cada um
 
   async createByScore(
     userId: string,
@@ -59,6 +59,8 @@ export class UserTask2Service {
     }
     return null;
   }
+
+  //TODO Fazer destribuicao de carga
   async createRandom(userId: string, taskIds: string[]): Promise<UserTask> {
     const randomIndex = Math.floor(Math.random() * taskIds.length);
     const selectTaskId = taskIds[randomIndex];

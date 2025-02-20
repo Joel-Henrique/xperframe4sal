@@ -31,7 +31,6 @@ export class Experiments2Service {
       ownerId,
       summary,
       tasksProps,
-      userProps,
       surveysProps,
       typeExperiment,
       betweenExperimentType,
@@ -49,38 +48,16 @@ export class Experiments2Service {
     });
     const savedExperiment = await this.experimentRepository.save(experiment);
 
-    //UserExperiment
-    const userExperimentPromises = userProps.map((user) => {
-      return this.userExperimentService.create({
-        userId: user,
-        experimentId: savedExperiment._id,
-      });
-    });
-
-    await Promise.all(userExperimentPromises);
-
     //Create Task
-    const newTasks = [];
-    for (const task of tasksProps) {
-      const result = await this.taskService.create({
+    const TasksPromises = tasksProps.map((task) => {
+      return this.taskService.create({
         title: task.title,
         summary: task.summary,
         description: task.description,
         experimentId: savedExperiment._id,
       });
-      newTasks.push(result);
-    }
-
-    //Create UserTask
-    const userTasksPromises = newTasks.flatMap((task) => {
-      return userProps.map((user) => {
-        return this.userTaskService.create({
-          userId: user,
-          taskId: task.id,
-        });
-      });
     });
-    await Promise.all(userTasksPromises);
+    await Promise.all(TasksPromises);
 
     //Create Surveys
     const SurveysPromises = surveysProps.map((survey) => {
