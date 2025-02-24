@@ -7,8 +7,12 @@ import {Column, Entity, ManyToOne} from 'typeorm';
 export class UserTask extends BaseEntity {
   @ManyToOne(() => User, (user) => user.userTasks)
   user: User;
+  @Column()
+  user_id: string;
   @ManyToOne(() => Task, (task) => task.userTasks)
   task: Task;
+  @Column()
+  task_id: string;
   @Column({default: false})
   hasFinishedTask: boolean = false;
   @Column({default: false})

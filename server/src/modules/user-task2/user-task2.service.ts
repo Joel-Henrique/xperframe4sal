@@ -61,10 +61,42 @@ export class UserTask2Service {
   }
 
   //TODO Fazer destribuicao de carga
-  async createRandom(userId: string, taskIds: string[]): Promise<UserTask> {
+  async createRandom2(userId: string, taskIds: string[]): Promise<UserTask> {
     const randomIndex = Math.floor(Math.random() * taskIds.length);
     const selectTaskId = taskIds[randomIndex];
 
+    return await this.create({userId: userId, taskId: selectTaskId});
+  }
+
+  async createRandom(userId: string, taskIds: string[]): Promise<UserTask> {
+    const taskCounts = await this.getTaskCounts(taskIds);
+    console.log('TaskCounts: ' + JSON.stringify(taskCounts));
+
+    const weights = taskIds.map((taskId) => {
+      const count = taskCounts[taskId];
+      return 1 / (count + 1);
+    });
+
+    console.log('Weights: ' + weights);
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    console.log('ToTalWeight: ' + totalWeight);
+    const cumulativeWeights = weights.map(
+      (w, i, arr) =>
+        arr.slice(0, i + 1).reduce((sum, weight) => sum + weight, 0) /
+        totalWeight,
+    );
+    console.log('CumulativeWeight: ' + cumulativeWeights);
+
+    const random = Math.random();
+    console.log('Random : ' + random);
+    let selectTaskId;
+    for (let i = 0; i < cumulativeWeights.length; i++) {
+      if (random <= cumulativeWeights[i]) {
+        selectTaskId = taskIds[i];
+        break;
+      }
+    }
+    console.log('selectTaskId: ' + selectTaskId);
     return await this.create({userId: userId, taskId: selectTaskId});
   }
 
@@ -184,5 +216,20 @@ export class UserTask2Service {
     endTime = new Date();
     await this.update(id, {hasFinishedTask, endTime});
     return await this.userTaskRepository.findOne({where: {_id: id}});
+  }
+
+  private async getTaskCounts(
+    taskIds: string[],
+  ): Promise<Record<string, number>> {
+    const counts: Record<string, number> = {};
+    for (const taskId of taskIds) {
+      counts[taskId] = await this.getTaskAssignmentCount(taskId);
+    }
+    return counts;
+  }
+
+  private async getTaskAssignmentCount(taskId: string): Promise<number> {
+    const tasks = await this.findByTaskId(taskId);
+    return tasks.length;
   }
 }

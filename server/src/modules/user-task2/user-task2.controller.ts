@@ -136,4 +136,11 @@ export class UserTask2Controller {
     const endTime = userTask.endTime;
     return await this.userTaskService.finish(id, {hasFinishedTask, endTime});
   }
+
+  @Post('/createRandom')
+  async createRandom(
+    @Body() body: {userId: string; taskIds: string[]},
+  ): Promise<UserTask> {
+    return await this.userTaskService.createRandom(body.userId, body.taskIds);
+  }
 }
