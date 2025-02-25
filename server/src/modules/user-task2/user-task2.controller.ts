@@ -13,6 +13,8 @@ import {UserTask2Service} from './user-task2.service';
 import {UserTask} from './entities/user-tasks.entity';
 import {CreateUserTaskDto} from './dto/create-userTask.dto';
 import {UpdateUserTaskDto} from './dto/update-userTask.dto';
+import {CreateUserTaskRandomDto} from './dto/create-userTaskRandom.dto';
+import {CreateUserTaskScoreDto} from './dto/create-userTaskScore.dto';
 
 @ApiTags('user-task2')
 @Controller('user-task2')
@@ -59,6 +61,23 @@ export class UserTask2Controller {
     @Body() createUserTaskDto: CreateUserTaskDto,
   ): Promise<UserTask> {
     return await this.userTaskService.create(createUserTaskDto);
+  }
+
+  @Post('/random')
+  @ApiOperation({summary: 'Create a new user task using random method'})
+  //@ApiBody({type: CreateUserTaskDto})
+  async createRandom(
+    @Body() createUserTaskRandomDto: CreateUserTaskRandomDto,
+  ): Promise<UserTask> {
+    return await this.userTaskService.createRandom(createUserTaskRandomDto);
+  }
+
+  @Post('/score')
+  @ApiOperation({summary: 'Create a new user task using score method'})
+  async getTeste(
+    @Body() createUserTaskScoreDto: CreateUserTaskScoreDto,
+  ): Promise<any> {
+    return await this.userTaskService.createByScore(createUserTaskScoreDto);
   }
 
   @Delete()
@@ -135,12 +154,5 @@ export class UserTask2Controller {
     const hasFinishedTask = userTask.hasFinishedTask;
     const endTime = userTask.endTime;
     return await this.userTaskService.finish(id, {hasFinishedTask, endTime});
-  }
-
-  @Post('/createRandom')
-  async createRandom(
-    @Body() body: {userId: string; taskIds: string[]},
-  ): Promise<UserTask> {
-    return await this.userTaskService.createRandom(body.userId, body.taskIds);
   }
 }

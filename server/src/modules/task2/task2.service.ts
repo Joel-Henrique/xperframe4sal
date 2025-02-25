@@ -1,7 +1,7 @@
 import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Task} from './entities/task.entity';
-import {Repository} from 'typeorm';
+import {In, Repository} from 'typeorm';
 import {CreateTaskDto} from './dto/create-task.dto';
 import {Experiments2Service} from '../experiments2/experiments2.service';
 import {UpdateTaskDto} from './dto/update-task.dto';
@@ -36,6 +36,14 @@ export class Task2Service {
 
   async findOne(id: string): Promise<Task> {
     return await this.taskRepository.findOneBy({_id: id});
+  }
+
+  async findMany(ids: string[]): Promise<Task[]> {
+    return await this.taskRepository.find({
+      where: {
+        _id: In(ids),
+      },
+    });
   }
 
   async findByExperimentId(experimentId: string): Promise<Task[]> {

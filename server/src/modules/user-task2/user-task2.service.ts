@@ -8,6 +8,8 @@ import {Task2Service} from '../task2/task2.service';
 import {UpdateUserTaskDto} from './dto/update-userTask.dto';
 import {TimeEditUserTaskDto} from './dto/timeEditUserTaskDTO';
 import {SurveyAnswer2Service} from '../survey-answer2/survey-answer2.service';
+import {CreateUserTaskRandomDto} from './dto/create-userTaskRandom.dto';
+import {CreateUserTaskScoreDto} from './dto/create-userTaskScore.dto';
 
 @Injectable()
 export class UserTask2Service {
@@ -44,20 +46,23 @@ export class UserTask2Service {
   //TODO receber mais de um survey e verificar para cada um
 
   async createByScore(
-    userId: string,
-    taskId: string,
-    surveyId: string,
-    score: number,
+    createUserTaskScoreDto: CreateUserTaskScoreDto,
   ): Promise<UserTask> {
-    const userAnswer = await this.surveyAnswer.findByUserIdAndSurveyId(
-      userId,
-      surveyId,
-    );
-    if (userAnswer.score >= score) {
-      const newUserTask = await this.create({userId: userId, taskId: taskId});
-      return newUserTask;
+    try {
+      const {userId, taskIds, score} = createUserTaskScoreDto;
+      console.log(taskIds);
+      const taskList = await this.taskService.findMany(taskIds);
+      let selectedTaskId;
+      for (const task of taskList) {
+        if (score >= task.min_score && score <= task.max_score) {
+          selectedTaskId = task._id;
+          break;
+        }
+      }
+      return this.create({userId: userId, taskId: selectedTaskId});
+    } catch (error) {
+      throw error;
     }
-    return null;
   }
 
   //TODO Fazer destribuicao de carga
@@ -68,36 +73,37 @@ export class UserTask2Service {
     return await this.create({userId: userId, taskId: selectTaskId});
   }
 
-  async createRandom(userId: string, taskIds: string[]): Promise<UserTask> {
-    const taskCounts = await this.getTaskCounts(taskIds);
-    console.log('TaskCounts: ' + JSON.stringify(taskCounts));
+  async createRandom(
+    createUserTaskRandomDto: CreateUserTaskRandomDto,
+  ): Promise<UserTask> {
+    try {
+      const {userId, taskIds} = createUserTaskRandomDto;
+      const taskCounts = await this.getTaskCounts(taskIds);
 
-    const weights = taskIds.map((taskId) => {
-      const count = taskCounts[taskId];
-      return 1 / (count + 1);
-    });
+      const weights = taskIds.map((taskId) => {
+        const count = taskCounts[taskId];
+        return 1 / (count + 1);
+      });
 
-    console.log('Weights: ' + weights);
-    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-    console.log('ToTalWeight: ' + totalWeight);
-    const cumulativeWeights = weights.map(
-      (w, i, arr) =>
-        arr.slice(0, i + 1).reduce((sum, weight) => sum + weight, 0) /
-        totalWeight,
-    );
-    console.log('CumulativeWeight: ' + cumulativeWeights);
+      const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+      const cumulativeWeights = weights.map(
+        (w, i, arr) =>
+          arr.slice(0, i + 1).reduce((sum, weight) => sum + weight, 0) /
+          totalWeight,
+      );
 
-    const random = Math.random();
-    console.log('Random : ' + random);
-    let selectTaskId;
-    for (let i = 0; i < cumulativeWeights.length; i++) {
-      if (random <= cumulativeWeights[i]) {
-        selectTaskId = taskIds[i];
-        break;
+      const random = Math.random();
+      let selectTaskId;
+      for (let i = 0; i < cumulativeWeights.length; i++) {
+        if (random <= cumulativeWeights[i]) {
+          selectTaskId = taskIds[i];
+          break;
+        }
       }
+      return await this.create({userId: userId, taskId: selectTaskId});
+    } catch (error) {
+      throw error;
     }
-    console.log('selectTaskId: ' + selectTaskId);
-    return await this.create({userId: userId, taskId: selectTaskId});
   }
 
   async createMany(userTasks: UserTask[]): Promise<UserTask[]> {

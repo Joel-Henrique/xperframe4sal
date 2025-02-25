@@ -23,8 +23,13 @@ export class Task extends BaseEntity {
     nullable: true,
   })
   survey: Survey;
-  @Column()
+  @Column({nullable: true})
   survey_id: string;
+
+  @Column({nullable: true})
+  max_score: number;
+  @Column({nullable: true})
+  min_score: number;
 
   @OneToMany(() => UserTask, (userTask) => userTask.task)
   userTasks: UserTask[];
