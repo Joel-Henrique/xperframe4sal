@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import {OptionDTO} from './option.dto';
 
-enum QuestionType {
+export enum QuestionType {
   MULTIPLE_CHOICES = 'multiple-choices',
   OPEN = 'open',
   MULTIPLE_SELECTION = 'multiple-selection',

@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17-alpine
-    restart: always
+    restart: no
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -14,7 +14,7 @@ services:
 
   mongo:
     image: mongo
-    restart: always
+    restart: no
     ports:
       - '27017:27017'
     volumes:
