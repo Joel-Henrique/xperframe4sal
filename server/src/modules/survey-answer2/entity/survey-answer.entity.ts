@@ -2,6 +2,7 @@ import {BaseEntity} from 'src/model/base_entity2';
 import {Survey} from 'src/modules/survey2/entity/survey.entity';
 import {User} from 'src/modules/user2/entity/user.entity';
 import {Column, Entity, ManyToOne} from 'typeorm';
+import {AnswerDTO} from '../dto/answers.dto';
 
 @Entity()
 export class SurveyAnswer extends BaseEntity {
@@ -16,7 +17,7 @@ export class SurveyAnswer extends BaseEntity {
   survey_id: string;
 
   @Column({type: 'jsonb'})
-  answers: any[];
+  answers: AnswerDTO[];
 
   @Column({type: 'float'})
   score: number;

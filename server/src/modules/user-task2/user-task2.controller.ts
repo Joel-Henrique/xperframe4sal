@@ -15,6 +15,8 @@ import {CreateUserTaskDto} from './dto/create-userTask.dto';
 import {UpdateUserTaskDto} from './dto/update-userTask.dto';
 import {CreateUserTaskRandomDto} from './dto/create-userTaskRandom.dto';
 import {CreateUserTaskScoreDto} from './dto/create-userTaskScore.dto';
+import {CreateUserTaskQuestScoreDto} from './dto/create-userTaskQuestionScore';
+import {CreateUserTaskAvgQuestScoreDto} from './dto/create-userTaskAvgQuestScore.dto';
 
 @ApiTags('user-task2')
 @Controller('user-task2')
@@ -72,12 +74,34 @@ export class UserTask2Controller {
     return await this.userTaskService.createRandom(createUserTaskRandomDto);
   }
 
-  @Post('/score')
+  @Post('/surveyScore')
   @ApiOperation({summary: 'Create a new user task using score method'})
-  async getTeste(
+  async createBySurveyScore(
     @Body() createUserTaskScoreDto: CreateUserTaskScoreDto,
-  ): Promise<any> {
-    return await this.userTaskService.createByScore(createUserTaskScoreDto);
+  ): Promise<UserTask> {
+    return await this.userTaskService.createBySurveyScore(
+      createUserTaskScoreDto,
+    );
+  }
+
+  @Post('/questionScore')
+  @ApiOperation({summary: 'Create a new user task using question score method'})
+  async createByQuestionScore(
+    @Body() createUserTaskQuestScoreDto: CreateUserTaskQuestScoreDto,
+  ): Promise<UserTask> {
+    return await this.userTaskService.createByQuestionScore(
+      createUserTaskQuestScoreDto,
+    );
+  }
+
+  @Post('/avgQuestionScore')
+  @ApiOperation({summary: 'Create a new user task using question score method'})
+  async createByAvgQuestionScore(
+    @Body() createUserTaskAvgQuestScoreDto: CreateUserTaskAvgQuestScoreDto,
+  ): Promise<UserTask> {
+    return await this.userTaskService.createByAverageQuestionsScore(
+      createUserTaskAvgQuestScoreDto,
+    );
   }
 
   @Delete()

@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {SurveyAnswer} from './entity/survey-answer.entity';
 import {Repository} from 'typeorm';
@@ -6,6 +6,7 @@ import {CreateSurveyAnswerDto} from './dto/create-surveyAnswer.dto';
 import {User2Service} from '../user2/user2.service';
 import {Survey2Service} from '../survey2/survey2.service';
 import {UpdateSurveyAnswerDto} from './dto/update-surveyAnswer.dto';
+import {QuestionType} from '../survey2/dto/question.dto';
 
 @Injectable()
 export class SurveyAnswer2Service {
@@ -19,14 +20,45 @@ export class SurveyAnswer2Service {
   async create(
     createSurveyAnswerDto: CreateSurveyAnswerDto,
   ): Promise<SurveyAnswer> {
-    const {userId, surveyId} = createSurveyAnswerDto;
-    const user = await this.userService.findOne(userId);
-    const survey = await this.surveyService.findOne(surveyId);
-    //TODO User ou survey nao encontrado
-    return await this.surveyAnswerRepository.save({
-      user: user,
-      survey: survey,
-    });
+    try {
+      const {userId, surveyId, answers} = createSurveyAnswerDto;
+      const user = await this.userService.findOne(userId);
+      if (!user) {
+        throw new NotFoundException('Usuario não encontrado.');
+      }
+      const survey = await this.surveyService.findOne(surveyId);
+      if (!survey) {
+        throw new NotFoundException('Survey não encontrado.');
+      }
+
+      let totalScore = 0;
+      for (const answer of answers) {
+        let questionScore = 0;
+        if (
+          answer.questionType === QuestionType.MULTIPLE_CHOICES ||
+          answer.questionType === QuestionType.MULTIPLE_SELECTION
+        ) {
+          questionScore = answer.selectedOptions?.reduce(
+            (acc, option) => acc + option.score,
+            0,
+          );
+        }
+
+        //TODO implementar para verificar as subquestoes
+        //if(answer.subAnswer && answer.subAnswer.length > 0)
+
+        answer.score = questionScore;
+        totalScore += questionScore;
+      }
+      return await this.surveyAnswerRepository.save({
+        user: user,
+        survey: survey,
+        answers: answers,
+        score: totalScore,
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findAll(): Promise<SurveyAnswer[]> {

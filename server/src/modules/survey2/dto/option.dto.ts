@@ -1,7 +1,10 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {Type} from 'class-transformer';
-import {IsArray, IsNumber, IsString, ValidateNested} from 'class-validator';
-import {QuestionDTO} from './question.dto';
+//import {Type} from 'class-transformer';
+import {
+  /*IsArray*/ IsNumber,
+  IsString /*ValidateNested*/,
+} from 'class-validator';
+//import {QuestionDTO} from './question.dto';
 
 export class OptionDTO {
   @ApiProperty()
@@ -12,7 +15,7 @@ export class OptionDTO {
   @IsNumber()
   score: number;
 
-  @ApiProperty({type: [QuestionDTO]})
+  /* @ApiProperty({type: [QuestionDTO]})
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => QuestionDTO)
@@ -24,5 +27,5 @@ export class OptionDTO {
 
   @ApiProperty()
   @IsString()
-  functionName: string;
+  functionName: string;*/
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserTask} from './entities/user-tasks.entity';
 import {Repository} from 'typeorm';
@@ -10,6 +10,8 @@ import {TimeEditUserTaskDto} from './dto/timeEditUserTaskDTO';
 import {SurveyAnswer2Service} from '../survey-answer2/survey-answer2.service';
 import {CreateUserTaskRandomDto} from './dto/create-userTaskRandom.dto';
 import {CreateUserTaskScoreDto} from './dto/create-userTaskScore.dto';
+import {CreateUserTaskQuestScoreDto} from './dto/create-userTaskQuestionScore';
+import {CreateUserTaskAvgQuestScoreDto} from './dto/create-userTaskAvgQuestScore.dto';
 
 @Injectable()
 export class UserTask2Service {
@@ -19,7 +21,7 @@ export class UserTask2Service {
 
     private readonly userService: User2Service,
     private readonly taskService: Task2Service,
-    private readonly surveyAnswer: SurveyAnswer2Service,
+    private readonly surveyAnswerService: SurveyAnswer2Service,
   ) {}
   async findOne(id: string): Promise<UserTask> {
     try {
@@ -33,24 +35,41 @@ export class UserTask2Service {
     }
   }
   async create(createUserTaskDto: CreateUserTaskDto): Promise<UserTask> {
-    const {userId, taskId} = createUserTaskDto;
-    const user = await this.userService.findOne(userId);
-    const task = await this.taskService.findOne(taskId);
-    const newUserTask = this.userTaskRepository.create({
-      user,
-      task,
-    });
-    return await this.userTaskRepository.save(newUserTask);
+    try {
+      const {userId, taskId} = createUserTaskDto;
+      const user = await this.userService.findOne(userId);
+      if (!user) {
+        throw new NotFoundException('Usuario nao foi encontrado');
+      }
+      const task = await this.taskService.findOne(taskId);
+      if (!task) {
+        throw new NotFoundException('Task nao foi encontrada');
+      }
+      const newUserTask = this.userTaskRepository.create({
+        user,
+        task,
+      });
+      return await this.userTaskRepository.save(newUserTask);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  //TODO receber mais de um survey e verificar para cada um
-
-  async createByScore(
+  async createBySurveyScore(
     createUserTaskScoreDto: CreateUserTaskScoreDto,
   ): Promise<UserTask> {
     try {
-      const {userId, taskIds, score} = createUserTaskScoreDto;
+      const {userId, surveyId, taskIds} = createUserTaskScoreDto;
       console.log(taskIds);
+      const surveyAnswer =
+        await this.surveyAnswerService.findByUserIdAndSurveyId(
+          userId,
+          surveyId,
+        );
+      if (!surveyAnswer) {
+        throw new NotFoundException('SurveyAnswer nao encontrado.');
+      }
+      const score = surveyAnswer.score;
       const taskList = await this.taskService.findMany(taskIds);
       let selectedTaskId;
       for (const task of taskList) {
@@ -59,6 +78,94 @@ export class UserTask2Service {
           break;
         }
       }
+      if (!selectedTaskId) {
+        throw new Error('Nenhua tarefa encontrada para o score desse usuario');
+      }
+      return this.create({userId: userId, taskId: selectedTaskId});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createByQuestionScore(
+    createUserTaskQuestScore: CreateUserTaskQuestScoreDto,
+  ): Promise<UserTask> {
+    try {
+      const {userId, surveyId, taskIds, questionStatement} =
+        createUserTaskQuestScore;
+      const surveyAnswer =
+        await this.surveyAnswerService.findByUserIdAndSurveyId(
+          userId,
+          surveyId,
+        );
+      if (!surveyAnswer) {
+        throw new NotFoundException('SurveyAnswer nao foi encontrado');
+      }
+      const questionAnswer = surveyAnswer.answers.find(
+        (answer) => answer.questionStatement === questionStatement,
+      );
+      if (!questionAnswer) {
+        throw new NotFoundException('Questao não encontrada.');
+      }
+      const questionScore = questionAnswer.score;
+      const taskList = await this.taskService.findMany(taskIds);
+      let selectedTaskId;
+      for (const task of taskList) {
+        if (
+          questionScore >= task.min_score &&
+          questionScore <= task.max_score
+        ) {
+          selectedTaskId = task._id;
+          break;
+        }
+      }
+      if (!selectedTaskId) {
+        throw new Error('Nenhuma task encontrada para o score desse usuario');
+      }
+      return this.create({userId: userId, taskId: selectedTaskId});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createByAverageQuestionsScore(
+    createUserTaskAvgQuestScore: CreateUserTaskAvgQuestScoreDto,
+  ): Promise<UserTask> {
+    try {
+      const {userId, surveyId, taskIds, questionStatements} =
+        createUserTaskAvgQuestScore;
+      const surveyAnswer =
+        await this.surveyAnswerService.findByUserIdAndSurveyId(
+          userId,
+          surveyId,
+        );
+      if (!surveyAnswer) {
+        throw new NotFoundException('SurveyAnswer nao foi encontrado');
+      }
+
+      const selectedQuestion = surveyAnswer.answers.filter((answer) =>
+        questionStatements.includes(answer.questionStatement),
+      );
+      if (selectedQuestion.length === 0) {
+        throw new Error('Nenhuma das questoes foram encontradas.');
+      }
+      const totalScore = selectedQuestion.reduce(
+        (acc, question) => acc + question.score,
+        0,
+      );
+      const avgScore = totalScore / selectedQuestion.length;
+      const taskList = await this.taskService.findMany(taskIds);
+      let selectedTaskId;
+      for (const task of taskList) {
+        if (avgScore >= task.min_score && avgScore <= task.max_score) {
+          selectedTaskId = task._id;
+          break;
+        }
+      }
+      if (!selectedTaskId) {
+        throw new Error('Nenhuma task encontrada para o score do usuario');
+      }
+
       return this.create({userId: userId, taskId: selectedTaskId});
     } catch (error) {
       throw error;

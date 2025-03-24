@@ -16,13 +16,16 @@ export class Task2Service {
   ) {}
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     try {
-      const {title, summary, description, experimentId} = createTaskDto;
+      const {title, summary, description, experimentId, minScore, maxScore} =
+        createTaskDto;
       const experiment = await this.experimentService.find(experimentId);
       const newTask = await this.taskRepository.create({
         title,
         summary,
         description,
         experiment,
+        min_score: minScore || 0,
+        max_score: maxScore || 0,
       });
       return await this.taskRepository.save(newTask);
     } catch (error) {

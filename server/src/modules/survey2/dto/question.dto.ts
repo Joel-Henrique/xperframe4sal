@@ -4,6 +4,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -25,10 +26,11 @@ export class QuestionDTO {
   type: QuestionType = QuestionType.MULTIPLE_CHOICES;
 
   @ApiProperty({type: [OptionDTO]})
+  @IsOptional()
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => OptionDTO)
-  options: OptionDTO[];
+  options?: OptionDTO[];
 
   @ApiProperty()
   @IsBoolean()
