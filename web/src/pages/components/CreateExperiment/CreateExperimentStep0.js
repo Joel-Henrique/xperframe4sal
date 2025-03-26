@@ -45,6 +45,8 @@ const CreateExperimentStep0 = () => {
         setExperimentType,
         BtypeExperiment,
         setBtypeExperiment,
+        RulesExperiment,
+        setRulesExperiment,
         ExperimentDesc,
         setExperimentDesc,
     } = useContext(StepContext);
@@ -60,8 +62,12 @@ const CreateExperimentStep0 = () => {
 
     const betweenExperimentTypes = [
         { value: 'random', label: t('random') },
-        { value: 'score_based', label: t('score_based') },
+        { value: 'rules_based', label: t('rules_based') },
         { value: 'manual', label: t('manual') },
+    ];
+    const RulesExperimentTypes = [
+        { value: 'score', label: t('score') },
+        { value: 'question', label: t('question') },
     ];
     const isValidFormExperiment = isValidTitleExp && ExperimentTitle;
     const handleNameChangeTitle = (e) => {
@@ -161,6 +167,7 @@ const CreateExperimentStep0 = () => {
                             </Select>
                         </FormControl>
                     )}
+                    
                     <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
                         <CustomContainer >
                             <ReactQuill

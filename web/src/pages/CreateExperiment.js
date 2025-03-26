@@ -12,7 +12,6 @@ import CreateExperimentStep0 from './components/CreateExperiment/CreateExperimen
 import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimentStep1';
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
-import CreateExperimentStep3 from './components/CreateExperiment/CreateExperimentStep3';
 import CreateExperimentStep4 from './components/CreateExperiment/CreateExperimentStep4';
 
 const CreateExperiment = () => {
@@ -21,10 +20,13 @@ const CreateExperiment = () => {
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('within-subject');
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
+  const [RulesExperiment, setRulesExperiment] = useState('score');
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
-  const [ExperimentUsers, setExperimentUsers] = useState([]);
+  const [ScoreThreshold, setScoreThreshold] = useState('');
+  const [SelectedSurvey, setSelectedSurvey] = useState('');
+
   const [isLoadingExp, setIsLoadingExp] = useState(false);
   const [ActiveStep, setActiveStep] = useState();
   const [step, setStep] = useState(0);
@@ -34,7 +36,7 @@ const CreateExperiment = () => {
     setActiveStep(step);
   }, [step]);
 
-  const steps = [t('step_1'), t('step_2'), t('step_3'), t('step_4'), t('step_5')];
+  const steps = [t('step_1'), t('step_3'), t('step_2'), t('step_5')];
 
   const handleCreateExperiment = async () => {
     try {
@@ -49,7 +51,6 @@ const CreateExperiment = () => {
           betweenExperimentType: BtypeExperiment,
           surveysProps: ExperimentSurveys,
           tasksProps: ExperimentTasks,
-          userProps: ExperimentUsers,
         },
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
@@ -58,7 +59,6 @@ const CreateExperiment = () => {
       setExperimentDesc('');
       setExperimentTasks([]);
       setExperimentSurveys([]);
-      setExperimentUsers([]);
       setStep(0);  
   
     } catch (error) {
@@ -97,21 +97,24 @@ const CreateExperiment = () => {
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
+          RulesExperiment,
+          setRulesExperiment,
+          SelectedSurvey,
+          setSelectedSurvey,
+          ScoreThreshold,
+          setScoreThreshold,
           ExperimentDesc,
           setExperimentDesc,
           ExperimentTasks,
           setExperimentTasks,
           ExperimentSurveys,
           setExperimentSurveys,
-          ExperimentUsers,
-          setExperimentUsers,
         }}
       >
         {step === 0 && <CreateExperimentStep0 />}
-        {step === 1 && <CreateExperimentStep1 />}
-        {step === 2 && <CreateExperimentStep2 />}
-        {step === 3 && <CreateExperimentStep3 />}
-        {step === 4 && <CreateExperimentStep4 />}
+        {step === 2 && <CreateExperimentStep1 />}
+        {step === 1 && <CreateExperimentStep2 />}
+        {step === 3 && <CreateExperimentStep4 />}
       </StepContext.Provider>
     </>
   );
