@@ -102,14 +102,6 @@ const CreateExperimentStep4 = () => {
                         }
                     </Grid>
 
-                    <Grid item xs={12}>
-                        <strong>{t('selected_user')}:</strong> {ExperimentUsers
-                            .map(id => {
-                                const user = users.find(s => s.id === id);
-                                return user ? ` ${user.name} ${user.lastName} - ${user.email} ` : '';
-                            })
-                            .join(', ') || t('non_selected_user')}
-                    </Grid>
                 </Grid>
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4, width: '100%' }}>
