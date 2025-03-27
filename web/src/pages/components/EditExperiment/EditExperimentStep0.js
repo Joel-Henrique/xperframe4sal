@@ -55,6 +55,8 @@ const EditExperimentStep0 = ({ }) => {
     setExperimentType,
     BtypeExperiment,
     setBtypeExperiment,
+    RulesExperiment,
+    setRulesExperiment,
     ExperimentDesc,
     setExperimentDesc,
     ExperimentId
@@ -69,6 +71,10 @@ const EditExperimentStep0 = ({ }) => {
     { value: 'random', label: t('random') },
     { value: 'score_based', label: t('score_based') },
     { value: 'manual', label: t('manual') },
+  ];
+  const RulesExperimentTypes = [
+    { value: 'score', label: t('score') },
+    { value: 'question', label: t('question') },
   ];
   const handleTitleChange = (e) => {
     const value = e.target.value;
@@ -183,6 +189,23 @@ const EditExperimentStep0 = ({ }) => {
                 label={t('ExperimentTypesbetween')}
               >
                 {betweenExperimentTypes.map((stype) => (
+                  <MenuItem key={stype.value} value={stype.value}>
+                    {stype.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
+          {ExperimentType === 'between-subject' && BtypeExperiment === 'score_based' &&  (
+            <FormControl fullWidth margin="normal">
+              <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+              <Select
+                value={RulesExperiment}
+                onChange={(e) => setRulesExperiment(e.target.value)}
+                label={t('aaaa')}
+              >
+                {RulesExperimentTypes.map((stype) => (
                   <MenuItem key={stype.value} value={stype.value}>
                     {stype.label}
                   </MenuItem>
