@@ -112,14 +112,21 @@ const CreateExperimentStep2 = () => {
                 };
                 if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
                     question.options = q.options.map((opt) => {
-                        const option = { statement: opt.statement };
-
-                        option.subquestion = opt.subquestion;
-                        option.subquestion.id = opt.subquestion.id;
-                        option.id = opt.id;
+                        const option = { statement: opt.statement, id: opt.id };
+                
+                        if (opt.subquestion) {
+                            option.subquestion = { ...opt.subquestion };
+                
+                           
+                            if (opt.subquestion.option) {
+                                option.subquestion.option.id = opt.subquestion.option.id;
+                            }
+                        }
+                
                         if (q.type === 'multiple-choices') {
                             option.score = opt.score;
                         }
+                
                         return option;
                     });
                 }
@@ -282,7 +289,10 @@ const CreateExperimentStep2 = () => {
                     }
                     : q
             )
+
         );
+
+        console.log(questions);
     };
 
     const handleRemoveOption = (questionId, optionId) => {
@@ -1002,6 +1012,7 @@ const CreateExperimentStep2 = () => {
                                     <Typography variant="h5" gutterBottom>
                                         {t('questions')}
                                     </Typography>
+                                    
                                     {editedSurvey.questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
                                             <Grid container spacing={2} alignItems="center">
