@@ -28,7 +28,8 @@ const EditExperiment = () => {
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
-  const [ExperimentDesc, setExperimentDesc] = useState('')
+  const [ExperimentDesc, setExperimentDesc] = useState('');
+  const [RulesExperiment, setRulesExperiment] = useState('');
   const [ExperimentId, setExperimentId] = useState('');;
 
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
@@ -47,14 +48,17 @@ const EditExperiment = () => {
     setError(null);
 
     try {
-      const { data } = await api.get(`/experiments/${experimentId}`, {
+      const { data } = await api.get(`/experiments2/${experimentId}`, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
       setExperimentId(experimentId);
       setExperimentTitle(data.name || '');
       setExperimentType(data.typeExperiment || '');
       setBtypeExperiment(data.betweenExperimentType || '');
+      console.log(data)
+      console.log(data.summary)
       setExperimentDesc(data.summary || '');
+      console.log(ExperimentDesc)
     } catch (err) {
       console.error('Error fetching experiment data:', err);
       setError('Error fetching the experiment');
@@ -128,17 +132,17 @@ const EditExperiment = () => {
 
       <StepContext.Provider
         value={[
-          step,
-          setStep,
           ExperimentTitle,
           setExperimentTitle,
           ExperimentType,
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
+          RulesExperiment,
+          setRulesExperiment,
           ExperimentDesc,
           setExperimentDesc,
-          ExperimentId,
+          ExperimentId
         ]}
       >
         {/* experimento */}

@@ -47,8 +47,6 @@ const EditExperimentStep0 = ({ }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [
-    step,
-    setStep,
     ExperimentTitle,
     setExperimentTitle,
     ExperimentType,
