@@ -92,7 +92,7 @@ const EditExperimentStep0 = ({ }) => {
     };
 
     try {
-      const response = await api.patch(`/experiments/${ExperimentId}`, updatedExperiment, {
+      const response = await api.patch(`/experiments2/${ExperimentId}`, updatedExperiment, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
       if (msgs.current) {

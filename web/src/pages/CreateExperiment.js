@@ -42,7 +42,7 @@ const CreateExperiment = () => {
     try {
       setIsLoadingExp(true);
       await api.post(
-        `/experiments`,
+        `/experiments2`,
         {
           ownerId: user.id,
           name: ExperimentTitle,
@@ -69,7 +69,7 @@ const CreateExperiment = () => {
   };
   
   useEffect(() => {
-    if (step === 5) {
+    if (step === 4) {
       handleCreateExperiment();
     }
   }, [step]);  

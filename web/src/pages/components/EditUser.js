@@ -30,12 +30,12 @@ const EditUser = (ExperimentId) => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`experiments/${ExperimentId.experimentId}/`, {
+            const response = await api.get(`experiments2/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const usersInExperimentIds = response.data.userProps;
 
-            const allUsersResponse = await api.get(`users`, {
+            const allUsersResponse = await api.get(`users2`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const allUsersData = allUsersResponse.data;

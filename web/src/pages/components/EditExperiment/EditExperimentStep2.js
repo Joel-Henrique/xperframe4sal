@@ -77,7 +77,7 @@ const EditExperimentStep2 = () => {
 
     const handleDeleteSurvey = async () => {
         try {
-            await api.delete(`/surveys/${SurveyToDeleteId._id}`, {
+            await api.delete(`/survey2/${SurveyToDeleteId._id}`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             handleCloseDeleteDialog();

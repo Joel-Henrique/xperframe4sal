@@ -23,21 +23,6 @@ const CreateExperimentStep4 = () => {
         setStep(step + 1);
     };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await api.get(`users`, {
-                    headers: { Authorization: `Bearer ${user.accessToken}` },
-                });
-                setUsers(response.data);
-            } catch (error) {
-                console.error(t('Error in Search'), error);
-            }
-        };
-
-        fetchUsers();
-    }, [t, user.accessToken]);
-
     const handleBack = () => {
         setStep(step - 1);
     };

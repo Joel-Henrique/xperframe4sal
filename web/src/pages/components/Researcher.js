@@ -103,7 +103,7 @@ const Researcher = () => {
       setError(null);
 
       try {
-        const { data: allExperiments } = await api.get('experiments', {
+        const { data: allExperiments } = await api.get('experiments2', {
           headers: { Authorization: `Bearer ${user.accessToken}` },
         });
 
@@ -111,7 +111,7 @@ const Researcher = () => {
         const ownedExperiments = [];
 
         allExperiments.forEach((experiment) => {
-          if (experiment.ownerId === user.id) {
+          if (experiment.owner_id === user.id) {
             ownedExperiments.push(experiment);
           } else if (experiment.userProps?.includes(user.id)) {
             participatedExperiments.push(experiment);

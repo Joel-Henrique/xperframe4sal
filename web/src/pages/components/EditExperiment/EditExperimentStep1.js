@@ -93,7 +93,7 @@ const EditExperimentStep1 = () => {
 
   const handleDeleteTask = async () => {
     try {
-      await api.delete(`/tasks/${taskToDeleteIndex}`, {
+      await api.delete(`/task2/${taskToDeleteIndex}`, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
       handleCloseDeleteDialog();

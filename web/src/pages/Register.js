@@ -22,7 +22,7 @@ const Register = () => {
   const { t } = useTranslation();
 
   const [name, setName] = useState('');
-  const [researcher, setResearcher] = useState(false);
+  const [researcher, setResearcher] = useState(true);
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -79,7 +79,7 @@ const Register = () => {
     const userData = { name, lastName, email, password, researcher };
     setIsLoading(true);
     try {
-      let response = await api.post("/users", userData);
+      let response = await api.post("/users2", userData);
       if (response.data) {
         setAlertMessage(t("success_message"));
         setMessageType('success');
@@ -174,16 +174,6 @@ const Register = () => {
               ),
             }}
           />
-          <Box display="flex" alignItems="center" justifyContent="space-between" margin="16px 0">
-            <Typography>
-              {researcher ? t('researcher_label') : t('normal_user_label')}
-            </Typography>
-            <Switch
-              checked={researcher}
-              onChange={(e) => setResearcher(e.target.checked)}
-              color="primary"
-            />
-          </Box>
           <Button
             variant="contained"
             color="primary"
