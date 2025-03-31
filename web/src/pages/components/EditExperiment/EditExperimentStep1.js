@@ -167,7 +167,7 @@ const EditExperimentStep1 = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await api.get(`tasks`, {
+      const response = await api.get(`task2`, {
         //params: { Experimentid: experimentId },    talvez seja uma boa melhorar o get, podendo usar parametros  
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
@@ -184,12 +184,12 @@ const EditExperimentStep1 = () => {
     try {
       setIsLoadingTask(true);
       await api.post(
-        `/tasks`,
+        `/task2`,
         {
           title: taskTitle,
           summary: taskSummary,
           description: taskDescription,
-          ExperimentId: ExperimentId,
+          experimentId: ExperimentId,
         },
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
@@ -212,11 +212,12 @@ const EditExperimentStep1 = () => {
       title: taskTitleEdit,
       summary: taskSummaryEdit,
       description: taskDescriptionEdit,
-      Experimentid: ExperimentId,
+      // Enviar somente os dados que irao sofrer alteracao
+      //experimentId: ExperimentId, 
     };
 
     try {
-      const response = await api.patch(`/tasks/${editTaskIndex}`, updatedTask, {
+      const response = await api.patch(`/task2/${editTaskIndex}`, updatedTask, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
 

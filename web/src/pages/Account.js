@@ -128,10 +128,13 @@ const Account = () => {
     let userData = { name, lastName, email, password };
 
     userData = Object.assign(userData, user);
-
+    
+    
+    //Correcao temporal
+    const userDataTemp = {name, lastName, email} 
     setIsLoading(true);
     try {
-      let response = await api.patch(`/users/${user.id}`, userData, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
+      let response = await api.patch(`/users2/${user.id}`, userDataTemp, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
       setIsLoading(false);
       const expirationTime = user.expirationTime;
       setUser({ ...userData, expirationTime });

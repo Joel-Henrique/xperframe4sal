@@ -30,21 +30,21 @@ const EditUser = (ExperimentId) => {
 
     const fetchData = async () => {
         try {
-            const response = await api.get(`experiments2/${ExperimentId.experimentId}/`, {
+            const response = await api.get(`user-experiments2/experiment/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
-            const usersInExperimentIds = response.data.userProps;
+            const usersInExperimentData = response.data;
 
             const allUsersResponse = await api.get(`users2`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const allUsersData = allUsersResponse.data;
-            const usersInExperimentData = allUsersData.filter((usr) =>
-                usersInExperimentIds.includes(usr.id)
-            );
+            //const usersInExperimentData = allUsersData.filter((usr) =>
+            //   usersInExperimentIds.includes(usr.id)
+            //);
 
             const usersNotInExperiment = allUsersData.filter(
-                (usr) => !usersInExperimentIds.includes(usr.id)
+                (usr) => !usersInExperimentData.some((user) => user.id === usr.id)
             );
 
             setAllUsers(usersNotInExperiment);
@@ -73,8 +73,8 @@ const EditUser = (ExperimentId) => {
     const saveChanges = async () => {
         try {
             await api.patch(
-                `experiments/${ExperimentId.experimentId}`,
-                { userIds: usersInExperiment.map((usr) => usr.id) },
+                `user-experiments2/update-users/${ExperimentId.experimentId}`,
+                { newUsersId: usersInExperiment.map((usr) => usr.id) },
                 { headers: { Authorization: `Bearer ${user.accessToken}` } }
             );
             if (msgs.current) {

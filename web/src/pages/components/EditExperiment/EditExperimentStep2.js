@@ -89,7 +89,7 @@ const EditExperimentStep2 = () => {
 
     const fetchSurvey = async () => {
         try {
-            const response = await api.get(`surveys`, {
+            const response = await api.get(`survey2`, {
                 //params: { Experimentid: experimentId }, 
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
@@ -106,7 +106,7 @@ const EditExperimentStep2 = () => {
         e.preventDefault();
         const payload = {
             name: title,
-            ExperimentId,
+            experimentId: ExperimentId,
             title,
             description,
             type,
@@ -139,7 +139,8 @@ const EditExperimentStep2 = () => {
         };
 
         try {
-            const response = await api.post(`surveys`, payload, {
+            console.log(payload)
+            const response = await api.post(`survey2`, payload, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
 
@@ -333,7 +334,7 @@ const EditExperimentStep2 = () => {
                 updatedSurveys[IndexId] = editedSurvey;
                 return updatedSurveys;
             });
-            const response = await api.patch(`/surveys/${editedSurvey._id}`, editedSurvey, {
+            const response = await api.patch(`/survey2/${editedSurvey._id}`, editedSurvey, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
 
