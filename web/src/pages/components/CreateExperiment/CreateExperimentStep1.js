@@ -53,16 +53,14 @@ const CreateExperimentStep1 = () => {
         setExperimentTasks,
         ExperimentType,
         BtypeExperiment,
-        RulesExperiment,
-        setRulesExperiment,
         ExperimentSurveys,
         SelectedSurvey,
-        setSelectedSurvey,
-        ScoreThreshold,
-        setScoreThreshold,
+        setSelectedSurvey
     } = useContext(StepContext);
     const { t } = useTranslation();
     const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
+    const [RulesExperiment, setRulesExperiment] = useState('score');
+    const [ScoreThreshold, setScoreThreshold] = useState('');
     const [isLoadingTask, setIsLoadingTask] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [openTaskIds, setOpenTaskIds] = useState([]);
@@ -78,7 +76,10 @@ const CreateExperimentStep1 = () => {
     const [taskTitleEdit, setTaskTitleEdit] = useState("");
     const [taskSummaryEdit, setTaskSummaryEdit] = useState("");
     const [taskDescriptionEdit, setTaskDescriptionEdit] = useState("");
-
+    const [RulesExperimentEdit, setRulesExperimentEdit] = useState("");
+    const [SelectedSurveyEdit, setSelectedSurveyEdit] = useState("");
+    const [ScoreThresholdmxEdit, setScoreThresholdmxEdit] = useState('');
+    const [ScoreThresholdEdit, setScoreThresholdEdit] = useState('');
     const [isValidTitleTask, setIsValidTitleTask] = React.useState(true);
     const [isValidSumaryTask, setIsValidSumaryTask] = React.useState(true);
 
@@ -190,13 +191,20 @@ const CreateExperimentStep1 = () => {
         const newTask = {
             title: taskTitle,
             summary: taskSummary,
-            description: taskDescription
+            description: taskDescription,
+            RulesExperiment: RulesExperiment,
+            ScoreThreshold: ScoreThreshold,
+            ScoreThresholdmx: ScoreThresholdmx,
         };
+        console.log(newTask)
         setExperimentTasks((prev) => [...prev, newTask]);
         toggleCreateTask();
         setTaskTitle("");
         setTaskSummary("");
         setTaskDescription("");
+        setRulesExperiment("");
+        setScoreThreshold("");
+        setScoreThresholdmx("");
     };
 
     const handleEditTaskSubmit = (e) => {
@@ -204,7 +212,10 @@ const CreateExperimentStep1 = () => {
         const updatedTask = {
             title: taskTitleEdit,
             summary: taskSummaryEdit,
-            description: taskDescriptionEdit
+            description: taskDescriptionEdit,
+            RulesExperiment: RulesExperimentEdit,
+            ScoreThreshold: ScoreThresholdEdit,
+            ScoreThresholdmx: ScoreThresholdmxEdit,
         };
         setExperimentTasks((prev) => {
             const updatedTasks = [...prev];
@@ -217,9 +228,14 @@ const CreateExperimentStep1 = () => {
     const handleEditTask = (index) => {
         setEditTaskIndex(index);
         const task = ExperimentTasks[index];
+        console.log(task)
         setTaskTitleEdit(task.title);
         setTaskSummaryEdit(task.summary);
         setTaskDescriptionEdit(task.description);
+        setRulesExperimentEdit(task.RulesExperiment);
+        setSelectedSurveyEdit(task.SelectedSurvey);
+        setScoreThresholdmxEdit(task.ScoreThresholdmx);
+        setScoreThresholdEdit(task.ScoreThreshold);
         toggleEditTask();
     };
 
@@ -463,6 +479,260 @@ const CreateExperimentStep1 = () => {
                             onChange={handleNameChangeTitleTaskEdit}
                             required
                         />
+                        {ExperimentType === 'between-subject' && BtypeExperiment === 'rules_based' && (
+                            <>
+                                {RulesExperimentEdit === 'score' && (
+                                    <Grid container spacing={2} alignItems="center">
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('Separation_rule')}</InputLabel>
+                                                <Select
+                                                    value={RulesExperimentEdit}
+                                                    onChange={(e) => setRulesExperimentEdit(e.target.value)}
+                                                    label={t('Separation_rule')}
+                                                >
+                                                    {RulesExperimentTypes.map((stype) => (
+                                                        <MenuItem key={stype.value} value={stype.value}>
+                                                            {stype.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_survey')}</InputLabel>
+                                                <Select
+                                                    value={SelectedSurveyEdit}
+                                                    onChange={(e) => setSelectedSurveyEdit(e.target.value)}
+                                                    label={t('select_survey')}
+                                                >
+                                                    {ExperimentSurveys.map((survey) => (
+                                                        <MenuItem key={survey.id} value={survey.title}>
+                                                            {survey.title}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_survey_th')}</InputLabel>
+                                                <Select
+                                                    value={scoreType}
+                                                    onChange={(e) => setscoreType(e.target.value)}
+                                                    label={t('select_survey_th')}
+                                                >
+                                                    {scoreTypes.map((stype) => (
+                                                        <MenuItem key={stype.value} value={stype.value}>
+                                                            {stype.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        {scoreType === 'unic' ? (
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    fullWidth
+                                                    margin="normal"
+                                                    type="number"
+                                                    label={t('score_Threshold_unic')}
+                                                    value={ScoreThresholdEdit}
+                                                    onChange={(e) => {
+                                                        const value = Number(e.target.value);
+                                                        setScoreThresholdEdit(value);
+                                                        setScoreThresholdmxEdit(value);
+                                                    }}
+                                                />
+                                            </Grid>
+                                        ) : (
+                                            <>
+                                                <Grid item xs={4}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_min')}
+                                                        value={ScoreThresholdEdit}
+                                                        onChange={(e) => {
+                                                            const minValue = Number(e.target.value);
+                                                            if (minValue <= ScoreThresholdmxEdit) {
+                                                                setScoreThresholdEdit(minValue);
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_max')}
+                                                        value={ScoreThresholdmxEdit}
+                                                        onChange={(e) => {
+                                                            const maxValue = Number(e.target.value);
+                                                            if (maxValue >= ScoreThresholdEdit) {
+                                                                setScoreThresholdmxEdit(maxValue);
+                                                            }
+                                                        }}
+                                                        inputProps={{ min: ScoreThresholdEdit }}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        )}
+
+                                    </Grid>
+                                )}
+
+                                {RulesExperimentEdit === 'question' && (
+                                    <Grid container spacing={2} alignItems="center">
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('Separation_rule')}</InputLabel>
+                                                <Select
+                                                    value={RulesExperimentEdit}
+                                                    onChange={(e) => setRulesExperimentEdit(e.target.value)}
+                                                    label={t('Separation_rule')}
+                                                >
+                                                    {RulesExperimentTypes.map((stype) => (
+                                                        <MenuItem key={stype.value} value={stype.value}>
+                                                            {stype.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_survey')}</InputLabel>
+                                                <Select
+                                                    value={SelectedSurveyEdit}
+                                                    onChange={handleSurveyChange}
+                                                    label={t('select_survey')}
+                                                >
+                                                    {ExperimentSurveys?.length > 0 ? (
+                                                        ExperimentSurveys.map((survey) => (
+                                                            <MenuItem key={survey.id} value={survey}>
+                                                                {survey.title}
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <MenuItem disabled>{t('no_survey_available')}</MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_question')}</InputLabel>
+                                                <Select
+                                                    value={selectedQuestionIds}
+                                                    onChange={handleQuestionChange}
+                                                    label={t('select_question')}
+                                                    multiple
+                                                    renderValue={(selected) =>
+                                                        SelectedSurvey.questions
+                                                            .filter(q => selected.includes(q))
+                                                            .map(q => q.statement || 'Sem enunciado')
+                                                            .join(', ')
+                                                    }
+                                                >
+                                                    {SelectedSurvey?.questions && SelectedSurvey.questions.length > 0 ? (
+                                                        SelectedSurvey.questions
+                                                            .filter(q => q.type === 'multiple-selection' || q.type === 'multiple-choices')
+                                                            .map((question) => (
+                                                                <MenuItem key={question.id} value={question}>
+                                                                    <Checkbox checked={selectedQuestionIds.includes(question)} />
+                                                                    {question.statement || 'Sem enunciado'}
+                                                                </MenuItem>
+                                                            ))
+                                                    ) : (
+                                                        <MenuItem disabled>{t('no_questions_available')}</MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+
+
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_survey_th')}</InputLabel>
+                                                <Select
+                                                    value={scoreType}
+                                                    onChange={(e) => setscoreType(e.target.value)}
+                                                    label={t('select_survey_th')}
+                                                >
+                                                    {scoreTypes.map((stype) => (
+                                                        <MenuItem key={stype.value} value={stype.value}>
+                                                            {stype.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+
+                                        {scoreType === 'unic' ? (
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    fullWidth
+                                                    margin="normal"
+                                                    type="number"
+                                                    label={t('score_Threshold_unic')}
+                                                    value={ScoreThresholdEdit}
+                                                    onChange={(e) => {
+                                                        const value = Number(e.target.value);
+                                                        setScoreThresholdEdit(value);
+                                                        setScoreThresholdmxEdit(value);
+                                                    }}
+                                                />
+                                            </Grid>
+                                        ) : (
+                                            <>
+                                                <Grid item xs={2}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_min')}
+                                                        value={ScoreThresholdEdit}
+                                                        onChange={(e) => {
+                                                            const minValue = Number(e.target.value);
+                                                            if (minValue <= ScoreThresholdmxEdit) {
+                                                                setScoreThresholdEdit(minValue);
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_max')}
+                                                        value={ScoreThresholdmxEdit}
+                                                        onChange={(e) => {
+                                                            const maxValue = Number(e.target.value);
+                                                            if (maxValue >= ScoreThresholdEdit) {
+                                                                setScoreThresholdmxEdit(maxValue);
+                                                            }
+                                                        }}
+                                                        inputProps={{ min: ScoreThresholdEdit }}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        )}
+                                    </Grid>
+                                )}
+
+
+                            </>
+                        )}
                         <TextField
                             label={t('task_summary')}
                             error={!isValidSumaryTaskEdit}
@@ -526,20 +796,6 @@ const CreateExperimentStep1 = () => {
                             onChange={handleNameChangeTitleTask}
                             required
                         />
-                        <TextField
-                            label={t('task_summary')}
-                            error={!isValidSumaryTask}
-                            helperText={!isValidSumaryTask ? t('invalid_name_message') : ''}
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={4}
-                            value={taskSummary}
-                            onChange={handleNameChangeSumaryTask}
-                            required
-                        />
-
                         {ExperimentType === 'between-subject' && BtypeExperiment === 'rules_based' && (
                             <>
                                 {RulesExperiment === 'score' && (
@@ -577,37 +833,73 @@ const CreateExperimentStep1 = () => {
                                                 </Select>
                                             </FormControl>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                fullWidth
-                                                margin="normal"
-                                                type="number"
-                                                label={t('score_Threshold_min')}
-                                                value={ScoreThreshold}
-                                                onChange={(e) => {
-                                                    const minValue = Number(e.target.value);
-                                                    if (minValue <= ScoreThresholdmx) {
-                                                        setScoreThreshold(minValue);
-                                                    }
-                                                }}
-                                            />
+                                        <Grid item xs={4}>
+                                            <FormControl fullWidth margin="normal">
+                                                <InputLabel>{t('select_survey_th')}</InputLabel>
+                                                <Select
+                                                    value={scoreType}
+                                                    onChange={(e) => setscoreType(e.target.value)}
+                                                    label={t('select_survey_th')}
+                                                >
+                                                    {scoreTypes.map((stype) => (
+                                                        <MenuItem key={stype.value} value={stype.value}>
+                                                            {stype.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                fullWidth
-                                                margin="normal"
-                                                type="number"
-                                                label={t('score_Threshold_max')}
-                                                value={ScoreThresholdmx}
-                                                onChange={(e) => {
-                                                    const maxValue = Number(e.target.value);
-                                                    if (maxValue >= ScoreThreshold) {
-                                                        setScoreThresholdmx(maxValue);
-                                                    }
-                                                }}
-                                                inputProps={{ min: ScoreThreshold }}
-                                            />
-                                        </Grid>
+
+                                        {scoreType === 'unic' ? (
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    fullWidth
+                                                    margin="normal"
+                                                    type="number"
+                                                    label={t('score_Threshold_unic')}
+                                                    value={ScoreThreshold}
+                                                    onChange={(e) => {
+                                                        const value = Number(e.target.value);
+                                                        setScoreThreshold(value);
+                                                        setScoreThresholdmx(value);
+                                                    }}
+                                                />
+                                            </Grid>
+                                        ) : (
+                                            <>
+                                                <Grid item xs={4}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_min')}
+                                                        value={ScoreThreshold}
+                                                        onChange={(e) => {
+                                                            const minValue = Number(e.target.value);
+                                                            if (minValue <= ScoreThresholdmx) {
+                                                                setScoreThreshold(minValue);
+                                                            }
+                                                        }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t('score_Threshold_max')}
+                                                        value={ScoreThresholdmx}
+                                                        onChange={(e) => {
+                                                            const maxValue = Number(e.target.value);
+                                                            if (maxValue >= ScoreThreshold) {
+                                                                setScoreThresholdmx(maxValue);
+                                                            }
+                                                        }}
+                                                        inputProps={{ min: ScoreThreshold }}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        )}
 
                                     </Grid>
                                 )}
@@ -758,6 +1050,20 @@ const CreateExperimentStep1 = () => {
 
                             </>
                         )}
+
+                        <TextField
+                            label={t('task_summary')}
+                            error={!isValidSumaryTask}
+                            helperText={!isValidSumaryTask ? t('invalid_name_message') : ''}
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            multiline
+                            rows={4}
+                            value={taskSummary}
+                            onChange={handleNameChangeSumaryTask}
+                            required
+                        />
 
                         <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
                             <CustomContainer>

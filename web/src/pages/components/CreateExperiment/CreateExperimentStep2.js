@@ -110,7 +110,9 @@ const CreateExperimentStep2 = () => {
                     required: q.required,
                     hasscore: q.hasscore,
                 };
-                if (q.type === 'multiple-selection' || q.type === 'multiple-choices') {
+                if (q.type === 'open') {
+                    question.options = []; 
+                } else {
                     question.options = q.options.map((opt) => {
                         const option = { statement: opt.statement, id: opt.id };
                 
@@ -1086,7 +1088,6 @@ const CreateExperimentStep2 = () => {
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                                     <Grid item xs={12}>
                                                         <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>{t('options')}</Typography>
-
                                                         {q.options.map((opt, optIndex) => (
                                                             <Box key={opt.id} sx={{ mb: 2 }}>
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>

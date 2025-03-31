@@ -6,8 +6,6 @@ const StepContext = createContext({
     setExperimentType: () => {},
     BtypeExperiment: '',
     setBtypeExperiment: () => {},
-    RulesExperiment: '',
-    setRulesExperiment: () => {},
     ExperimentDesc: '',
     setExperimentDesc: () => {},
     ExperimentId: ''

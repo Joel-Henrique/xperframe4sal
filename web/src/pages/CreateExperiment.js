@@ -20,7 +20,6 @@ const CreateExperiment = () => {
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('within-subject');
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
-  const [RulesExperiment, setRulesExperiment] = useState('score');
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
@@ -97,8 +96,6 @@ const CreateExperiment = () => {
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
-          RulesExperiment,
-          setRulesExperiment,
           SelectedSurvey,
           setSelectedSurvey,
           ScoreThreshold,
