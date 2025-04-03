@@ -1,4 +1,5 @@
-**.DS_Store
-**.vscode
-.ideia
+.DS_Store
+.vscode
+.idea
 .tool-versions
+node_modules/
