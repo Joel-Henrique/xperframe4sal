@@ -1,13 +1,15 @@
-import React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../config/axios'; 
 import {
   Typography,
   Stepper,
   Step,
-  StepLabel,
+  StepLabel
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Toast } from 'primereact/toast';
+import { ProgressBar } from 'primereact/progressbar';
+
 import CreateExperimentStep0 from './components/CreateExperiment/CreateExperimentStep0';
 import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimentStep1';
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
@@ -23,23 +25,26 @@ const CreateExperiment = () => {
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
-  const [ScoreThreshold, setScoreThreshold] = useState('');
-  const [SelectedSurvey, setSelectedSurvey] = useState('');
-
-  const [isLoadingExp, setIsLoadingExp] = useState(false);
-  const [ActiveStep, setActiveStep] = useState();
   const [step, setStep] = useState(0);
-
-
-  useEffect(() => {
-    setActiveStep(step);
-  }, [step]);
-
-  const steps = [t('step_1'), t('step_3'), t('step_2'), t('step_5')];
+  const toast = useRef(null); 
 
   const handleCreateExperiment = async () => {
     try {
-      setIsLoadingExp(true);
+      if (toast.current) {
+        toast.current.clear();
+        toast.current.show({
+          severity: 'info',
+          summary: t('Creating experiment...'),
+          detail: (
+            <div style={{ width: '100%', paddingTop: '10px' }}>
+              <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
+            </div>
+          ),
+          life: 5000,
+          closable: false 
+        });
+      }
+
       await api.post(
         `/experiments2`,
         {
@@ -53,39 +58,61 @@ const CreateExperiment = () => {
         },
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
-  
-      setExperimentTitle('');
-      setExperimentDesc('');
-      setExperimentTasks([]);
-      setExperimentSurveys([]);
-      setStep(0);  
-  
+
+      if (toast.current) {
+        toast.current.clear();
+        toast.current.show({
+          severity: 'success',
+          summary: t('Success'),
+          detail: t('Experiment created successfully!'),
+          life: 3000
+        });
+      }
+
+      setTimeout(() => {
+        setExperimentTitle('');
+        setExperimentDesc('');
+        setExperimentTasks([]);
+        setExperimentSurveys([]);
+        setStep(0);
+      }, 1500);
+
     } catch (error) {
+      if (toast.current) {
+        toast.current.clear();
+        toast.current.show({
+          severity: 'error',
+          summary: t('Error'),
+          detail: t('Failed to create experiment.'),
+          life: 3000
+        });
+      }
       console.error(t('Error creating experiment'), error);
-    } finally {
-      setIsLoadingExp(false);
     }
   };
-  
+
   useEffect(() => {
     if (step === 4) {
       handleCreateExperiment();
     }
   }, [step]);  
-  
+
   return (
     <>
+      <Toast ref={toast} position="bottom-right" /> 
+
       <Typography variant="h4" component="h1" gutterBottom align="center">
         {t('Experiment_create')}
       </Typography>
+
       <Stepper activeStep={step} alternativeLabel>
-        {steps.map((label, index) => (
+        {[t('step_1'), t('step_3'), t('step_2'), t('step_5')].map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-  
+
       <StepContext.Provider
         value={{
           step,
@@ -96,10 +123,6 @@ const CreateExperiment = () => {
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
-          SelectedSurvey,
-          setSelectedSurvey,
-          ScoreThreshold,
-          setScoreThreshold,
           ExperimentDesc,
           setExperimentDesc,
           ExperimentTasks,
@@ -116,6 +139,5 @@ const CreateExperiment = () => {
     </>
   );
 };
-
 
 export { CreateExperiment };

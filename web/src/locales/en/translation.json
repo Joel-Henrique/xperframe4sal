@@ -226,5 +226,6 @@
   "selected_task": "Experiment Tasks",
   "selected_surveys": "Experiment Questionnaires",
   "non_selected_task": "No tasks have been created",
-  "non_selected_survey": "No questionnaire has been created"
+  "non_selected_survey": "No questionnaire has been created",
+  "Experiment_created": "Experiment created successfully!"
 }
