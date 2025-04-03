@@ -14,8 +14,6 @@ const StepContextCreate = createContext({
     setExperimentTasks: () => {},
     ExperimentSurveys: [],
     setExperimentSurveys: () => {},
-    ExperimentUsers: [],
-    setExperimenUsers: () => {},
 });
 
 

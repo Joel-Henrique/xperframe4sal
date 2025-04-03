@@ -21,17 +21,13 @@ import {
     Paper,
     Dialog,
     DialogContent,
-    Checkbox,
     FormControlLabel,
     Switch,
     Menu,
-
 } from '@mui/material';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from 'react-i18next';
-import { Add, Remove } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 
@@ -112,25 +108,25 @@ const CreateExperimentStep2 = () => {
                 };
                 if (q.type === 'open') {
                     question.options = []; 
-                } else {
+                }else {
+                    console.log("aaaaaaaaa")
                     question.options = q.options.map((opt) => {
                         const option = { statement: opt.statement, id: opt.id };
-                
+                    
                         if (opt.subquestion) {
                             option.subquestion = { ...opt.subquestion };
-                
-                           
-                            if (opt.subquestion.option) {
-                                option.subquestion.option.id = opt.subquestion.option.id;
-                            }
+                            option.hassub = true; 
+                        } else {
+                            option.hassub = false; 
                         }
-                
+                    
                         if (q.type === 'multiple-choices') {
                             option.score = opt.score;
                         }
-                
+                    
                         return option;
                     });
+                    
                 }
                 return question;
             }),
@@ -177,7 +173,9 @@ const CreateExperimentStep2 = () => {
                     ? {
                         ...q,
                         options: q.options.map((opt) =>
-                            opt.id === optionId ? { ...opt, [field]: value } : opt
+                            opt.id === optionId ? { ...opt, [field]: value,
+                                ...(field === "subquestion" ? { hassub: true } : {}), 
+                             } : opt
                         ),
                     }
                     : q
@@ -217,7 +215,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null },
+                            { id: Date.now(), statement: '', score: 0, subquestion: null, hassub: false},
                         ],
                     }
                     : q
@@ -286,7 +284,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null },
+                            { id: Date.now(), statement: '', score: 0, subquestion: null, hassub: false },
                         ],
                     }
                     : q
@@ -321,6 +319,7 @@ const CreateExperimentStep2 = () => {
                                 ? {
                                     ...opt,
                                     [field]: value,
+                                    ...(field === "subquestion" ? { hassub: true } : {}), 
                                 }
                                 : opt
                         ),
@@ -329,7 +328,7 @@ const CreateExperimentStep2 = () => {
             )
         );
     };
-
+    
     const handleEditSurveysave = (event) => {
         event.preventDefault();
 
@@ -762,6 +761,7 @@ const CreateExperimentStep2 = () => {
                                                                                     options: [],
                                                                                     hasscore: false,
                                                                                     required: false,
+                                                                                    hassub: false,
                                                                                 };
                                                                                 handleOptionChange(q.id, selectedOptId, "subquestion", newValue);
                                                                                 handleMenuClose();
@@ -1088,6 +1088,7 @@ const CreateExperimentStep2 = () => {
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                                     <Grid item xs={12}>
                                                         <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>{t('options')}</Typography>
+                                                        
                                                         {q.options.map((opt, optIndex) => (
                                                             <Box key={opt.id} sx={{ mb: 2 }}>
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -1150,7 +1151,7 @@ const CreateExperimentStep2 = () => {
                                                                 </Box>
 
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                    {opt.subquestion !== null && (
+                                                                    {opt.hassub == true && (
                                                                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, ml: 8, marginTop: 2 }}>
                                                                             <Grid container spacing={2} alignItems="center">
                                                                                 <Grid item xs={6}>

@@ -201,7 +201,7 @@ const EditExperimentStep0 = ({ }) => {
               <Select
                 value={RulesExperiment}
                 onChange={(e) => setRulesExperiment(e.target.value)}
-                label={t('aaaa')}
+                label={t('Group_Separation_Method')}
               >
                 {RulesExperimentTypes.map((stype) => (
                   <MenuItem key={stype.value} value={stype.value}>

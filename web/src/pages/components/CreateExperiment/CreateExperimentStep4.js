@@ -2,13 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import StepContext from './context/StepContextCreate';
-import { api } from '../../../config/axios';
 const CreateExperimentStep4 = () => {
     const { t } = useTranslation();
     const {
         step,
         setStep,
-        ExperimentUsers,
         ExperimentTitle,
         ExperimentType,
         BtypeExperiment,
@@ -16,9 +14,6 @@ const CreateExperimentStep4 = () => {
         ExperimentTasks,
         ExperimentSurveys,
     } = useContext(StepContext);
-    const [users, setUsers] = useState([]);
-    const [user] = useState(JSON.parse(localStorage.getItem('user')));
-    
     const handleCreate = () => {
         setStep(step + 1);
     };
@@ -107,7 +102,6 @@ const CreateExperimentStep4 = () => {
                     >
                         {t('create')}
                     </Button>
-
                 </Box>
             </Box>
         </Box>

@@ -45,8 +45,6 @@ const CreateExperimentStep0 = () => {
         setExperimentType,
         BtypeExperiment,
         setBtypeExperiment,
-        RulesExperiment,
-        setRulesExperiment,
         ExperimentDesc,
         setExperimentDesc,
     } = useContext(StepContext);
