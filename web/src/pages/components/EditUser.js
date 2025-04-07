@@ -103,11 +103,11 @@ const EditUser = (ExperimentId) => {
 
     return (
 
-        <div>
-            <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5} marginTop={5}>
+        <div className={styles.fullPage}>
+            <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5}>
                 {t('edit_user')}
             </Typography>
-            <div style={{ marginTop: 50, justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%" }}>
+            <div style={{ justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%" }}>
                 <div className={styles.container}>
                     <div className={styles.userListContainer}>
                         <UserList

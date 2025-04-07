@@ -1,3 +1,16 @@
+:root {
+  --navbar-height: 96px;
+}
+
+.fullPage {
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .container {
   width: 60%;
 }
@@ -25,16 +38,20 @@
   overflow-wrap: break-word;
 }
 
-@media(max-width: 600px) {
- .container{
-  width: 100%; 
- }
+@media(max-width: 768px) {
+  .fullPage > h1{
+    margin: 0 0 10px 0;
+  }
 
- .userListContainer{
-  flex-direction: column;
- }
+  .container{
+    width: 100%; 
+  }
 
- .buttonContainer{
-  justify-content: center;
- }
+  .userListContainer{
+    flex-direction: column;
+  }
+
+  .buttonContainer{
+    justify-content: center;
+  }
 }
