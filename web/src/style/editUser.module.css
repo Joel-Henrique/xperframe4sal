@@ -1,0 +1,40 @@
+.container {
+  width: 60%;
+}
+
+.userListContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-direction: row;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+.UserInfoArea{
+  max-width: calc(100% - 40px);
+}
+
+.forceLineBreak {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+@media(max-width: 600px) {
+ .container{
+  width: 100%; 
+ }
+
+ .userListContainer{
+  flex-direction: column;
+ }
+
+ .buttonContainer{
+  justify-content: center;
+ }
+}

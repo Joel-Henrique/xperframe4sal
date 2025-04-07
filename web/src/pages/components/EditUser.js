@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Messages } from 'primereact/messages';
+import styles from "../../style/editUser.module.css"
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -106,10 +107,9 @@ const EditUser = (ExperimentId) => {
             <Typography variant="h4" component="h1" gutterBottom align="center" marginBottom={5} marginTop={5}>
                 {t('edit_user')}
             </Typography>
-            <div style={{ marginTop: 50, justifyContent: 'center', justifyContent: 'space-between', display: 'flex', flexDirection: "row", width: "100%" }}>
-                <div style={{ width: "20%" }} />
-                <div style={{ width: "60%" }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexDirection: 'row' }}>
+            <div style={{ marginTop: 50, justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%" }}>
+                <div className={styles.container}>
+                    <div className={styles.userListContainer}>
                         <UserList
                             title={t('all_users')}
                             users={allUsers}
@@ -125,7 +125,7 @@ const EditUser = (ExperimentId) => {
                             buttonType="delete"
                         />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '30px' }}>
+                    <div className={styles.buttonContainer}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -136,7 +136,6 @@ const EditUser = (ExperimentId) => {
                         </Button>
                     </div>
                 </div>
-                <div style={{ width: "20%" }} />
             </div>
             <Box
                 sx={{
@@ -183,13 +182,12 @@ const UserList = ({ title, users, buttonAction, buttonType }) => {
                 maxWidth: '450px',
                 width: '100%',
                 overflowY: 'auto',
-                margin: '0 10px',
                 backgroundColor: '#f9f9f9',
                 display: 'flex',
                 flexDirection: 'column',
             }}
         >
-            <h3 style={{ textAlign: 'center' }}>{title}</h3>
+            <h3 style={{ textAlign: 'center', marginTop: '0' }}>{title}</h3>
             <input
                 type="text"
                 placeholder={t('search_by_name_or_email')}
@@ -222,10 +220,10 @@ const UserList = ({ title, users, buttonAction, buttonType }) => {
                             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                         }}
                     >
-                        <div style={{ flex: 1 }}>
-                            <strong>{user.name}</strong>
+                        <div className={styles.UserInfoArea}>
+                            <strong className={styles.forceLineBreak}>{user.name}</strong>
                             <br />
-                            <small>{user.email}</small>
+                            <small className={styles.forceLineBreak}>{user.email}</small>
                         </div>
                         <IconButton
                             onClick={() => buttonAction(user.id)}
