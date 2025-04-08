@@ -229,5 +229,6 @@
   "non_selected_survey": "No questionnaire has been created",
   "edit_users": "Edit Users",
   "edit_groups": "Edit Groups",
-  "select_group" : "Select a Group"
+  "select_group" : "Select a Group",
+  "manual_group_warning" : "*Remember to separate groups after creation!"
 }

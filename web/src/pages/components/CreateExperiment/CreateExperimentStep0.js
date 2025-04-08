@@ -152,20 +152,25 @@ const CreateExperimentStep0 = () => {
                     </FormControl>
 
                     {ExperimentType === 'between-subject' && (
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>{t('Group_Separation_Method')}</InputLabel>
-                            <Select
-                                value={BtypeExperiment}
-                                onChange={(e) => setBtypeExperiment(e.target.value)}
-                                label={t('Group_Separation_Method')}
-                            >
-                                {betweenExperimentTypes.map((stype) => (
-                                    <MenuItem key={stype.value} value={stype.value}>
-                                        {stype.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+                                <Select
+                                    value={BtypeExperiment}
+                                    onChange={(e) => setBtypeExperiment(e.target.value)}
+                                    label={t('Group_Separation_Method')}
+                                >
+                                    {betweenExperimentTypes.map((stype) => (
+                                        <MenuItem key={stype.value} value={stype.value}>
+                                            {stype.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            {BtypeExperiment === "manual" && (
+                                <small style={{color: 'red'}}>{t('manual_group_warning')}</small>
+                            )}
+                        </>
                     )}
                     
                     <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
