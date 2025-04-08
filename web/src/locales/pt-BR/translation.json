@@ -226,5 +226,8 @@
   "selected_task": "Tarefas do Experimento",
   "selected_surveys": "Questionários do Experimento",
   "non_selected_task": "Nenhuma Tarefa Foi Criada",
-  "non_selected_survey": "Nenhum Questionário Foi Criado"
+  "non_selected_survey": "Nenhum Questionário Foi Criado",
+  "edit_users": "Editar Usuários",
+  "edit_groups": "Editar Grupos",
+  "select_group" : "Selecione Um Grupo"
 }
