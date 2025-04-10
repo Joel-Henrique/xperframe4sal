@@ -143,7 +143,7 @@ export function PrivateRoutes(props) {
     <Box sx={{ display: "block" }}>
       <CssBaseline />
       <AppBar color="primary" component="nav">
-        <Toolbar>
+        <Toolbar sx={{justifyContent: 'space-between'}}>
           <Box sx={{ display: { sm: 'none', xs: 'flex', md: 'none' } }}>
             <IconButton
               color="inherit"
@@ -163,7 +163,7 @@ export function PrivateRoutes(props) {
             onClick={handleGoHome}
             sx={{
               flexGrow: 1, minWidth: 190,
-              display: { xs: 'block', sm: 'block' },
+              display: { xs: 'none', sm: 'block' },
               fontSize: { xs: '1.0rem', sm: '1.2rem' },
               cursor: 'pointer'
             }}
