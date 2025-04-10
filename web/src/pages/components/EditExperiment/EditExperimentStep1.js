@@ -260,7 +260,7 @@ const EditExperimentStep1 = () => {
             backgroundColor: '#f9f9f9',
             borderRadius: '8px',
             boxShadow: 4,
-            width: '60%',
+            width: {xs: '100%',sm:'60%'},
             marginX: 'auto',
             wordBreak: 'break-word',
           }}
@@ -441,6 +441,11 @@ const EditExperimentStep1 = () => {
             borderRadius: '8px',
             boxShadow: 3,
             padding: 4,
+            margin: {xs: 0, sm: 32},
+            width: '100vw',
+            maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
+            height: '100vh',
+            maxHeight: {xs: '100vh', sm: 'calc(100% - 64px)'}
           },
         }}
       >
@@ -497,13 +502,17 @@ const EditExperimentStep1 = () => {
         open={isCreateTaskOpen}
         onClose={toggleCreateTask}
         fullWidth
-        maxWidth="lg"
         sx={{
           '& .MuiDialog-paper': {
             backgroundColor: '#ffffff',
             borderRadius: '8px',
             boxShadow: 3,
-            padding: 4
+            padding: 4,
+            margin: {xs: 0, sm: 32},
+            width: '100vw',
+            maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
+            height: '100vh',
+            maxHeight: {xs: '100vh', sm: 'calc(100% - 64px)'}
           }
         }}
       >

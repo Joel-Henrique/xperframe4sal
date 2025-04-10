@@ -25,7 +25,7 @@ import {
     FormControlLabel
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, CancelOutlined, Done, Remove } from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { api } from '../../../config/axios';
 
@@ -392,7 +392,7 @@ const EditExperimentStep2 = () => {
             >
                 <Box
                     sx={{
-                        width: '60%',
+                        width: {xs: '100%',sm:'60%'},
                         padding: 3,
                         display: 'flex',
                         flexDirection: 'column',
@@ -576,7 +576,13 @@ const EditExperimentStep2 = () => {
                     open={isCreateQuestOpen}
                     onClose={toggleCreateQuest}
                     fullWidth
-                    maxWidth="lg"
+                    sx={{'& .MuiDialog-paper': {
+                        margin: {xs: 0, sm: 32},
+                        height: {xs: '100vh', sm:'100%'},
+                        maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                        width: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                        }
+                    }}
                 >
                     <DialogContent sx={{
                         width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
@@ -900,11 +906,18 @@ const EditExperimentStep2 = () => {
                                 </Box>
 
 
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                    <Button variant="contained" onClick={toggleCreateQuest} color="primary">
+                                        <CancelOutlined/>
+                                    </Button>
+                                    <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
+                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done/>}
+                                    </Button>
+                                </Box>
+                                <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
                                         {'Cancelar'}
-                                    </Button>
-
+                                    </Button>                                
                                     <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
                                         {isLoadingSurvey ? <CircularProgress size={24} /> : t('createSurvey')}
                                     </Button>

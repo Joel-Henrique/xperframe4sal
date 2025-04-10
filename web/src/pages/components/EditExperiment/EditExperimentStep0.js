@@ -130,16 +130,15 @@ const EditExperimentStep0 = ({ }) => {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           width: '100%',
           marginTop: 3,
         }}
       >
-        <Box sx={{ width: '20%' }} />
 
         <Box
           sx={{
-            width: '60%',
+            width: {xs: '100%',sm:'60%'},
             padding: 2,
             display: 'flex',
             margin: 2,
@@ -242,8 +241,6 @@ const EditExperimentStep0 = ({ }) => {
             </Button>
           </Box>
         </Box>
-
-        <Box sx={{ width: '20%' }} />
       </Box>
       <Box
         sx={{
