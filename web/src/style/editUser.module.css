@@ -11,7 +11,7 @@
 }
 
 .stepContainer{
-  width: 30%;
+  width: 35%;
   display: flex;
   justify-content: space-between;
   margin:  20px 0 20px 0;
@@ -84,7 +84,7 @@
   margin-top: 30px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 540px) {
   .fullPage > h1{
     margin: 0 0 10px 0;
   }
