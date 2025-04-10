@@ -14,6 +14,7 @@ import ReactQuill from 'react-quill';
 import StepContext from './context/StepContextCreate';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -97,7 +98,7 @@ const CreateExperimentStep0 = () => {
         >
             <Box
                 sx={{
-                    width: '60%',
+                    width: {xs:'100%',sm:'60%'},
                     padding: 2,
                     display: 'flex',
                     flexDirection: 'column',
@@ -186,7 +187,7 @@ const CreateExperimentStep0 = () => {
 
                     <Box
                         sx={{
-                            display: 'flex',
+                            display: {xs: 'none',sm:'flex'},
                             justifyContent: 'space-between',
                             marginTop: 2,
                             width: '100%',
@@ -209,6 +210,33 @@ const CreateExperimentStep0 = () => {
                             disabled={!isValidFormExperiment || isLoading}
                         >
                             {t('next')}
+                        </Button>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: {xs: 'flex', sm: 'none'},
+                            justifyContent: 'space-between',
+                            marginTop: 2,
+                            width: '100%',
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleBackResearcher}
+                            sx={{ maxWidth: '150px' }}
+                        >
+                            <ArrowBack/>
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNextExperiment}
+                            sx={{ maxWidth: '150px' }}
+                            disabled={!isValidFormExperiment || isLoading}
+                        >
+                            <ArrowForward/>
                         </Button>
                     </Box>
                 </Box>

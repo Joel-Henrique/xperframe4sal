@@ -25,7 +25,7 @@ import ReactQuill from 'react-quill';
 import StepContext from './context/StepContextCreate';
 import 'react-quill/dist/quill.snow.css';
 import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
-import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowBack, ArrowForward } from '@mui/icons-material';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -261,7 +261,7 @@ const CreateExperimentStep1 = () => {
                         backgroundColor: '#f9f9f9',
                         borderRadius: '8px',
                         boxShadow: 4,
-                        width: '60%',
+                        width: {xs:'95%',sm:'60%'},
                         marginX: 'auto'
                     }}
                 >
@@ -360,7 +360,7 @@ const CreateExperimentStep1 = () => {
                         </Box>
                     )}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                    <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                         <Box>
                             <Button
                                 variant="contained"
@@ -383,6 +383,33 @@ const CreateExperimentStep1 = () => {
                                 </Button>
                             </Box>
                         </Box>
+                    </Box>
+
+                    <Box sx={{ display: {xs: 'flex',sm:'none'}, justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleBack}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                        >
+                            <ArrowBack/>
+                        </Button>
+                        <Button 
+                            variant="contained" 
+                            color="primary" 
+                            onClick={toggleCreateTask}
+                            sx={{maxWidth: '170px'}}
+                        >
+                            {isCreateTaskOpen ? 'Cancelar' : 'Criar Tarefa'}
+                        </Button>  
+                        <Button 
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                        >
+                            <ArrowForward/>
+                        </Button>
                     </Box>
                 </Box>
             </Box>

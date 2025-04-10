@@ -31,7 +31,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from 'react-i18next';
-import { Add, Remove } from '@mui/icons-material';
+import { Add, ArrowBack, ArrowForward, Cancel, CancelOutlined, Done} from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 
@@ -387,8 +387,8 @@ const CreateExperimentStep2 = () => {
             >
                 <Box
                     sx={{
-                        width: '60%',
-                        padding: 3,
+                        width: {xs:'100%',sm:'60%'},
+                        padding: {xs: 1, sm: 3},
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
@@ -487,7 +487,7 @@ const CreateExperimentStep2 = () => {
                         </Box>
                     )}
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                    <Box sx={{ display: {xs: 'none',sm:'flex'}, justifyContent: 'space-between', mt: 2, width: '100%' }}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -515,6 +515,33 @@ const CreateExperimentStep2 = () => {
                                 {t('next')}
                             </Button>
                         </Box>
+                    </Box>
+
+                    <Box sx={{ display: {xs: 'flex',sm:'none'}, justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleBack}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                        >
+                            <ArrowBack/>
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={toggleCreateQuest}
+                            sx={{maxWidth: '170px'}}
+                        >
+                            {t('create_survey')}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
+                        >
+                            <ArrowForward/>
+                        </Button>
                     </Box>
                 </Box>
                 <Dialog
@@ -585,7 +612,13 @@ const CreateExperimentStep2 = () => {
                     open={isCreateQuestOpen}
                     onClose={toggleCreateQuest}
                     fullWidth
-                    maxWidth="lg"
+                    sx={{'& .MuiDialog-paper': {
+                            margin: {xs: 0, sm: 32},
+                            height: {xs: '100vh', sm:'100%'},
+                            maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                            width: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                        }
+                    }}
                 >
                     <DialogContent sx={{
                         width: '100%', padding: 3, backgroundColor: '#f9f9f9', mx: 'auto', '& .MuiDialog-paper': {
@@ -636,8 +669,21 @@ const CreateExperimentStep2 = () => {
                                     
                                     {questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2, backgroundColor: '#f9f9f9' }}>
-                                            <Grid container spacing={2} alignItems="center">
-                                                <Grid item xs={6}>
+                                            <Grid container spacing={2} sx={{
+                                                flexDirection: {
+                                                    xs: 'column', sm: 'row'
+                                                },
+                                                alignItems: {
+                                                    xs: 'flex-start', sm: 'center'
+                                                },
+                                            }}>
+                                                <Grid 
+                                                item 
+                                                xs={6} 
+                                                sx={{
+                                                    width: '100%',
+                                                    maxWidth: {xs: '100%', sm: '50%'}
+                                                }}>
                                                     <TextField
                                                         label={t('questionStatement', { index: index + 1 })}
                                                         value={q.statement}
@@ -646,7 +692,13 @@ const CreateExperimentStep2 = () => {
                                                         required
                                                     />
                                                 </Grid>
-                                                <Grid item xs={6}>
+                                                <Grid
+                                                item
+                                                xs={6}
+                                                sx={{
+                                                    width: '100%',
+                                                    maxWidth: {xs: '100%', sm: '50%'}
+                                                }}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('questionType')}</InputLabel>
                                                         <Select
@@ -943,7 +995,16 @@ const CreateExperimentStep2 = () => {
                                     </Button>
                                 </Box>
 
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                    <Button variant="contained" onClick={toggleCreateQuest} color="primary">
+                                        <CancelOutlined/>
+                                    </Button>
+
+                                    <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
+                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done/>}
+                                    </Button>
+                                </Box>
+                                <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
                                         {'Cancelar'}
                                     </Button>
@@ -971,7 +1032,13 @@ const CreateExperimentStep2 = () => {
                         open={isEditDialogOpen}
                         onClose={toggleEditQuest}
                         fullWidth
-                        maxWidth="lg"
+                        sx={{'& .MuiDialog-paper': {
+                            margin: {xs: 0, sm: 32},
+                            height: {xs: '100vh', sm:'100%'},
+                            maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                            width: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                        }
+                    }}
                     >
                         <DialogContent sx={{ backgroundColor: '#f9f9f9', padding: 3 }}>
                             <Typography variant="h4" gutterBottom align="center">
@@ -1017,8 +1084,21 @@ const CreateExperimentStep2 = () => {
                                     
                                     {editedSurvey.questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
-                                            <Grid container spacing={2} alignItems="center">
-                                                <Grid item xs={6}>
+                                            <Grid container spacing={2} sx={{
+                                                flexDirection: {
+                                                    xs: 'column', sm: 'row'
+                                                },
+                                                alignItems: {
+                                                    xs: 'flex-start', sm: 'center'
+                                                },
+                                            }}>
+                                                <Grid
+                                                item
+                                                xs={6}
+                                                sx={{
+                                                    width: '100%',
+                                                    maxWidth: {xs: '100%', sm: '50%'}
+                                                }}>
                                                     <TextField
                                                         label={t('questionStatement', { index: index + 1 })}
                                                         value={q.statement}
@@ -1029,7 +1109,13 @@ const CreateExperimentStep2 = () => {
                                                         required
                                                     />
                                                 </Grid>
-                                                <Grid item xs={6}>
+                                                <Grid
+                                                item
+                                                xs={6}
+                                                sx={{
+                                                    width: '100%',
+                                                    maxWidth: {xs: '100%', sm: '50%'}
+                                                }}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('questionType')}</InputLabel>
                                                         <Select
