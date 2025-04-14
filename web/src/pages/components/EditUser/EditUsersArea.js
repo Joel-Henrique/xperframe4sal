@@ -91,7 +91,7 @@ const EditUserArea = ({ExperimentId}) => {
 
     return (
         <>
-            <div style={{ justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%" }}>
+            <div style={{ justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%", marginTop: '20px', }}>
                 <div className={styles.container}>
                     <div className={styles.userListContainer}>
                         <UserList
