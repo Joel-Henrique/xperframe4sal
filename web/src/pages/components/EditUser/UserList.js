@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { IconButton } from '@mui/material';
 import {
     Add as AddIcon,
-    Remove as RemoveIcon
+    Remove as RemoveIcon,
+    SwapHoriz as SwapIcon
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import 'primereact/resources/themes/saga-blue/theme.css';
@@ -23,6 +24,11 @@ const UserList = ({ title, users, buttonAction, buttonType }) => {
             backgroundColor: '#ff4d4d',
             color: '#fff',
             icon: <RemoveIcon />,
+        },
+        change: {
+            backgroundColor: '#007bff',
+            color: '#fff',
+            icon: <SwapIcon />,
         },
     };
 

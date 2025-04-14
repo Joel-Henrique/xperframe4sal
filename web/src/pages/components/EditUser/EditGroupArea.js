@@ -75,7 +75,7 @@ const EditGroupArea = ({ExperimentId}) => {
                             title={t('users_in_experiment')}
                             users={usersInExperiment}
                             buttonAction={openModal}
-                            buttonType="add"
+                            buttonType="change"
                         />
                         {groups.map(group => (
                             <UserList

@@ -1,5 +1,5 @@
 import { IconButton, Typography } from "@mui/material";
-import { Add, Close } from '@mui/icons-material';
+import { Close, SwapHoriz } from '@mui/icons-material';
 import styles from "../../../style/groupSelector.module.css"
 import { useTranslation } from "react-i18next";
 
@@ -25,7 +25,7 @@ const GroupSelector = ({isVisible, closeModal, userId, groups, addUserToGroup}) 
                                 onClick={() => addUserToGroup(userId, group.id)}
                                 style={{backgroundColor: '#007bff', color: '#fff'}}
                             >
-                                <Add />
+                                <SwapHoriz />
                             </IconButton>
                         </div>
                     ))}
