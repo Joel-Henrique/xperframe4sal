@@ -112,7 +112,6 @@ const CreateExperiment = () => {
           </Step>
         ))}
       </Stepper>
-
       <StepContext.Provider
         value={{
           step,

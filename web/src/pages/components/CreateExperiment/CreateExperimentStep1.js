@@ -193,7 +193,8 @@ const CreateExperimentStep1 = () => {
             summary: taskSummary,
             description: taskDescription,
             RulesExperiment: RulesExperiment,
-            SelectedSurvey: SelectedSurvey,
+            SelectedSurvey: SelectedSurvey.uuid,
+            selectedQuestionIds: selectedQuestionIds,
             ScoreThreshold: ScoreThreshold,
             ScoreThresholdmx: ScoreThresholdmx,
         };
@@ -203,7 +204,6 @@ const CreateExperimentStep1 = () => {
         setTaskTitle("");
         setTaskSummary("");
         setTaskDescription("");
-        setRulesExperiment("");
         setScoreThreshold("");
         setScoreThresholdmx("");
     };
@@ -229,7 +229,6 @@ const CreateExperimentStep1 = () => {
     const handleEditTask = (index) => {
         setEditTaskIndex(index);
         const task = ExperimentTasks[index];
-        console.log(task)
         setTaskTitleEdit(task.title);
         setTaskSummaryEdit(task.summary);
         setTaskDescriptionEdit(task.description);

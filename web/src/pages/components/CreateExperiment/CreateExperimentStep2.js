@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useContext } from 'react';
 import 'react-quill/dist/quill.snow.css';
+import { v4 as uuidv4 } from 'uuid';
 import StepContext from './context/StepContextCreate';
 import {
     TextField,
@@ -96,6 +97,7 @@ const CreateExperimentStep2 = () => {
         const payload = {
             name: title,
             title,
+            uuid: uuidv4(),
             description,
             type,
             questions: questions.map((q) => {
