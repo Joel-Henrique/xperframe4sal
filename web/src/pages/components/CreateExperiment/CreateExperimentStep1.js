@@ -54,8 +54,7 @@ const CreateExperimentStep1 = () => {
         ExperimentType,
         BtypeExperiment,
         ExperimentSurveys,
-        SelectedSurvey,
-        setSelectedSurvey
+        setExperimentSurveys
     } = useContext(StepContext);
     const { t } = useTranslation();
     const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
@@ -64,6 +63,7 @@ const CreateExperimentStep1 = () => {
     const [isLoadingTask, setIsLoadingTask] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [openTaskIds, setOpenTaskIds] = useState([]);
+    const [SelectedSurvey, setSelectedSurvey] = useState([]);
 
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
