@@ -193,6 +193,7 @@ const CreateExperimentStep1 = () => {
             summary: taskSummary,
             description: taskDescription,
             RulesExperiment: RulesExperiment,
+            SelectedSurvey: SelectedSurvey,
             ScoreThreshold: ScoreThreshold,
             ScoreThresholdmx: ScoreThresholdmx,
         };
