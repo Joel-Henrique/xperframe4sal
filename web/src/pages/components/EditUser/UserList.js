@@ -79,7 +79,7 @@ const UserList = ({ title, users, buttonAction, buttonType }) => {
                             <small className={styles.forceLineBreak}>{user.email}</small>
                         </div>
                         <IconButton
-                            onClick={() => buttonAction(user.id)}
+                            onClick={() => buttonAction(user.id ?? user._id)}
                             style={buttonStyles[buttonType]}
                         >
                             {buttonStyles[buttonType].icon}

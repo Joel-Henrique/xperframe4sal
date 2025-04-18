@@ -14,36 +14,56 @@ const EditGroupArea = ({ExperimentId}) => {
     const { t } = useTranslation();
     const msgs = useRef(null);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
+    const [groups, setGroups] = useState([]);
     const [usersInExperiment, setUsersInExperiment] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     const modalUserId = useRef(null);
 
-    const groups = [
-        {id: '1',groupName: "Grupo X", users: []},
-        {id: '2',groupName: "Grupo X", users: []},
-        {id: '3',groupName: "Grupo X", users: []},
-        {id: '4',groupName: "Grupo X", users: []},
-        {id: '5',groupName: "Grupo X", users: []},
-        {id: '6',groupName: "Grupo X", users: []},
-        {id: '7',groupName: "Grupo X", users: []},
-    ]
-
     useEffect(() => {
-        fetchData();
+        fetchUserData();
+        fetchGroupsData();
     }, [user, ExperimentId]);
 
-    const fetchData = async () => {
+    const fetchUserData = async () => {
         try {
             const response = await api.get(`user-experiments2/experiment/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const usersInExperimentData = response.data;
-
             setUsersInExperiment(usersInExperimentData);
         } catch (error) {
             console.error('Erro ao buscar dados dos usuários:', error);
         }
     };
+
+    const fetchGroupsData = async () => { 
+        try {
+            const response = await api.get(`task2/experiment/${ExperimentId.experimentId}/`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+
+            const tasks = response.data;
+            const generatedGroups = [];
+
+            for (const task of tasks) {
+                const response = await api.get(`user-task2/task/${task._id}/users`, {
+                    headers: { Authorization: `Bearer ${user.accessToken}` },
+                });
+
+                const users = response.data;
+
+                generatedGroups.push({
+                    id: task._id,
+                    groupName: task.title,
+                    users: [...users],
+                })
+            }
+
+            setGroups([...generatedGroups])
+        }catch (error){
+            console.error('Erro ao buscar dados das Tarefas: ', error)
+        }
+    }
 
    const saveChanges = () => {
 
@@ -58,12 +78,35 @@ const EditGroupArea = ({ExperimentId}) => {
         setIsVisible(false);
    }
 
-   const addUserToGroup = (userId, groupId) =>{
-        closeModal();
+   const addUserToGroup = async (userId, groupId) =>{
+        try {
+            await api.post(
+                '/user-task2',
+                {
+                    userId: userId,
+                    taskId: groupId
+                },
+                {headers: { Authorization: `Bearer ${user.accessToken}` }}
+            )
+        } catch (error) {
+            console.error('Erro ao alocar usuário na tarefa: ', error)
+        }
+        closeModal()
    }
 
-   const removeUserFromGroup = (userId) => {
+   const removeUserFromGroup = async (userId) => {
+        try {
+            const group = groups.find(group =>
+                group.users.some(user => user._id === userId)
+            );
 
+            await api.delete(
+                `/user-task2?userId=${userId}&taskId=${group.id}`,
+                {headers: { Authorization: `Bearer ${user.accessToken}` }}
+            )
+        } catch (error) {
+            console.error('Erro ao remover usuário na tarefa: ', error)
+        }
    }
 
     return(
@@ -111,7 +154,7 @@ const EditGroupArea = ({ExperimentId}) => {
             </Box>
 
             <GroupSelector 
-                userId={modalUserId} 
+                userId={modalUserId.current} 
                 isVisible={isVisible}
                 groups={groups}
                 addUserToGroup={addUserToGroup}
