@@ -20,23 +20,11 @@ const EditGroupArea = ({ExperimentId}) => {
     const modalUserId = useRef(null);
 
     useEffect(() => {
-        fetchUserData();
-        fetchGroupsData();
+        fetchData();
     }, [user, ExperimentId]);
 
-    const fetchUserData = async () => {
-        try {
-            const response = await api.get(`user-experiments2/experiment/${ExperimentId.experimentId}/`, {
-                headers: { Authorization: `Bearer ${user.accessToken}` },
-            });
-            const usersInExperimentData = response.data;
-            setUsersInExperiment(usersInExperimentData);
-        } catch (error) {
-            console.error('Erro ao buscar dados dos usuários:', error);
-        }
-    };
-
-    const fetchGroupsData = async () => { 
+    const fetchData = async () => {
+        const allUsersInTasks = [];
         try {
             const response = await api.get(`task2/experiment/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -51,6 +39,7 @@ const EditGroupArea = ({ExperimentId}) => {
                 });
 
                 const users = response.data;
+                allUsersInTasks.push(...users)
 
                 generatedGroups.push({
                     id: task._id,
@@ -58,16 +47,23 @@ const EditGroupArea = ({ExperimentId}) => {
                     users: [...users],
                 })
             }
-
-            setGroups([...generatedGroups])
+            setGroups(generatedGroups)
         }catch (error){
             console.error('Erro ao buscar dados das Tarefas: ', error)
         }
-    }
 
-   const saveChanges = () => {
-
-   }
+        try {
+            const response = await api.get(`user-experiments2/experiment/${ExperimentId.experimentId}/`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            const usersInExperimentData = response.data;
+            setUsersInExperiment(usersInExperimentData.filter(userInExperiment =>
+                !allUsersInTasks.some(userInTask => userInTask._id === userInExperiment.id)
+            ));
+        } catch (error) {
+            console.error('Erro ao buscar dados dos usuários:', error);
+        }
+    };
 
    const openModal = (userId) => {
         modalUserId.current = userId;
@@ -88,6 +84,8 @@ const EditGroupArea = ({ExperimentId}) => {
                 },
                 {headers: { Authorization: `Bearer ${user.accessToken}` }}
             )
+
+            fetchData();
         } catch (error) {
             console.error('Erro ao alocar usuário na tarefa: ', error)
         }
@@ -104,6 +102,8 @@ const EditGroupArea = ({ExperimentId}) => {
                 `/user-task2?userId=${userId}&taskId=${group.id}`,
                 {headers: { Authorization: `Bearer ${user.accessToken}` }}
             )
+
+            fetchData();
         } catch (error) {
             console.error('Erro ao remover usuário na tarefa: ', error)
         }
@@ -129,16 +129,6 @@ const EditGroupArea = ({ExperimentId}) => {
                                 buttonType="delete"
                             />
                         ))}
-                    </div>
-                    <div className={styles.buttonContainer}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={saveChanges}
-                            sx={{ width: '200px' }}
-                        >
-                            {t('save')}
-                        </Button>
                     </div>
                 </div>
             </div>
