@@ -29,8 +29,8 @@ const EditExperiment = () => {
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
   const [ExperimentDesc, setExperimentDesc] = useState('');
-  const [ExperimentId, setExperimentId] = useState('');;
-
+  const [ExperimentId, setExperimentId] = useState('');
+  const [ExperimentSurveys, setExperimentSurveys] = useState('');
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const CustomConnector = () => <span style={{ display: 'none' }} />;
   useEffect(() => {
@@ -65,9 +65,23 @@ const EditExperiment = () => {
       setIsLoading(false);
     }
   };
+      const fetchSurvey = async () => {
+          try {
+              const response = await api.get(`survey2`, {
+                  //params: { Experimentid: experimentId }, 
+                  headers: { Authorization: `Bearer ${user.accessToken}` },
+              });
+              //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
+              const filteredsurveys = response.data
+              setExperimentSurveys(filteredsurveys);
+          } catch (error) {
+              console.error(t('Error in Search'), error);
+          }
+      };
 
   useEffect(() => {
     fetchExperiment();
+    fetchSurvey();
   }, [experimentId, user.accessToken]);
 
   const handleStepClick = (index) => {
@@ -139,7 +153,10 @@ const EditExperiment = () => {
           setBtypeExperiment,
           ExperimentDesc,
           setExperimentDesc,
-          ExperimentId
+          ExperimentId,
+          setExperimentId,
+          ExperimentSurveys,
+          setExperimentSurveys,
         ]}
       >
         {/* experimento */}

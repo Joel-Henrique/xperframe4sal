@@ -11,6 +11,12 @@ import {
   CircularProgress,
   ListItemText,
   styled,
+  Typography,
+  Grid,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
@@ -40,8 +46,6 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 const EditExperimentStep1 = () => {
   const [
-    step,
-    setStep,
     ExperimentTitle,
     setExperimentTitle,
     ExperimentType,
@@ -50,11 +54,11 @@ const EditExperimentStep1 = () => {
     setBtypeExperiment,
     ExperimentDesc,
     setExperimentDesc,
-    ExperimentId
+    ExperimentId,
+    setExperimentId,
+    ExperimentSurveys,
+    setExperimentSurveys,
   ] = useContext(StepContext);
-
-  console.log(ExperimentId)
-
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
 
   const { t } = useTranslation();
@@ -70,6 +74,13 @@ const EditExperimentStep1 = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskSummary, setTaskSummary] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
+  const [RulesExperiment, setRulesExperiment] = useState('score');
+  const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
+  const [ScoreThreshold, setScoreThreshold] = useState('');
+  const [scoreType, setscoreType] = useState('');
+  const [SelectedSurvey, setSelectedSurvey] = useState("");
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   const [editTaskIndex, setEditTaskIndex] = useState(null);
   const [taskTitleEdit, setTaskTitleEdit] = useState("");
@@ -84,6 +95,14 @@ const EditExperimentStep1 = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [taskToDeleteIndex, setTaskToDeleteIndex] = useState(null);
 
+  const scoreTypes = [
+    { value: 'unic', label: t('unic') },
+    { value: 'min_max', label: t('min_max') }
+  ];
+  const RulesExperimentTypes = [
+    { value: 'score', label: t('score') },
+    { value: 'question', label: t('question') },
+  ];
 
   const handleOpenDeleteDialog = (index) => {
     setTaskToDeleteIndex(index);
@@ -152,6 +171,19 @@ const EditExperimentStep1 = () => {
     toggleCreateTask();
   };
 
+  const handleSurveyChange = (event) => {
+    const newSurvey = event.target.value;
+    setSelectedSurvey(newSurvey);
+    setSelectedQuestion(null);
+  };
+
+  const handleQuestionChange = (event) => {
+    const selectedIds = event.target.value;
+    setSelectedQuestionIds(selectedIds);
+    const selectedQuestions = SelectedSurvey.questions.filter(q => selectedIds.includes(q.statement));
+    setSelectedQuestion(selectedQuestions);
+  };
+
   const toggleCreateTask = () => setIsCreateTaskOpen((prev) => !prev);
   const toggleEditTask = () => setIsEditTaskOpen((prev) => !prev);
 
@@ -183,16 +215,28 @@ const EditExperimentStep1 = () => {
   const handleCreateTask = async () => {
     try {
       setIsLoadingTask(true);
+
+      const questionIds = RulesExperiment === 'score'
+        ? null
+        : selectedQuestionIds?.map((q) => q.uuid) || [];
+
+      const newTask = {
+        title: taskTitle,
+        summary: taskSummary,
+        description: taskDescription,
+        RulesExperiment: RulesExperiment,
+        SelectedSurvey: SelectedSurvey._id,
+        selectedQuestionIds: questionIds,
+        ScoreThreshold: ScoreThreshold,
+        ScoreThresholdmx: ScoreThresholdmx,
+      };
+
       await api.post(
         `/task2`,
-        {
-          title: taskTitle,
-          summary: taskSummary,
-          description: taskDescription,
-          experimentId: ExperimentId,
-        },
+        newTask,
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
+
       toggleCreateTask();
       setTaskTitle("");
       setTaskSummary("");
@@ -204,6 +248,7 @@ const EditExperimentStep1 = () => {
       setIsLoadingTask(false);
     }
   };
+
 
   const handleEditTaskSubmit = async (e) => {
     e.preventDefault();
@@ -521,6 +566,265 @@ const EditExperimentStep1 = () => {
               onChange={handleNameChangeTitleTask}
               required
             />
+
+            {ExperimentType === 'between-subject' && BtypeExperiment === 'rules_based' && (
+              <>
+                {RulesExperiment === 'score' && (
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('Separation_rule')}</InputLabel>
+                        <Select
+                          value={RulesExperiment}
+                          onChange={(e) => setRulesExperiment(e.target.value)}
+                          label={t('Separation_rule')}
+                        >
+                          {RulesExperimentTypes.map((stype) => (
+                            <MenuItem key={stype.value} value={stype.value}>
+                              {stype.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('select_survey')}</InputLabel>
+                        <Select
+                          value={SelectedSurvey}
+                          onChange={handleSurveyChange}
+                          label={t('select_survey')}
+                        >
+                          {ExperimentSurveys?.length > 0 ? (
+                            ExperimentSurveys.map((survey) => (
+                              <MenuItem key={survey.id} value={survey}>
+                                {survey.title}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>{t('no_survey_available')}</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('select_survey_th')}</InputLabel>
+                        <Select
+                          value={scoreType}
+                          onChange={(e) => setscoreType(e.target.value)}
+                          label={t('select_survey_th')}
+                        >
+                          {scoreTypes.map((stype) => (
+                            <MenuItem key={stype.value} value={stype.value}>
+                              {stype.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    {scoreType === 'unic' ? (
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          type="number"
+                          label={t('score_Threshold_unic')}
+                          value={ScoreThreshold}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setScoreThreshold(value);
+                            setScoreThresholdmx(value);
+                          }}
+                        />
+                      </Grid>
+                    ) : (
+                      <>
+                        <Grid item xs={4}>
+                          <TextField
+                            fullWidth
+                            margin="normal"
+                            type="number"
+                            label={t('score_Threshold_min')}
+                            value={ScoreThreshold}
+                            onChange={(e) => {
+                              const minValue = Number(e.target.value);
+                              if (minValue <= ScoreThresholdmx) {
+                                setScoreThreshold(minValue);
+                              }
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={4}>
+                          <TextField
+                            fullWidth
+                            margin="normal"
+                            type="number"
+                            label={t('score_Threshold_max')}
+                            value={ScoreThresholdmx}
+                            onChange={(e) => {
+                              const maxValue = Number(e.target.value);
+                              if (maxValue >= ScoreThreshold) {
+                                setScoreThresholdmx(maxValue);
+                              }
+                            }}
+                            inputProps={{ min: ScoreThreshold }}
+                          />
+                        </Grid>
+                      </>
+                    )}
+
+                  </Grid>
+                )}
+
+                {RulesExperiment === 'question' && (
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('Separation_rule')}</InputLabel>
+                        <Select
+                          value={RulesExperiment}
+                          onChange={(e) => setRulesExperiment(e.target.value)}
+                          label={t('Separation_rule')}
+                        >
+                          {RulesExperimentTypes.map((stype) => (
+                            <MenuItem key={stype.value} value={stype.value}>
+                              {stype.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('select_survey')}</InputLabel>
+                        <Select
+                          value={SelectedSurvey}
+                          onChange={handleSurveyChange}
+                          label={t('select_survey')}
+                        >
+                          {ExperimentSurveys?.length > 0 ? (
+                            ExperimentSurveys.map((survey) => (
+                              <MenuItem key={survey.id} value={survey}>
+                                {survey.title}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem disabled>{t('no_survey_available')}</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('select_question')}</InputLabel>
+                        <Select
+                          value={selectedQuestionIds}
+                          onChange={handleQuestionChange}
+                          label={t('select_question')}
+                          multiple
+                          renderValue={(selected) =>
+                            SelectedSurvey.questions
+                              .filter(q => selected.includes(q))
+                              .map(q => q.statement || 'Sem enunciado')
+                              .join(', ')
+                          }
+                        >
+                          {SelectedSurvey?.questions && SelectedSurvey.questions.length > 0 ? (
+                            SelectedSurvey.questions
+                              .filter(q => q.type === 'multiple-selection' || q.type === 'multiple-choices')
+                              .map((question) => (
+                                <MenuItem key={question.id} value={question}>
+                                  <Checkbox checked={selectedQuestionIds.includes(question)} />
+                                  {question.statement || 'Sem enunciado'}
+                                </MenuItem>
+                              ))
+                          ) : (
+                            <MenuItem disabled>{t('no_questions_available')}</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+
+
+                    <Grid item xs={4}>
+                      <FormControl fullWidth margin="normal">
+                        <InputLabel>{t('select_survey_th')}</InputLabel>
+                        <Select
+                          value={scoreType}
+                          onChange={(e) => setscoreType(e.target.value)}
+                          label={t('select_survey_th')}
+                        >
+                          {scoreTypes.map((stype) => (
+                            <MenuItem key={stype.value} value={stype.value}>
+                              {stype.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    {scoreType === 'unic' ? (
+                      <Grid item xs={2}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          type="number"
+                          label={t('score_Threshold_unic')}
+                          value={ScoreThreshold}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setScoreThreshold(value);
+                            setScoreThresholdmx(value);
+                          }}
+                        />
+                      </Grid>
+                    ) : (
+                      <>
+                        <Grid item xs={2}>
+                          <TextField
+                            fullWidth
+                            margin="normal"
+                            type="number"
+                            label={t('score_Threshold_min')}
+                            value={ScoreThreshold}
+                            onChange={(e) => {
+                              const minValue = Number(e.target.value);
+                              if (minValue <= ScoreThresholdmx) {
+                                setScoreThreshold(minValue);
+                              }
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={2}>
+                          <TextField
+                            fullWidth
+                            margin="normal"
+                            type="number"
+                            label={t('score_Threshold_max')}
+                            value={ScoreThresholdmx}
+                            onChange={(e) => {
+                              const maxValue = Number(e.target.value);
+                              if (maxValue >= ScoreThreshold) {
+                                setScoreThresholdmx(maxValue);
+                              }
+                            }}
+                            inputProps={{ min: ScoreThreshold }}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                )}
+              </>
+            )}
             <TextField
               label={t('task_summary')}
               error={!isValidSumaryTask}

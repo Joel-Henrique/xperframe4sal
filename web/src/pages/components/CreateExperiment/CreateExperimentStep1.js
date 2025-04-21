@@ -16,8 +16,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Checkbox, FormLabel, RadioGroup, FormControlLabel, Radio
-
+    Checkbox, 
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -54,7 +53,6 @@ const CreateExperimentStep1 = () => {
         ExperimentType,
         BtypeExperiment,
         ExperimentSurveys,
-        setExperimentSurveys
     } = useContext(StepContext);
     const { t } = useTranslation();
     const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
