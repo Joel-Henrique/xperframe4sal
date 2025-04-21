@@ -15,16 +15,20 @@ import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimen
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
 import CreateExperimentStep4 from './components/CreateExperiment/CreateExperimentStep4';
+import CreateExperimentICF from './components/CreateExperiment/CreateExperimentICF';
 
 const CreateExperiment = () => {
   const { t } = useTranslation();
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [ExperimentTitle, setExperimentTitle] = useState('');
+  const [ExperimentTitleICF, setExperimentTitleICF] = useState('');
+  const [ExperimentDescICF, setExperimentDescICF] = useState('');
   const [ExperimentType, setExperimentType] = useState('within-subject');
   const [BtypeExperiment, setBtypeExperiment] = useState('random');
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [ExperimentTasks, setExperimentTasks] = useState([]);
   const [ExperimentSurveys, setExperimentSurveys] = useState([]);
+
   const [step, setStep] = useState(0);
   const toast = useRef(null); 
 
@@ -92,7 +96,7 @@ const CreateExperiment = () => {
   };
 
   useEffect(() => {
-    if (step === 4) {
+    if (step === 5) {
       handleCreateExperiment();
     }
   }, [step]);  
@@ -106,7 +110,7 @@ const CreateExperiment = () => {
       </Typography>
 
       <Stepper activeStep={step} alternativeLabel>
-        {[t('step_1'), t('step_3'), t('step_2'), t('step_5')].map((label, index) => (
+        {[t('step_1'), t('ICF'), t('step_3'), t('step_2'), t('step_5')].map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
           </Step>
@@ -128,12 +132,17 @@ const CreateExperiment = () => {
           setExperimentTasks,
           ExperimentSurveys,
           setExperimentSurveys,
+          ExperimentTitleICF,
+          setExperimentTitleICF,
+          ExperimentDescICF,
+          setExperimentDescICF,
         }}
       >
         {step === 0 && <CreateExperimentStep0 />}
-        {step === 2 && <CreateExperimentStep1 />}
-        {step === 1 && <CreateExperimentStep2 />}
-        {step === 3 && <CreateExperimentStep4 />}
+        {step === 1 && <CreateExperimentICF/>}
+        {step === 2 && <CreateExperimentStep2 />}
+        {step === 3 && <CreateExperimentStep1 />}
+        {step === 4 && <CreateExperimentStep4 />}
       </StepContext.Provider>
     </>
   );
