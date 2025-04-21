@@ -103,7 +103,7 @@ const CreateExperimentStep2 = () => {
             questions: questions.map((q) => {
                 const question = {
                     statement: q.statement,
-                    id: q.id,
+                    uuid: q.id,
                     type: q.type,
                     required: q.required,
                     hasscore: q.hasscore,
@@ -113,7 +113,7 @@ const CreateExperimentStep2 = () => {
                 }else {
                     console.log("aaaaaaaaa")
                     question.options = q.options.map((opt) => {
-                        const option = { statement: opt.statement, id: opt.id };
+                        const option = { statement: opt.statement, uuid: opt.id };
                     
                         if (opt.subquestion) {
                             option.subquestion = { ...opt.subquestion };
@@ -191,7 +191,7 @@ const CreateExperimentStep2 = () => {
             questions: [
                 ...prev.questions,
                 {
-                    id: Date.now(),
+                    id: uuidv4(),
                     statement: '',
                     type: 'open',
                     required: false,
@@ -217,7 +217,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null, hassub: false},
+                            { id: uuidv4(), statement: '', score: 0, subquestion: null, hassub: false},
                         ],
                     }
                     : q
@@ -243,7 +243,7 @@ const CreateExperimentStep2 = () => {
         setQuestions([
             ...questions,
             {
-                id: Date.now(),
+                id: uuidv4(),
                 statement: '',
                 type: 'open',
                 required: false,
@@ -286,7 +286,7 @@ const CreateExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null, hassub: false },
+                            { id: uuidv4(), statement: '', score: 0, subquestion: null, hassub: false },
                         ],
                     }
                     : q
@@ -914,7 +914,7 @@ const CreateExperimentStep2 = () => {
                                                                                                 ...opt.subquestion,
                                                                                                 options: [
                                                                                                     ...(opt.subquestion.options || []),
-                                                                                                    { id: Date.now() },
+                                                                                                    { id: uuidv4(), },
                                                                                                 ],
                                                                                             })
                                                                                         }
@@ -1293,7 +1293,7 @@ const CreateExperimentStep2 = () => {
                                                                                                 ...opt.subquestion,
                                                                                                 options: [
                                                                                                     ...(opt.subquestion.options || []),
-                                                                                                    { id: `subopt-${Date.now()}`, statement: '' },
+                                                                                                    { id: `subopt-${uuidv4()}`, statement: '' },
                                                                                                 ],
                                                                                             })
                                                                                         }
