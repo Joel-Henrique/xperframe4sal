@@ -229,6 +229,7 @@ const EditExperimentStep1 = () => {
         selectedQuestionIds: questionIds,
         ScoreThreshold: ScoreThreshold,
         ScoreThresholdmx: ScoreThresholdmx,
+        experimentId: ExperimentId,
       };
 
       await api.post(

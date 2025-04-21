@@ -54,8 +54,6 @@ const EditExperiment = () => {
       setExperimentTitle(data.name || '');
       setExperimentType(data.typeExperiment || '');
       setBtypeExperiment(data.betweenExperimentType || '');
-      console.log(data)
-      console.log(data.summary)
       setExperimentDesc(data.summary || '');
       console.log(ExperimentDesc)
     } catch (err) {
