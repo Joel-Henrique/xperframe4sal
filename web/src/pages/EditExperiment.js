@@ -29,7 +29,6 @@ const EditExperiment = () => {
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
   const [ExperimentDesc, setExperimentDesc] = useState('');
-  const [RulesExperiment, setRulesExperiment] = useState('');
   const [ExperimentId, setExperimentId] = useState('');;
 
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
@@ -138,8 +137,6 @@ const EditExperiment = () => {
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
-          RulesExperiment,
-          setRulesExperiment,
           ExperimentDesc,
           setExperimentDesc,
           ExperimentId
