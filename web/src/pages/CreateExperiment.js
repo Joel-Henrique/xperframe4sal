@@ -59,6 +59,8 @@ const CreateExperiment = () => {
           betweenExperimentType: BtypeExperiment,
           surveysProps: ExperimentSurveys,
           tasksProps: ExperimentTasks,
+          TitleICF: ExperimentTitleICF,
+          DescriptionICF: ExperimentDescICF,
         },
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
