@@ -114,6 +114,8 @@ const EditExperimentStep2 = () => {
                 statement,
                 type,
                 required,
+                otherStatement: "string",
+                helperText: "string",
                 ...(type === 'multiple-selection' || type === 'multiple-choices'
                     ? {
                         options: options.map(({ statement, subquestion, score }) => ({
@@ -124,21 +126,32 @@ const EditExperimentStep2 = () => {
                                         statement: subquestion.statement,
                                         type: subquestion.type,
                                         required: subquestion.required,
-                                        options: subquestion.options?.map(({ statement, score }) => ({
+                                        options: (subquestion.options ?? []).map(({ statement, score }) => ({
                                             statement,
                                             score,
                                         })),
                                     },
                                 }
                                 : {}),
-                            ...(type === 'multiple-choices' && { score }),
+                            score: score ? score : 0,
                         })),
                     }
-                    : {}),
+                    : {options: [
+                        {
+                            statement: '',
+                            score: 0
+                        }
+                    ]}),
             })),
         };
 
         try {
+            questions.map(question => {
+                if(question.type === 'multiple-selection' || question.type === 'multiple-choices'){
+                    if(question.options.length === 0)
+                        throw new Error("Need to create options");
+                }
+            })
             console.log(payload)
             const response = await api.post(`survey2`, payload, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
