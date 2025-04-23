@@ -34,7 +34,8 @@
     "react-scripts": "^5.0.1",
     "react-serp-preview": "^1.1.0",
     "react-tracking": "^9.3.2",
-    "styled-components": "^6.1.14"
+    "styled-components": "^6.1.14",
+    "uuid": "^11.1.0"
   },
   "engines": {
     "node": "20"
