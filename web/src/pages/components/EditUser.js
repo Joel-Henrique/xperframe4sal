@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../../config/axios';
 import { Typography, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -16,20 +16,7 @@ const EditUser = (ExperimentId) => {
     const { t } = useTranslation();
     const [actualStep, setActualStep] = useState(null);
 
-    useEffect(() => {
-        fetchData();
-    }, [user, ExperimentId]);
-
-    const STEPS = [
-        {label: 'edit_users', icon: (<Person/>)},
-        {label: 'edit_groups', icon: (<People/>)},
-    ];
-
-    const handleSwitchStep = (step) => {
-        setActualStep(step);
-    }
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const { data } = await api.get(`/experiments2/${ExperimentId.experimentId}`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -41,7 +28,20 @@ const EditUser = (ExperimentId) => {
         } catch (error) {
             console.error('Erro ao buscar dados do experimento:', error);
         }
-    };
+    },[ExperimentId.experimentId, user.accessToken]);
+
+    useEffect(() => {
+        fetchData();
+    },[fetchData]);
+
+    const STEPS = [
+        {label: 'edit_users', icon: (<Person/>)},
+        {label: 'edit_groups', icon: (<People/>)},
+    ];
+
+    const handleSwitchStep = (step) => {
+        setActualStep(step);
+    }
 
     const displayStep = () => {
         if (actualStep === 0)
