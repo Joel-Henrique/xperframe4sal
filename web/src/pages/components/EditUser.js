@@ -6,8 +6,8 @@ import styles from "../../style/editUser.module.css"
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import EditUserArea from './EditUser/EditUsersArea';
-import EditGroupArea from './EditUser/EditGroupArea';
+import EditUserArea  from '../../components/EditUser/EditUsersArea';
+import EditGroupArea from '../../components/EditUser/EditGroupArea';
 import { People, Person } from '@mui/icons-material';
 
 

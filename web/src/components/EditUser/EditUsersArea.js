@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { api } from '../../../config/axios';
+import { api } from '../../config/axios';
 import { Button, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Messages } from 'primereact/messages';
-import styles from "../../../style/editUser.module.css"
+import styles from "../../style/editUser.module.css"
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';

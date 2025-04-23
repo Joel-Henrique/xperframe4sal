@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import styles from "../../../style/userList.module.css"
+import styles from "../../style/userList.module.css"
 
 const UserList = ({ title, users, buttonAction, buttonType }) => {
     const { t } = useTranslation();

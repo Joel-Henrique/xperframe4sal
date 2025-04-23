@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { api } from '../../../config/axios';
-import { Button, Box } from '@mui/material';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { api } from '../../config/axios';
+import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Messages } from 'primereact/messages';
-import styles from "../../../style/editUser.module.css"
+import styles from "../../style/editUser.module.css"
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -19,11 +19,7 @@ const EditGroupArea = ({ExperimentId}) => {
     const [isVisible, setIsVisible] = useState(false);
     const modalUserId = useRef(null);
 
-    useEffect(() => {
-        fetchData();
-    }, [user, ExperimentId]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         const allUsersInTasks = [];
         try {
             const response = await api.get(`task2/experiment/${ExperimentId.experimentId}/`, {
@@ -63,7 +59,11 @@ const EditGroupArea = ({ExperimentId}) => {
         } catch (error) {
             console.error('Erro ao buscar dados dos usuários:', error);
         }
-    };
+    }, [ExperimentId.experimentId, user.accessToken]);
+
+    useEffect(() => {
+        fetchData();
+    },[fetchData]);
 
    const openModal = (userId) => {
         modalUserId.current = userId;
@@ -111,7 +111,7 @@ const EditGroupArea = ({ExperimentId}) => {
 
     return(
         <>
-            <div style={{ justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%", marginTop: '20px', }}>
+            <div style={{ justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%", marginTop: '20px', }}>
                 <div className={styles.container}>
                     <div className={styles.userListContainer}>
                         <UserList

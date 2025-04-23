@@ -1,6 +1,6 @@
 import { IconButton, Typography } from "@mui/material";
 import { Close, SwapHoriz } from '@mui/icons-material';
-import styles from "../../../style/groupSelector.module.css"
+import styles from "../../style/groupSelector.module.css"
 import { useTranslation } from "react-i18next";
 
 

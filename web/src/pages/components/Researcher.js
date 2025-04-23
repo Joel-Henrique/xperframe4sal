@@ -4,8 +4,8 @@ import { api } from '../../config/axios';
 import { Button, Typography} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditUser from './EditUser';
-import { ExperimentAccordion } from './Researcher/ExperimentAccordion';
-import { LoadingState } from './Researcher/LoadingState';
+import { ExperimentAccordion } from '../../components/Researcher/ExperimentAccordion';
+import { LoadingState } from '../../components/Researcher/LoadingState';
 
 const Researcher = () => {
   const navigate = useNavigate();
