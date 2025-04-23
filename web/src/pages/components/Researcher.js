@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../config/axios';
 import {
@@ -41,17 +41,22 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
         dangerouslySetInnerHTML={{ __html: experiment.summary }}
       />
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ margin: '2px' }}
+          onClick={() => onAccess(experiment._id)}
+        >
+          {t('Access')}
+        </Button>
+
         {isOwner && (
           <>
             <Button
               variant="contained"
               color="primary"
               style={{ margin: '2px' }}
-
-              onClick={() => {
-
-                onEdituser(experiment._id)
-              }}
+              onClick={() => onEdituser(experiment._id)}
             >
               {t('edit_user')}
             </Button>
@@ -68,22 +73,13 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
             <Button
             variant="contained"
             color="primary"
-            style={{ margin: '2px' }}
+            style={{ margin: '2px', background: '#D32F2F' }}
             onClick={() => onDelete(experiment._id)}
           >
             {t('delete')}
           </Button>
           </>
         )}
-
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: '2px' }}
-          onClick={() => onAccess(experiment._id)}
-        >
-          {t('Access')}
-        </Button>
       </div>
     </AccordionDetails>
   </Accordion>
@@ -108,11 +104,7 @@ const Researcher = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const { t } = useTranslation();
 
-  useEffect(() => {
-    fetchAllExperiments();
-  }, [user.id, user.accessToken, t]);
-
-  const fetchAllExperiments = async () => {
+  const fetchAllExperiments = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -145,7 +137,11 @@ const Researcher = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user.accessToken, user.id, t]);
+
+  useEffect(() => {
+    fetchAllExperiments();
+  }, [fetchAllExperiments]);
 
   const handleCreateExperiment = () => navigate('/CreateExperiment');
 
