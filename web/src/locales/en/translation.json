@@ -62,6 +62,7 @@
   "loading_experiments": "Loading experiments...",
   "no_experiments": "You are not currently enrolled in any experiments.",
   "error_fetching_experiments": "Error fetching experiments.",
+  "error_deleting_experiment": "Error deleting experiment",
   "accordion_summary_hover": "Hover to expand",
   "forgot_password_title": "Forgot your password?",
   "email_label": "Registered email",

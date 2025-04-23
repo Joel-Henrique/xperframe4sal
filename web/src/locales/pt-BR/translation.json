@@ -65,6 +65,7 @@
   "loading_experiments": "Carregando experimentos...",
   "no_experiments": "No momento você não foi inscrito em nenhum experimento.",
   "error_fetching_experiments": "Erro ao buscar experimentos.",
+  "error_deleting_experiment": "Erro ao deletar experimento.",
   "accordion_summary_hover": "Passe o mouse para expandir",
   "forgot_password_title": "Esqueceu a senha?",
   "email_label": "E-mail cadastrado",
