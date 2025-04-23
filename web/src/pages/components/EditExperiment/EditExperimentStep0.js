@@ -39,12 +39,10 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 
-const EditExperimentStep0 = ({ }) => {
+const EditExperimentStep0 = () => {
   const msgs = useRef(null);
   const { t } = useTranslation();
   const [isValidTitleExp, setIsValidTitleExp] = useState(true);
-  const [isValidFormExperiment, setIsValidFormExperiment] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [
     ExperimentTitle,
@@ -90,7 +88,7 @@ const EditExperimentStep0 = ({ }) => {
     };
 
     try {
-      const response = await api.patch(`/experiments2/${ExperimentId}`, updatedExperiment, {
+      await api.patch(`/experiments2/${ExperimentId}`, updatedExperiment, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
       if (msgs.current) {
