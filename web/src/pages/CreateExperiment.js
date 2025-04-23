@@ -13,6 +13,7 @@ import CreateExperimentStep1 from './components/CreateExperiment/CreateExperimen
 import CreateExperimentStep2 from './components/CreateExperiment/CreateExperimentStep2';
 import StepContext from './components/CreateExperiment/context/StepContextCreate';
 import CreateExperimentStep4 from './components/CreateExperiment/CreateExperimentStep4';
+import { useNavigate } from 'react-router-dom';
 
 const CreateExperiment = () => {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ const CreateExperiment = () => {
   const [isLoadingExp, setIsLoadingExp] = useState(false);
   const [ActiveStep, setActiveStep] = useState();
   const [step, setStep] = useState(0);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     setActiveStep(step);
@@ -54,11 +55,7 @@ const CreateExperiment = () => {
         { headers: { Authorization: `Bearer ${user.accessToken}` } }
       );
   
-      setExperimentTitle('');
-      setExperimentDesc('');
-      setExperimentTasks([]);
-      setExperimentSurveys([]);
-      setStep(0);  
+      navigate('/experiments');
   
     } catch (error) {
       console.error(t('Error creating experiment'), error);
