@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../../../config/axios';
 import { Button, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -16,11 +16,7 @@ const EditUserArea = ({ExperimentId}) => {
     const [usersInExperiment, setUsersInExperiment] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
 
-    useEffect(() => {
-        fetchData();
-    }, [user, ExperimentId]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const response = await api.get(`user-experiments2/experiment/${ExperimentId.experimentId}/`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -41,7 +37,11 @@ const EditUserArea = ({ExperimentId}) => {
         } catch (error) {
             console.error('Erro ao buscar dados dos usuários:', error);
         }
-    };
+    },[user.accessToken, ExperimentId.experimentId]);
+
+    useEffect(() => {
+        fetchData();
+    },[fetchData]);
 
     const addUserToExperiment = (userId) => {
         const userToAdd = allUsers.find((user) => user.id === userId);
@@ -91,7 +91,7 @@ const EditUserArea = ({ExperimentId}) => {
 
     return (
         <>
-            <div style={{ justifyContent: 'center', justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%", marginTop: '20px', }}>
+            <div style={{justifyContent: 'center', display: 'flex', flexDirection: "row", width: "100%", marginTop: '20px', }}>
                 <div className={styles.container}>
                     <div className={styles.userListContainer}>
                         <UserList
