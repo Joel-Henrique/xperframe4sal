@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useState, useContext, useEffect } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import StepContext from './context/StepContext';
@@ -31,16 +31,6 @@ import { api } from '../../../config/axios';
 
 const EditExperimentStep2 = () => {
     const [
-        step,
-        setStep,
-        ExperimentTitle,
-        setExperimentTitle,
-        ExperimentType,
-        setExperimentType,
-        BtypeExperiment,
-        setBtypeExperiment,
-        ExperimentDesc,
-        setExperimentDesc,
         ExperimentId
     ] = useContext(StepContext);
     const [ExperimentSurveys, setExperimentSurveys] = useState('');
@@ -66,9 +56,22 @@ const EditExperimentStep2 = () => {
 
     const generateRandomId = () => `id-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
+    const fetchSurvey = useCallback(async () => {
+        try {
+            const response = await api.get(`survey2`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            const filteredsurveys = response.data
+            setExperimentSurveys(filteredsurveys);
+        } catch (error) {
+            console.error(t('Error in Search'), error);
+        }
+    },[user.accessToken, t]);
+
     useEffect(() => {
         fetchSurvey();
-    }, [user, t]);
+    },[fetchSurvey]);
+
     const handleOpenDeleteDialog = (index) => {
         setSurveyToDeleteId(ExperimentSurveys[index])
         setIsDeleteDialogOpen(true);
@@ -88,19 +91,6 @@ const EditExperimentStep2 = () => {
             console.error(t('Error in Search'), error);
         }
     };
-
-    const fetchSurvey = async () => {
-        try {
-            const response = await api.get(`survey2`, {
-                headers: { Authorization: `Bearer ${user.accessToken}` },
-            });
-            const filteredsurveys = response.data
-            setExperimentSurveys(filteredsurveys);
-        } catch (error) {
-            console.error(t('Error in Search'), error);
-        }
-    };
-
 
     const handleCreateSurvey = async (e) => {
         e.preventDefault();
@@ -146,7 +136,7 @@ const EditExperimentStep2 = () => {
         };
 
         try {
-            questions.map(question => {
+            questions.forEach(question => {
                 if(question.type === 'multiple-selection' || question.type === 'multiple-choices'){
                     if(question.options.length === 0)
                         throw new Error("Need to create options");
