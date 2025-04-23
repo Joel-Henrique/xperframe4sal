@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 import EditUser from './EditUser';
 
-const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, onEdituser, isOwner, t }) => (
+const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, onDelete, onEdituser, isOwner, t }) => (
   <Accordion
     sx={{ marginBottom: '5px' }}
     elevation={3}
@@ -42,29 +42,40 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
       />
       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
         {isOwner && (
-          <Button
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: '2px' }}
+
+              onClick={() => {
+
+                onEdituser(experiment._id)
+              }}
+            >
+              {t('edit_user')}
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: '2px' }}
+              onClick={() => onEdit(experiment._id)}
+            >
+              {t('edit')}
+            </Button>
+
+            <Button
             variant="contained"
             color="primary"
             style={{ margin: '2px' }}
-
-            onClick={() => {
-
-              onEdituser(experiment._id)
-            }}
+            onClick={() => onDelete(experiment._id)}
           >
-            {t('edit_user')}
+            {t('delete')}
           </Button>
+          </>
         )}
-        {isOwner && (
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ margin: '2px' }}
-            onClick={() => onEdit(experiment._id)}
-          >
-            {t('edit')}
-          </Button>
-        )}
+
         <Button
           variant="contained"
           color="primary"
@@ -98,43 +109,43 @@ const Researcher = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchAllExperiments = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const { data: allExperiments } = await api.get('experiments2', {
-          headers: { Authorization: `Bearer ${user.accessToken}` },
-        });
-
-        const participatedExperiments = [];
-        const ownedExperiments = [];
-
-        allExperiments.forEach((experiment) => {
-          if (experiment.owner_id === user.id) {
-            ownedExperiments.push(experiment);
-          } else if (experiment.userProps?.includes(user.id)) {
-            participatedExperiments.push(experiment);
-          }
-        });
-
-        setExperiments(participatedExperiments);
-        setOwnerExperiments(ownedExperiments);
-
-        if (ownedExperiments.length > 0) {
-          setExpanded(`panel-owner-0`);
-        } else if (participatedExperiments.length > 0) {
-          setExpanded(`panel-0`);
-        }
-      } catch (err) {
-        setError(t('error_loading_experiments'));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchAllExperiments();
   }, [user.id, user.accessToken, t]);
+
+  const fetchAllExperiments = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { data: allExperiments } = await api.get('experiments2', {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+      });
+
+      const participatedExperiments = [];
+      const ownedExperiments = [];
+
+      allExperiments.forEach((experiment) => {
+        if (experiment.owner_id === user.id) {
+          ownedExperiments.push(experiment);
+        } else if (experiment.userProps?.includes(user.id)) {
+          participatedExperiments.push(experiment);
+        }
+      });
+
+      setExperiments(participatedExperiments);
+      setOwnerExperiments(ownedExperiments);
+
+      if (ownedExperiments.length > 0) {
+        setExpanded(`panel-owner-0`);
+      } else if (participatedExperiments.length > 0) {
+        setExpanded(`panel-0`);
+      }
+    } catch (err) {
+      setError(t('error_loading_experiments'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleCreateExperiment = () => navigate('/CreateExperiment');
 
@@ -145,6 +156,18 @@ const Researcher = () => {
   const handleEditExperiment = (experimentId) => {
     navigate(`/EditExperiment/${experimentId}`);
   };
+
+  const handleDeleteExperiment = async (experimentId) => {
+    try {
+      await api.delete(`experiments2/${experimentId}`, {
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+      });
+
+      fetchAllExperiments()
+    } catch (error) {
+      setError(t('error_deleting_experiment'))
+    }
+  }
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
@@ -185,6 +208,7 @@ const Researcher = () => {
             onChange={handleChange(`panel-owner-${index}`)}
             onAccess={handleAccessExperiment}
             onEdit={handleEditExperiment}
+            onDelete={handleDeleteExperiment}
             onEdituser={handleEditUser}
             isOwner={true}
             t={t}
