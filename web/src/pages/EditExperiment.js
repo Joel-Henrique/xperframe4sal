@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useState, useEffect } from 'react';
 import { api } from '../config/axios';
 import 'react-quill/dist/quill.snow.css';
@@ -21,16 +21,14 @@ import { useParams } from 'react-router-dom';
 const EditExperiment = () => {
   const { t } = useTranslation();
   const { experimentId } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [step, setStep] = useState(0);
+  const step = 0;
   const [ExperimentTitle, setExperimentTitle] = useState('');
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [RulesExperiment, setRulesExperiment] = useState('');
-  const [ExperimentId, setExperimentId] = useState('');;
+  const [ExperimentId, setExperimentId] = useState('');
 
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const CustomConnector = () => <span style={{ display: 'none' }} />;
@@ -43,9 +41,7 @@ const EditExperiment = () => {
     { label: t('edit_survey'), icon: '❓' },
   ];
 
-  const fetchExperiment = async () => {
-    setIsLoading(true);
-    setError(null);
+  const fetchExperiment = useCallback(async () => {
 
     try {
       const { data } = await api.get(`/experiments2/${experimentId}`, {
@@ -58,15 +54,12 @@ const EditExperiment = () => {
       setExperimentDesc(data.summary || '');
     } catch (err) {
       console.error('Error fetching experiment data:', err);
-      setError('Error fetching the experiment');
-    } finally {
-      setIsLoading(false);
     }
-  };
+  },[experimentId, user.accessToken]);
 
   useEffect(() => {
     fetchExperiment();
-  }, [experimentId, user.accessToken]);
+  },[fetchExperiment]);
 
   const handleStepClick = (index) => {
     setActiveStep(index);
