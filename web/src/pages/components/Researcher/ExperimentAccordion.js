@@ -1,5 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Divider, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
+import DeleteIcon from '@mui/icons-material/Delete';
+import styles from '../../../style/text.module.css'
 
 const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit, onDelete, onEdituser, isOwner, t }) => (
   <Accordion
@@ -27,14 +32,18 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
         style={{ wordBreak: 'break-word' }}
         dangerouslySetInnerHTML={{ __html: experiment.summary }}
       />
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px' }}>
+      <div className={styles.buttonContainer} >
         <Button
           variant="contained"
           color="primary"
-          style={{ margin: '2px' }}
           onClick={() => onAccess(experiment._id)}
         >
-          {t('Access')}
+          <div className={styles.desktopText} >
+            {t('Access')}
+          </div>
+          <div className={styles.mobileText} >
+            <MeetingRoomIcon/>
+          </div>
         </Button>
 
         {isOwner && (
@@ -42,28 +51,41 @@ const ExperimentAccordion = ({ experiment, expanded, onChange, onAccess, onEdit,
             <Button
               variant="contained"
               color="primary"
-              style={{ margin: '2px' }}
               onClick={() => onEdituser(experiment._id)}
             >
-              {t('edit_user')}
+              <div className={styles.desktopText} >
+                {t('edit_user')}
+              </div>
+              <div className={styles.mobileText} >
+                <PersonIcon/>
+              </div>
             </Button>
 
             <Button
               variant="contained"
               color="primary"
-              style={{ margin: '2px' }}
               onClick={() => onEdit(experiment._id)}
             >
-              {t('edit')}
+              <div className={styles.desktopText} >
+                {t('edit')}
+              </div>
+              <div className={styles.mobileText} >
+                <EditIcon/>
+              </div>
             </Button>
-
+                
             <Button
             variant="contained"
             color="primary"
-            style={{ margin: '2px', background: '#D32F2F' }}
+            style={{ background: '#D32F2F' }}
             onClick={() => onDelete(experiment._id)}
           >
-            {t('delete')}
+              <div className={styles.desktopText} >
+                {t('delete')}
+              </div>
+              <div className={styles.mobileText} >
+              <DeleteIcon/>
+              </div>
           </Button>
           </>
         )}
