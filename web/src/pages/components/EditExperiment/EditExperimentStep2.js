@@ -64,6 +64,8 @@ const EditExperimentStep2 = () => {
     const [editedSurvey, setEditedSurvey] = useState(null);
     const [IndexId, setIndexId] = useState(null);
 
+    const generateRandomId = () => `id-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
     useEffect(() => {
         fetchSurvey();
     }, [user, t]);
@@ -90,7 +92,6 @@ const EditExperimentStep2 = () => {
     const fetchSurvey = async () => {
         try {
             const response = await api.get(`survey2`, {
-                //params: { Experimentid: experimentId }, 
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
@@ -200,7 +201,7 @@ const EditExperimentStep2 = () => {
             questions: [
                 ...prev.questions,
                 {
-                    id: Date.now(),
+                    id: generateRandomId(),
                     statement: '',
                     type: 'open',
                     required: false,
@@ -226,7 +227,7 @@ const EditExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null },
+                            { id: generateRandomId(), statement: '', score: 0, subquestion: null },
                         ],
                     }
                     : q
@@ -252,7 +253,7 @@ const EditExperimentStep2 = () => {
         setQuestions([
             ...questions,
             {
-                id: Date.now(),
+                id: generateRandomId(),
                 statement: '',
                 type: 'open',
                 required: false,
@@ -286,7 +287,7 @@ const EditExperimentStep2 = () => {
                         ...q,
                         options: [
                             ...q.options,
-                            { id: Date.now(), statement: '', score: 0, subquestion: null },
+                            { id: generateRandomId(), statement: '', score: 0, subquestion: null },
                         ],
                     }
                     : q
@@ -360,11 +361,29 @@ const EditExperimentStep2 = () => {
         }
     };
 
+    const addIdOnSurvey = (questions) => {
+        if (!questions || !Array.isArray(questions)) return;
+    
+        questions.forEach((question) => {
+            question.id = generateRandomId();
+    
+            if (question.options && Array.isArray(question.options)) {
+                question.options.forEach((option) => {
+                    option.id = generateRandomId(); 
+    
+                    if (option.subquestion && option.subquestion.options) {
+                        addIdOnSurvey(option.subquestion.options);
+                    }
+                });
+            }
+        });
+    };
 
     const handleEditSurvey = (index) => {
         setIndexId(index);
-        const surveyToEdit = ExperimentSurveys[index];
+        let surveyToEdit = ExperimentSurveys[index];
         if (surveyToEdit) {
+            addIdOnSurvey(surveyToEdit.questions);
             setEditedSurvey(surveyToEdit);
             setIsEditDialogOpen(true);
         }
@@ -823,7 +842,7 @@ const EditExperimentStep2 = () => {
                                                                                                 ...opt.subquestion,
                                                                                                 options: [
                                                                                                     ...(opt.subquestion.options || []),
-                                                                                                    { id: `subopt-${Date.now()}`, statement: '' },
+                                                                                                    { id: generateRandomId(), statement: '' },
                                                                                                 ],
                                                                                             })
                                                                                         }
@@ -887,7 +906,7 @@ const EditExperimentStep2 = () => {
                                                                                                 ...opt.subquestion,
                                                                                                 options: [
                                                                                                     ...(opt.subquestion.options || []),
-                                                                                                    { id: `subopt-${Date.now()}`, statement: '', score: 0 },
+                                                                                                    { id: generateRandomId(), statement: '', score: 0 },
                                                                                                 ],
                                                                                             })
                                                                                         }
