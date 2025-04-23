@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../config/axios';
 import 'react-quill/dist/quill.snow.css';
 
@@ -55,10 +55,7 @@ const EditExperiment = () => {
       setExperimentTitle(data.name || '');
       setExperimentType(data.typeExperiment || '');
       setBtypeExperiment(data.betweenExperimentType || '');
-      console.log(data)
-      console.log(data.summary)
       setExperimentDesc(data.summary || '');
-      console.log(ExperimentDesc)
     } catch (err) {
       console.error('Error fetching experiment data:', err);
       setError('Error fetching the experiment');
