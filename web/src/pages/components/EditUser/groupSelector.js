@@ -19,7 +19,7 @@ const GroupSelector = ({isVisible, closeModal, userId, groups, addUserToGroup}) 
 
                 <div className={styles.groupList}>
                     {groups.map(group => (
-                        <div className={styles.groupContainer}>
+                        <div key={group.groupName} className={styles.groupContainer}>
                             <strong>{group.groupName}</strong>
                             <IconButton
                                 onClick={() => addUserToGroup(userId, group.id)}

@@ -62,7 +62,7 @@ const EditUser = (ExperimentId) => {
                 <>
                     <div className={styles.stepContainer}>
                         {STEPS.map((step, index) => (
-                            <div className={styles.stepSelector} onClick={() => handleSwitchStep(index)}>
+                            <div key={index} className={styles.stepSelector} onClick={() => handleSwitchStep(index)}>
                                 <Box
                                 sx={{
                                     display: 'flex',
@@ -79,7 +79,7 @@ const EditUser = (ExperimentId) => {
                                 >
                                     {step.icon}
                                 </Box>
-                                <p className={index !== actualStep && styles.inactiveText}>{t(step.label)}</p>
+                                <p className={index !== actualStep ? styles.inactiveText : undefined}>{t(step.label)}</p>
                             </div>
                         ))}
                     </div>
