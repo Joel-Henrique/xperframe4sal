@@ -16,8 +16,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Checkbox, FormLabel, RadioGroup, FormControlLabel, Radio
-
+    Checkbox, 
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -54,8 +53,6 @@ const CreateExperimentStep1 = () => {
         ExperimentType,
         BtypeExperiment,
         ExperimentSurveys,
-        SelectedSurvey,
-        setSelectedSurvey
     } = useContext(StepContext);
     const { t } = useTranslation();
     const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
@@ -64,6 +61,7 @@ const CreateExperimentStep1 = () => {
     const [isLoadingTask, setIsLoadingTask] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [openTaskIds, setOpenTaskIds] = useState([]);
+    const [SelectedSurvey, setSelectedSurvey] = useState([]);
 
     const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
@@ -89,7 +87,7 @@ const CreateExperimentStep1 = () => {
     const [taskToDeleteIndex, setTaskToDeleteIndex] = useState(null);
 
     const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-
+    const [selectedQuestionIdsEdit, setSelectedQuestionIdsEdit] = useState([]);
     const [selectedQuestion, setSelectedQuestion] = useState(null);
     const [scoreType, setscoreType] = useState('');
 
@@ -188,27 +186,39 @@ const CreateExperimentStep1 = () => {
 
     const handleCreateTask = (e) => {
         e.preventDefault();
+
+        const questionIds = RulesExperiment === 'score'
+        ? null
+        : selectedQuestionIds?.map((q) => q.uuid) || [];
+
         const newTask = {
             title: taskTitle,
             summary: taskSummary,
             description: taskDescription,
             RulesExperiment: RulesExperiment,
+            SelectedSurvey: SelectedSurvey.uuid,
+            selectedQuestionIds: questionIds,
             ScoreThreshold: ScoreThreshold,
             ScoreThresholdmx: ScoreThresholdmx,
         };
+
         console.log(newTask)
         setExperimentTasks((prev) => [...prev, newTask]);
         toggleCreateTask();
         setTaskTitle("");
         setTaskSummary("");
         setTaskDescription("");
-        setRulesExperiment("");
         setScoreThreshold("");
         setScoreThresholdmx("");
     };
 
     const handleEditTaskSubmit = (e) => {
         e.preventDefault();
+
+        const questionIds = RulesExperimentEdit === 'score'
+        ? null
+        : selectedQuestionIdsEdit?.map((q) => q.uuid) || [];
+
         const updatedTask = {
             title: taskTitleEdit,
             summary: taskSummaryEdit,
@@ -216,6 +226,8 @@ const CreateExperimentStep1 = () => {
             RulesExperiment: RulesExperimentEdit,
             ScoreThreshold: ScoreThresholdEdit,
             ScoreThresholdmx: ScoreThresholdmxEdit,
+            SelectedSurvey: SelectedSurveyEdit.uuid,
+            selectedQuestionIds: questionIds,
         };
         setExperimentTasks((prev) => {
             const updatedTasks = [...prev];
@@ -228,12 +240,19 @@ const CreateExperimentStep1 = () => {
     const handleEditTask = (index) => {
         setEditTaskIndex(index);
         const task = ExperimentTasks[index];
-        console.log(task)
         setTaskTitleEdit(task.title);
         setTaskSummaryEdit(task.summary);
         setTaskDescriptionEdit(task.description);
         setRulesExperimentEdit(task.RulesExperiment);
-        setSelectedSurveyEdit(task.SelectedSurvey);
+
+        const selectedSurveyObj = ExperimentSurveys.find(survey => survey.uuid === task.SelectedSurvey);
+        setSelectedSurveyEdit(selectedSurveyObj); 
+
+        const selectedQuestionIdsObj = SelectedSurvey?.questions?.filter(quest =>
+            Array.isArray(task?.selectedQuestionIds) && task.selectedQuestionIds.includes(quest.uuid)
+          ) || [];
+          
+        setSelectedQuestionIdsEdit(selectedQuestionIdsObj);   
         setScoreThresholdmxEdit(task.ScoreThresholdmx);
         setScoreThresholdEdit(task.ScoreThreshold);
         toggleEditTask();
@@ -532,14 +551,18 @@ const CreateExperimentStep1 = () => {
                                                 <InputLabel>{t('select_survey')}</InputLabel>
                                                 <Select
                                                     value={SelectedSurveyEdit}
-                                                    onChange={(e) => setSelectedSurveyEdit(e.target.value)}
+                                                    onChange={handleSurveyChange}
                                                     label={t('select_survey')}
                                                 >
-                                                    {ExperimentSurveys.map((survey) => (
-                                                        <MenuItem key={survey.id} value={survey.title}>
-                                                            {survey.title}
-                                                        </MenuItem>
-                                                    ))}
+                                                    {ExperimentSurveys?.length > 0 ? (
+                                                        ExperimentSurveys.map((survey) => (
+                                                            <MenuItem key={survey.id} value={survey}>
+                                                                {survey.title}
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <MenuItem disabled>{t('no_survey_available')}</MenuItem>
+                                                    )}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
@@ -658,7 +681,7 @@ const CreateExperimentStep1 = () => {
                                             <FormControl fullWidth margin="normal">
                                                 <InputLabel>{t('select_question')}</InputLabel>
                                                 <Select
-                                                    value={selectedQuestionIds}
+                                                    value={selectedQuestionIdsEdit}
                                                     onChange={handleQuestionChange}
                                                     label={t('select_question')}
                                                     multiple
@@ -674,7 +697,7 @@ const CreateExperimentStep1 = () => {
                                                             .filter(q => q.type === 'multiple-selection' || q.type === 'multiple-choices')
                                                             .map((question) => (
                                                                 <MenuItem key={question.id} value={question}>
-                                                                    <Checkbox checked={selectedQuestionIds.includes(question)} />
+                                                                    <Checkbox checked={selectedQuestionIdsEdit.includes(question)} />
                                                                     {question.statement || 'Sem enunciado'}
                                                                 </MenuItem>
                                                             ))
@@ -844,22 +867,28 @@ const CreateExperimentStep1 = () => {
                                             </FormControl>
 
                                         </Grid>
+                                        
                                         <Grid item xs={4}>
                                             <FormControl fullWidth margin="normal">
                                                 <InputLabel>{t('select_survey')}</InputLabel>
                                                 <Select
                                                     value={SelectedSurvey}
-                                                    onChange={(e) => setSelectedSurvey(e.target.value)}
+                                                    onChange={handleSurveyChange}
                                                     label={t('select_survey')}
                                                 >
-                                                    {ExperimentSurveys.map((survey) => (
-                                                        <MenuItem key={survey.id} value={survey.title}>
-                                                            {survey.title}
-                                                        </MenuItem>
-                                                    ))}
+                                                    {ExperimentSurveys?.length > 0 ? (
+                                                        ExperimentSurveys.map((survey) => (
+                                                            <MenuItem key={survey.id} value={survey}>
+                                                                {survey.title}
+                                                            </MenuItem>
+                                                        ))
+                                                    ) : (
+                                                        <MenuItem disabled>{t('no_survey_available')}</MenuItem>
+                                                    )}
                                                 </Select>
                                             </FormControl>
                                         </Grid>
+
                                         <Grid item xs={4}>
                                             <FormControl fullWidth margin="normal">
                                                 <InputLabel>{t('select_survey_th')}</InputLabel>

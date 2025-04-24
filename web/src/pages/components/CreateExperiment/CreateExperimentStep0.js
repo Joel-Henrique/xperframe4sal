@@ -46,8 +46,6 @@ const CreateExperimentStep0 = () => {
         setExperimentType,
         BtypeExperiment,
         setBtypeExperiment,
-        RulesExperiment,
-        setRulesExperiment,
         ExperimentDesc,
         setExperimentDesc,
     } = useContext(StepContext);
@@ -66,10 +64,7 @@ const CreateExperimentStep0 = () => {
         { value: 'rules_based', label: t('rules_based') },
         { value: 'manual', label: t('manual') },
     ];
-    const RulesExperimentTypes = [
-        { value: 'score', label: t('score') },
-        { value: 'question', label: t('question') },
-    ];
+    
     const isValidFormExperiment = isValidTitleExp && ExperimentTitle;
     const handleNameChangeTitle = (e) => {
         const value = e.target.value;

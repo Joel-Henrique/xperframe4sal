@@ -231,5 +231,9 @@
   "edit_users": "Edit Users",
   "edit_groups": "Edit Groups",
   "select_group" : "Select a Group",
-  "manual_group_warning" : "*Remember to separate groups after creation!"
+  "manual_group_warning" : "*Remember to separate groups after creation!",
+  "Experiment_created": "Experiment created successfully!",
+  "ICF": "Consent Form Creation",
+  "ICF_desc": "Detailed description of the consent form that will be presented to participants before starting the experiment.",
+  "Experiment_title_ICF": "Consent Form Title"
 }

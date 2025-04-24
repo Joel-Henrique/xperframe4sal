@@ -29,7 +29,7 @@ const EditExperiment = () => {
   const [ExperimentDesc, setExperimentDesc] = useState('');
   const [RulesExperiment, setRulesExperiment] = useState('');
   const [ExperimentId, setExperimentId] = useState('');
-
+  const [ExperimentSurveys, setExperimentSurveys] = useState('');
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const CustomConnector = () => <span style={{ display: 'none' }} />;
   useEffect(() => {
@@ -57,9 +57,24 @@ const EditExperiment = () => {
     }
   },[experimentId, user.accessToken]);
 
+  const fetchSurvey = useCallback(async () => {
+      try {
+          const response = await api.get(`survey2`, {
+              //params: { Experimentid: experimentId }, 
+              headers: { Authorization: `Bearer ${user.accessToken}` },
+          });
+          //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
+          const filteredsurveys = response.data
+          setExperimentSurveys(filteredsurveys);
+      } catch (error) {
+          console.error(t('Error in Search'), error);
+      }
+  },[user.accessToken])
+
   useEffect(() => {
     fetchExperiment();
-  },[fetchExperiment]);
+    fetchSurvey();
+  }, [fetchExperiment, fetchSurvey()]);
 
   const handleStepClick = (index) => {
     setActiveStep(index);
@@ -128,11 +143,12 @@ const EditExperiment = () => {
           setExperimentType,
           BtypeExperiment,
           setBtypeExperiment,
-          RulesExperiment,
-          setRulesExperiment,
           ExperimentDesc,
           setExperimentDesc,
-          ExperimentId
+          ExperimentId,
+          setExperimentId,
+          ExperimentSurveys,
+          setExperimentSurveys,
         ]}
       >
         {/* experimento */}

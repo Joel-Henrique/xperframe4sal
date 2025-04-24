@@ -43,6 +43,7 @@ const EditExperimentStep0 = () => {
   const msgs = useRef(null);
   const { t } = useTranslation();
   const [isValidTitleExp, setIsValidTitleExp] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const [
     ExperimentTitle,
@@ -51,8 +52,6 @@ const EditExperimentStep0 = () => {
     setExperimentType,
     BtypeExperiment,
     setBtypeExperiment,
-    RulesExperiment,
-    setRulesExperiment,
     ExperimentDesc,
     setExperimentDesc,
     ExperimentId
@@ -65,13 +64,10 @@ const EditExperimentStep0 = () => {
   ];
   const betweenExperimentTypes = [
     { value: 'random', label: t('random') },
-    { value: 'score_based', label: t('score_based') },
+    { value: 'rules_based', label: t('rules_based') },
     { value: 'manual', label: t('manual') },
   ];
-  const RulesExperimentTypes = [
-    { value: 'score', label: t('score') },
-    { value: 'question', label: t('question') },
-  ];
+
   const handleTitleChange = (e) => {
     const value = e.target.value;
     setExperimentTitle(value);
@@ -192,22 +188,6 @@ const EditExperimentStep0 = () => {
             </FormControl>
           )}
 
-          {ExperimentType === 'between-subject' && BtypeExperiment === 'score_based' &&  (
-            <FormControl fullWidth margin="normal">
-              <InputLabel>{t('Group_Separation_Method')}</InputLabel>
-              <Select
-                value={RulesExperiment}
-                onChange={(e) => setRulesExperiment(e.target.value)}
-                label={t('aaaa')}
-              >
-                {RulesExperimentTypes.map((stype) => (
-                  <MenuItem key={stype.value} value={stype.value}>
-                    {stype.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
 
           <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
             <CustomContainer>

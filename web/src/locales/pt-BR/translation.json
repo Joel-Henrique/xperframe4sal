@@ -231,5 +231,10 @@
   "edit_users": "Editar Usuários",
   "edit_groups": "Editar Grupos",
   "select_group" : "Selecione Um Grupo",
-  "manual_group_warning" : "*Lembre-se de separar os grupos após a criação!"
+  "manual_group_warning" : "*Lembre-se de separar os grupos após a criação!",
+  "Experiment_created": "O Experimento foi criado com sucesso!",
+  "ICF": "Criação do Termo de Consentimento",
+  "ICF_desc": "Descrição detalhada do termo de consentimento que será apresentado aos participantes antes de iniciar o experimento.",
+  "Experiment_title_ICF": "Título do Termo de Consentimento"
+
 }

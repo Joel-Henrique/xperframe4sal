@@ -8,7 +8,10 @@ const StepContext = createContext({
     setBtypeExperiment: () => {},
     ExperimentDesc: '',
     setExperimentDesc: () => {},
-    ExperimentId: ''
+    ExperimentId: '',
+    setExperimentId: () => {},
+    ExperimentSurveys: '',
+    setExperimentSurveys: () => {},
 });
 
 
