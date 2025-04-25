@@ -22,7 +22,7 @@ import {
     DialogContent,
     Checkbox,
     FormControlLabel,
-    Grid2
+    Grid
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, CancelOutlined, Done, Remove } from '@mui/icons-material';
@@ -652,8 +652,8 @@ const EditExperimentStep2 = () => {
                                     </Typography>
                                     {questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2, backgroundColor: '#f9f9f9' }}>
-                                            <Grid2 container spacing={2} alignItems="center">
-                                                <Grid2 item xs={11}>
+                                            <Grid container spacing={2} alignItems="center">
+                                                <Grid item xs={11}>
                                                     <TextField
                                                         label={t('questionStatement', { index: index + 1 })}
                                                         value={q.statement}
@@ -661,13 +661,13 @@ const EditExperimentStep2 = () => {
                                                         fullWidth
                                                         required
                                                     />
-                                                </Grid2>
-                                                <Grid2 item xs={1}>
+                                                </Grid>
+                                                <Grid item xs={1}>
                                                     <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
                                                         <Remove />
                                                     </IconButton>
-                                                </Grid2>
-                                                <Grid2 item xs={6}>
+                                                </Grid>
+                                                <Grid item xs={6}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('questionType')}</InputLabel>
                                                         <Select
@@ -682,8 +682,8 @@ const EditExperimentStep2 = () => {
                                                             ))}
                                                         </Select>
                                                     </FormControl>
-                                                </Grid2>
-                                                <Grid2 item xs={6}>
+                                                </Grid>
+                                                <Grid item xs={6}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('required')}</InputLabel>
                                                         <Select
@@ -695,10 +695,10 @@ const EditExperimentStep2 = () => {
                                                             <MenuItem value={true}>{t('yes')}</MenuItem>
                                                         </Select>
                                                     </FormControl>
-                                                </Grid2>
+                                                </Grid>
 
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
-                                                    <Grid2 item xs={12}>
+                                                    <Grid item xs={12}>
                                                         <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
                                                             {t('options')}
                                                         </Typography>
@@ -913,9 +913,9 @@ const EditExperimentStep2 = () => {
                                                         >
                                                             {t('addOption')}
                                                         </Button>
-                                                    </Grid2>
+                                                    </Grid>
                                                 )}
-                                            </Grid2>
+                                            </Grid>
                                         </Paper>
                                     ))}
                                     <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestion}>
@@ -1005,8 +1005,8 @@ const EditExperimentStep2 = () => {
                                     </Typography>
                                     {editedSurvey.questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2 }}>
-                                            <Grid2 container spacing={2} alignItems="center">
-                                                <Grid2 item xs={11}>
+                                            <Grid container spacing={2} alignItems="center">
+                                                <Grid item xs={11}>
                                                     <TextField
                                                         label={t('questionStatement', { index: index + 1 })}
                                                         value={q.statement}
@@ -1016,13 +1016,13 @@ const EditExperimentStep2 = () => {
                                                         fullWidth
                                                         required
                                                     />
-                                                </Grid2>
-                                                <Grid2 item xs={1}>
+                                                </Grid>
+                                                <Grid item xs={1}>
                                                     <IconButton color="error" onClick={() => handleRemoveQuestionEdit(q.id)}>
                                                         <Remove />
                                                     </IconButton>
-                                                </Grid2>
-                                                <Grid2 item xs={6}>
+                                                </Grid>
+                                                <Grid item xs={6}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('questionType')}</InputLabel>
                                                         <Select
@@ -1037,8 +1037,8 @@ const EditExperimentStep2 = () => {
                                                             ))}
                                                         </Select>
                                                     </FormControl>
-                                                </Grid2>
-                                                <Grid2 item xs={6}>
+                                                </Grid>
+                                                <Grid item xs={6}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('required')}</InputLabel>
                                                         <Select
@@ -1050,10 +1050,10 @@ const EditExperimentStep2 = () => {
                                                             <MenuItem value={true}>{t('yes')}</MenuItem>
                                                         </Select>
                                                     </FormControl>
-                                                </Grid2>
+                                                </Grid>
 
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
-                                                    <Grid2 item xs={12}>
+                                                    <Grid item xs={12}>
                                                         <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>{t('options')}</Typography>
 
                                                         {q.options.map((opt, optIndex) => (
@@ -1124,9 +1124,9 @@ const EditExperimentStep2 = () => {
                                                         >
                                                             {t('addOption')}
                                                         </Button>
-                                                    </Grid2>
+                                                    </Grid>
                                                 )}
-                                            </Grid2>
+                                            </Grid>
                                         </Paper>
                                     ))}
                                     <Button variant="contained" startIcon={<Add />} onClick={handleAddQuestionEdit}>
