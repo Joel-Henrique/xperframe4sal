@@ -16,6 +16,7 @@ import EditExperimentStep1 from './components/EditExperiment/EditExperimentStep1
 import EditExperimentStep2 from './components/EditExperiment/EditExperimentStep2';
 import StepContext from './components/EditExperiment/context/StepContext';
 import { useParams } from 'react-router-dom';
+import EditExperimentICF from './components/EditExperiment/EditExperimentICF';
 
 
 const EditExperiment = () => {
@@ -27,16 +28,19 @@ const EditExperiment = () => {
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
   const [ExperimentDesc, setExperimentDesc] = useState('');
-  const [RulesExperiment, setRulesExperiment] = useState('');
+  const [Icf, setIcf] = useState('');
   const [ExperimentId, setExperimentId] = useState('');
   const [ExperimentSurveys, setExperimentSurveys] = useState('');
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
   const CustomConnector = () => <span style={{ display: 'none' }} />;
+
   useEffect(() => {
     setActiveStep(step);
   }, [step]);
+
   const steps = [
     { label: t('edit_form'), icon: '📝' },
+    { label: t('edit_icf'), icon: '🤵' },
     { label: t('edit_task'), icon: '📋' },
     { label: t('edit_survey'), icon: '❓' },
   ];
@@ -47,11 +51,13 @@ const EditExperiment = () => {
       const { data } = await api.get(`/experiments2/${experimentId}`, {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       });
+      console.log(data)
       setExperimentId(experimentId);
       setExperimentTitle(data.name || '');
       setExperimentType(data.typeExperiment || '');
       setBtypeExperiment(data.betweenExperimentType || '');
       setExperimentDesc(data.summary || '');
+      setIcf(data.icf || '');
     } catch (err) {
       console.error('Error fetching experiment data:', err);
     }
@@ -149,14 +155,19 @@ const EditExperiment = () => {
           setExperimentId,
           ExperimentSurveys,
           setExperimentSurveys,
+          Icf, 
+          setIcf,
         ]}
       >
         {/* experimento */}
         {activeStep === 0 && <EditExperimentStep0 />}
+         {/*Icf */}
+         {activeStep === 1 && <EditExperimentICF />}
         {/* tarefa */}
-        {activeStep === 1 && <EditExperimentStep1 />}
+        {activeStep === 2 && <EditExperimentStep1 />}
         {/* questionario */}
-        {activeStep === 2 && <EditExperimentStep2 />}
+        {activeStep === 3 && <EditExperimentStep2 />}
+        
       </StepContext.Provider>
     </>
   );
