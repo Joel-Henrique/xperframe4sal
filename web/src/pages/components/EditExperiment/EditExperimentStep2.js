@@ -42,7 +42,7 @@ const EditExperimentStep2 = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
-    const [isLoadingSurvey, setIsLoadingSurvey] = useState(false);
+    const [isLoadingSurvey, setIsLoadingSurvey] = useState(true);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [openSurveyIds, setOpenSurveyIds] = useState([]);
     const [questions, setQuestions] = useState([]);
@@ -63,6 +63,7 @@ const EditExperimentStep2 = () => {
             });
             const filteredsurveys = response.data
             setExperimentSurveys(filteredsurveys);
+            setIsLoadingSurvey(false);
         } catch (error) {
             console.error(t('Error in Search'), error);
         }
