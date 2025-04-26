@@ -189,7 +189,7 @@ const CreateExperimentStep1 = () => {
 
         const questionIds = RulesExperiment === 'score'
         ? null
-        : selectedQuestionIds?.map((q) => q.uuid) || [];
+        : selectedQuestionIds?.map((q) => q.id) || [];
 
         const newTask = {
             title: taskTitle,
@@ -217,7 +217,7 @@ const CreateExperimentStep1 = () => {
 
         const questionIds = RulesExperimentEdit === 'score'
         ? null
-        : selectedQuestionIdsEdit?.map((q) => q.uuid) || [];
+        : selectedQuestionIdsEdit?.map((q) => q.id) || [];
 
         const updatedTask = {
             title: taskTitleEdit,
