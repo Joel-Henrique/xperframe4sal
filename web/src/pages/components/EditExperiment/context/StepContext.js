@@ -12,8 +12,6 @@ const StepContext = createContext({
     setExperimentId: () => {},
     ExperimentSurveys: '',
     setExperimentSurveys: () => {},
-    Icf: '', 
-    setIcf: () => {},
 });
 
 

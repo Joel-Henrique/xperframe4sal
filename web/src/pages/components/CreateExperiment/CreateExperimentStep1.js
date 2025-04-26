@@ -55,7 +55,7 @@ const CreateExperimentStep1 = () => {
         ExperimentSurveys,
     } = useContext(StepContext);
     const { t } = useTranslation();
-    const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
+    const [ScoreThresholdmx, setScoreThresholdmx] = useState('0');
     const [RulesExperiment, setRulesExperiment] = useState('score');
     const [ScoreThreshold, setScoreThreshold] = useState('');
     const [isLoadingTask, setIsLoadingTask] = useState(false);
@@ -615,6 +615,7 @@ const CreateExperimentStep1 = () => {
                                                         }}
                                                     />
                                                 </Grid>
+
                                                 <Grid item xs={4}>
                                                     <TextField
                                                         fullWidth

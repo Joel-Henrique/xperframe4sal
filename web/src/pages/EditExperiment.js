@@ -28,7 +28,7 @@ const EditExperiment = () => {
   const [ExperimentType, setExperimentType] = useState('');
   const [BtypeExperiment, setBtypeExperiment] = useState('');
   const [ExperimentDesc, setExperimentDesc] = useState('');
-  const [Icf, setIcf] = useState('');
+
   const [ExperimentId, setExperimentId] = useState('');
   const [ExperimentSurveys, setExperimentSurveys] = useState('');
   const [user] = useState(JSON.parse(localStorage.getItem('user')));
@@ -57,25 +57,24 @@ const EditExperiment = () => {
       setExperimentType(data.typeExperiment || '');
       setBtypeExperiment(data.betweenExperimentType || '');
       setExperimentDesc(data.summary || '');
-      setIcf(data.icf || '');
     } catch (err) {
       console.error('Error fetching experiment data:', err);
     }
-  },[experimentId, user.accessToken]);
+  }, [experimentId, user.accessToken]);
 
   const fetchSurvey = useCallback(async () => {
-      try {
-          const response = await api.get(`survey2`, {
-              //params: { Experimentid: experimentId }, 
-              headers: { Authorization: `Bearer ${user.accessToken}` },
-          });
-          //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
-          const filteredsurveys = response.data
-          setExperimentSurveys(filteredsurveys);
-      } catch (error) {
-          console.error(t('Error in Search'), error);
-      }
-  },[user.accessToken])
+    try {
+      const response = await api.get(`survey2`, {
+        //params: { Experimentid: experimentId }, 
+        headers: { Authorization: `Bearer ${user.accessToken}` },
+      });
+      //const filteredsurveys = response.data.filter(survey => survey.Experimentid === ExperimentId); 
+      const filteredsurveys = response.data
+      setExperimentSurveys(filteredsurveys);
+    } catch (error) {
+      console.error(t('Error in Search'), error);
+    }
+  }, [user.accessToken])
 
   useEffect(() => {
     fetchExperiment();
@@ -105,13 +104,13 @@ const EditExperiment = () => {
               cursor: 'pointer',
               '& .MuiStepLabel-root': {
                 color: index === activeStep ? 'primary.main' : 'text.disabled',
-                textDecoration: 'none', 
+                textDecoration: 'none',
               },
               '& .MuiStepIcon-root': {
                 color: index === activeStep ? 'primary.main' : 'text.disabled',
               },
               '&:hover .MuiStepLabel-root': {
-                textDecoration: 'none', 
+                textDecoration: 'none',
               },
             }}
           >
@@ -155,19 +154,17 @@ const EditExperiment = () => {
           setExperimentId,
           ExperimentSurveys,
           setExperimentSurveys,
-          Icf, 
-          setIcf,
         ]}
       >
         {/* experimento */}
         {activeStep === 0 && <EditExperimentStep0 />}
-         {/*Icf */}
-         {activeStep === 1 && <EditExperimentICF />}
+        {/*Icf */}
+        {activeStep === 1 && <EditExperimentICF />}
         {/* tarefa */}
         {activeStep === 2 && <EditExperimentStep1 />}
         {/* questionario */}
         {activeStep === 3 && <EditExperimentStep2 />}
-        
+
       </StepContext.Provider>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useContext, useEffect, useRef } from 'react';
 import {
     Box,
     TextField,
@@ -10,6 +10,7 @@ import ReactQuill from 'react-quill';
 import StepContext from './context/StepContext';
 import 'react-quill/dist/quill.snow.css';
 import { api } from '../../../config/axios';
+import { Messages } from 'primereact/messages';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -33,21 +34,28 @@ const CustomContainer = styled('div')(({ theme }) => ({
 
 const EditExperimentICF = () => {
     const [
-        Icf,
-        ExperimentId
+        ExperimentTitle,
+        setExperimentTitle,
+        ExperimentType,
+        setExperimentType,
+        BtypeExperiment,
+        setBtypeExperiment,
+        ExperimentDesc,
+        setExperimentDesc,
+        ExperimentId,
+        setExperimentId,
+        ExperimentSurveys,
+        setExperimentSurveys,
     ] = useContext(StepContext);
 
     const { t } = useTranslation();
     const [isValidTitleExp, setIsValidTitleExp] = useState(true);
+    const [Icfid, setIcfid] = useState('');
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
     const [ExperimentTitleICF, setExperimentTitleICF] = useState('');
     const [ExperimentDescICF, setExperimentDescICF] = useState('');
     const msgs = useRef(null);
 
-    useEffect(() => {
-        setExperimentTitleICF(Icf.ExperimentTitleICF || '');
-        setExperimentDescICF(Icf.ExperimentDescICF || '');
-    }, [Icf]);
 
     const isValidFormExperiment = isValidTitleExp && ExperimentTitleICF?.trim().length > 0;
 
@@ -57,16 +65,34 @@ const EditExperimentICF = () => {
         setIsValidTitleExp(value.trim().length > 0);
     };
 
+    const fetchIcf = useCallback(async () => {
+        try {
+            const { data } = await api.get(`/icf2/experiment/${ExperimentId}`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            console.log(data)
+            setExperimentTitleICF(data.title || '');
+            setExperimentDescICF(data.description || '');
+            setIcfid(data._id || '' )
+        } catch (err) {
+            console.error('Error fetching experiment data:', err);
+        }
+    }, [ExperimentId, user.accessToken]);
+
+    useEffect(() => {
+        fetchIcf();
+    }, [fetchIcf]);
+
+
     const handleEditExperimentSubmit = async (e) => {
         e.preventDefault();
-
         const icf = {
             title: ExperimentTitleICF,
             description: ExperimentDescICF,
         };
 
         try {
-            await api.patch(`/experiments2/${ExperimentId}`, icf, {
+            await api.patch(`/icf2/${Icfid}`, icf, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
 
@@ -158,7 +184,7 @@ const EditExperimentICF = () => {
                     <Box
                         sx={{
                             display: 'flex',
-                            justifyContent: 'space-between',
+                            justifyContent: 'flex-end',
                             marginTop: 2,
                             width: '100%',
                         }}
@@ -175,6 +201,16 @@ const EditExperimentICF = () => {
                         </Button>
                     </Box>
                 </Box>
+                      <Box
+                        sx={{
+                          position: 'fixed',
+                          bottom: 16,
+                          right: 16,
+                          zIndex: 1000,
+                        }}
+                      >
+                    <Messages ref={msgs} />
+                    </Box>
             </Box>
         </Box>
     );
