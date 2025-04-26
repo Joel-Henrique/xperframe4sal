@@ -80,7 +80,7 @@ const EditExperiment = () => {
   useEffect(() => {
     fetchExperiment();
     fetchSurvey();
-  }, [fetchExperiment, fetchSurvey()]);
+  }, [fetchExperiment, fetchSurvey]);
 
   const handleStepClick = (index) => {
     setActiveStep(index);
