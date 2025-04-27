@@ -31,9 +31,20 @@ import { api } from '../../../config/axios';
 
 const EditExperimentStep2 = () => {
     const [
-        ExperimentId
+        ExperimentTitle,
+        setExperimentTitle,
+        ExperimentType,
+        setExperimentType,
+        BtypeExperiment,
+        setBtypeExperiment,
+        ExperimentDesc,
+        setExperimentDesc,
+        ExperimentId,
+        setExperimentId,
+        ExperimentSurveys,
+        setExperimentSurveys,
     ] = useContext(StepContext);
-    const [ExperimentSurveys, setExperimentSurveys] = useState('');
+
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -143,6 +154,7 @@ const EditExperimentStep2 = () => {
                         throw new Error("Need to create options");
                 }
             })
+            console.log(payload);
             const response = await api.post(`survey2`, payload, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });

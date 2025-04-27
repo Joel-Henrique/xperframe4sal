@@ -111,7 +111,6 @@ const CreateExperimentStep2 = () => {
                 if (q.type === 'open') {
                     question.options = []; 
                 }else {
-                    console.log("aaaaaaaaa")
                     question.options = q.options.map((opt) => {
                         const option = { statement: opt.statement, id: opt.id };
                     
