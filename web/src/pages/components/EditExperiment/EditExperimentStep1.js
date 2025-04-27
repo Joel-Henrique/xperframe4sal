@@ -239,13 +239,15 @@ const EditExperimentStep1 = () => {
                 title: taskTitle,
                 summary: taskSummary,
                 description: taskDescription,
-                RulesExperiment: RulesExperiment,
-                SelectedSurvey: SelectedSurvey._id,
-                selectedQuestionIds: questionIds,
-                ScoreThreshold: ScoreThreshold,
-                ScoreThresholdmx: ScoreThresholdmx,
+                rule_type: RulesExperiment,
+                surveyId: SelectedSurvey._id,
+                questionsId: questionIds,
+                minScore: ScoreThreshold,
+                maxScore: ScoreThresholdmx,
                 experimentId: ExperimentId,
             };
+            
+            console.log(newTask)
 
             await api.post(`/task2`, newTask, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
@@ -293,6 +295,7 @@ const EditExperimentStep1 = () => {
     const handleEditTask = (index) => {
         setEditTaskIndex(index);
         const task = tasks.find((t) => t._id === index);
+        console.log(task)
         if (task) {
             setTaskTitleEdit(task.title);
             setTaskSummaryEdit(task.summary);
