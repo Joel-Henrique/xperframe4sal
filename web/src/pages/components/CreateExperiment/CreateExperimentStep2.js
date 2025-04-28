@@ -103,7 +103,7 @@ const CreateExperimentStep2 = () => {
             questions: questions.map((q) => {
                 const question = {
                     statement: q.statement,
-                    uuid: q.id,
+                    id: q.id,
                     type: q.type,
                     required: q.required,
                     hasscore: q.hasscore,
@@ -111,9 +111,8 @@ const CreateExperimentStep2 = () => {
                 if (q.type === 'open') {
                     question.options = []; 
                 }else {
-                    console.log("aaaaaaaaa")
                     question.options = q.options.map((opt) => {
-                        const option = { statement: opt.statement, uuid: opt.id };
+                        const option = { statement: opt.statement, id: opt.id };
                     
                         if (opt.subquestion) {
                             option.subquestion = { ...opt.subquestion };

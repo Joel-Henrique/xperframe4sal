@@ -201,7 +201,6 @@
   "subquestion": "Subquestion",
   "subquestionType": "Subquestion Type",
   "subquestion_E": "subquestion_E",
-  "success_message": "user create succes.........",
   "NSurveysFound": "No Surveys Found",
   "Nosurveyscreated": "No surveys have been created yet. Start by creating a new one!",
   "Removesubq": "Remove Subquestion",
@@ -230,10 +229,14 @@
   "non_selected_survey": "No questionnaire has been created",
   "edit_users": "Edit Users",
   "edit_groups": "Edit Groups",
-  "select_group" : "Select a Group",
-  "manual_group_warning" : "*Remember to separate groups after creation!",
+  "select_group": "Select a Group",
+  "manual_group_warning": "*Remember to separate groups after creation!",
   "Experiment_created": "Experiment created successfully!",
   "ICF": "Consent Form Creation",
   "ICF_desc": "Detailed description of the consent form that will be presented to participants before starting the experiment.",
-  "Experiment_title_ICF": "Consent Form Title"
+  "Experiment_title_ICF": "Consent Form Title",
+  "edit_icf": "Edit Consent Form",
+  "register_fail_message": "Registration failed. Please check your information and try again.",
+  "success_message": "Successfully registered!",
+  "error_loading_experiments": "Error Loading Experiments"
 }

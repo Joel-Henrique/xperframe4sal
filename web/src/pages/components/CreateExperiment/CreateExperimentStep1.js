@@ -55,7 +55,7 @@ const CreateExperimentStep1 = () => {
         ExperimentSurveys,
     } = useContext(StepContext);
     const { t } = useTranslation();
-    const [ScoreThresholdmx, setScoreThresholdmx] = useState('');
+    const [ScoreThresholdmx, setScoreThresholdmx] = useState('0');
     const [RulesExperiment, setRulesExperiment] = useState('score');
     const [ScoreThreshold, setScoreThreshold] = useState('');
     const [isLoadingTask, setIsLoadingTask] = useState(false);
@@ -189,7 +189,7 @@ const CreateExperimentStep1 = () => {
 
         const questionIds = RulesExperiment === 'score'
         ? null
-        : selectedQuestionIds?.map((q) => q.uuid) || [];
+        : selectedQuestionIds?.map((q) => q.id) || [];
 
         const newTask = {
             title: taskTitle,
@@ -217,7 +217,7 @@ const CreateExperimentStep1 = () => {
 
         const questionIds = RulesExperimentEdit === 'score'
         ? null
-        : selectedQuestionIdsEdit?.map((q) => q.uuid) || [];
+        : selectedQuestionIdsEdit?.map((q) => q.id) || [];
 
         const updatedTask = {
             title: taskTitleEdit,
@@ -615,6 +615,7 @@ const CreateExperimentStep1 = () => {
                                                         }}
                                                     />
                                                 </Grid>
+
                                                 <Grid item xs={4}>
                                                     <TextField
                                                         fullWidth
