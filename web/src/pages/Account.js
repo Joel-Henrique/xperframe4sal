@@ -1,155 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { api } from "../config/axios.js";
-import {
-  Container,
-  Paper,
-  TextField,
-  Button,
-  InputAdornment,
-  IconButton,
-  Box,
-} from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { ConfirmDialog } from '../components/ConfirmDialog.js';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { ErrorMessage } from '../components/ErrorMessage.js';
-import { LoadingIndicator } from '../components/LoadIndicator.js';
 import { CustomSnackbar } from '../components/CustomSnackbar';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import EditAccount from '../components/Account/EditAccount.js';
+import EditPassword from '../components/Account/EditPassword.js';
 
 const Account = () => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
   const storedUser = localStorage.getItem('user');
   const navigate = useNavigate();
-  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
-  let [name, setName] = useState('');
-  let [lastName, setLastName] = useState('');
-  let [email, setEmail] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [showSnackBar, setShowSnackBar] = useState(false);
   const [severity, setSeverity] = useState('success');
   const [message, setMessage] = useState('success');
   const [redirect, setRedirect] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(true);
-  const [isValidName, setIsValidName] = useState(true);
-  const [isValidLastName, setIsValidLastName] = useState(true);
-  const [isValidPassword, setIsValidPassword] = useState(true);
-  const [password, setPassword] = useState('');
   const [alertMessage, setAlertMessage] = useState(null);
   const [messageType, setMessageType] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [enableEditButton, setEnableEditButton] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setLastName(user.lastName);
-      setEmail(user.email);
-    }
-  }, [user]);
-
-  const handleEmailChange = (e) => {
-    const inputEmail = e.target.value;
-    setEmail(inputEmail);
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const isValid = emailRegex.test(inputEmail) && inputEmail.length > 0;
-    if (inputEmail !== user.email && isValid) {
-      setEnableEditButton(true);
-    } else {
-      setEnableEditButton(false);
-    }
-    setIsValidEmail(isValid);
-  };
-
-  const handlePasswordChange = (e) => {
-    const inputPassword = e.target.value;
-    setPassword(inputPassword);
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\]*@#$%^<>'";|}{:,./?~()`&\-_+=![]).{6,}$/;
-    setIsValidPassword(passwordRegex.test(inputPassword));
-  }
-
-  const handleNameChange = (e) => {
-    const inputName = e.target.value;
-    setName(inputName);
-    if (inputName !== user.name && inputName.length > 0) {
-      setEnableEditButton(true);
-    } else {
-      setEnableEditButton(false);
-    }
-    setIsValidName(inputName ? true : false)
-  };
-
-  const handleLastNameChange = (e) => {
-    const inputName = e.target.value;
-    setLastName(inputName);
-    if (inputName !== user.lastName) {
-      setEnableEditButton(true);
-    } else {
-      setEnableEditButton(false);
-    }
-    setIsValidLastName(inputName ? true : false)
-  };
-
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleEdit = async () => {
-    if (!isValidEmail) {
-      setAlertMessage(t('E-mail inválido. Verifique e tente novamente.'));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidName) {
-      setAlertMessage(t('Preencha seu nome.'));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidLastName) {
-      setAlertMessage(t('Preencha seu sobrenome.'));
-      setMessageType('fail');
-      return;
-    }
-    if (!isValidPassword) {
-      setAlertMessage(t('isValidPassword'));
-      setMessageType('fail');
-      return;
-    }
-
-    name = name.trim();
-    setName(name);
-    lastName = lastName.trim();
-    setLastName(lastName);
-    email = email.trim();
-    setEmail(email);
-
-    let userData = { name, lastName, email, password };
-
-    userData = Object.assign(userData, user);
-    
-    
-    //Correcao temporal
-    const userDataTemp = {name, lastName, email} 
-    setIsLoading(true);
-    try {
-      let response = await api.patch(`/users2/${user.id}`, userDataTemp, { 'headers': { Authorization: `Bearer ${user.accessToken}` } });
-      setIsLoading(false);
-      const expirationTime = user.expirationTime;
-      setUser({ ...userData, expirationTime });
-      localStorage.setItem('user', JSON.stringify({ ...userData, expirationTime }));
-      if (response.data) {
-        setAlertMessage(t('Seu cadastro foi atualizado com sucesso!'));
-        setMessageType('success');
-        setEnableEditButton(false);
-      }
-    } catch (e) {
-      setIsLoading(false);
-      setAlertMessage(t('Não foi possível atualizar o cadastro. Verifique todos os campos e tente novamente.'));
-      setMessageType('fail');
-    }
-  };
+  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
   const handleDeleteAllData = async () => {
     try {
@@ -202,86 +74,30 @@ const Account = () => {
           {t('Apagar todos meus dados')}
         </Button>
       </Box>
-      <Container maxWidth="xs" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-        height: '80vh',
-        justifyContent: 'center',
-        position: 'relative',
-      }}>
-        <Paper elevation={3} sx={{ padding: 2 }}>
-          {isLoading && <LoadingIndicator size={50} />}
-          {alertMessage && <ErrorMessage message={alertMessage} messageType={messageType} onClose={() => setAlertMessage(null)} />}
-          <form onSubmit={handleEdit} disabled={isLoading}>
-            <TextField
-              label={t('Nome')}
-              error={!isValidName}
-              helperText={!isValidName ? t('Preencha o campo nome.') : ''}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={name}
-              onChange={handleNameChange}
-            />
-            <TextField
-              label={t('Sobrenome')}
-              error={!isValidLastName}
-              helperText={!isValidLastName ? t('Preencha o campo sobrenome.') : ''}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={lastName}
-              onChange={handleLastNameChange}
-            />
-            <TextField
-              label={t('E-mail')}
-              type="email"
-              autoComplete="email"
-              error={!isValidEmail}
-              helperText={!isValidEmail ? t('E-mail inválido.') : ''}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              value={email}
-              onChange={handleEmailChange}
-            />
-            <TextField
-              label={t('Senha')}
-              error={!isValidPassword}
-              helperText={!isValidPassword ? t('isValidPassword') : ''}
-              fullWidth
-              margin="normal"
-              autoComplete="current-password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={handlePasswordChange}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={handleTogglePasswordVisibility}
-                      edge="end"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              type="submit"
-              style={{ margin: '16px 0' }}
-              disabled={!enableEditButton || isLoading}
-            >
-              Editar
-            </Button>
-          </form>
-        </Paper>
-      </Container>
+      <EditAccount
+        t={t}
+        user={user}
+        isLoading={isLoading}
+        alertMessage={alertMessage}
+        messageType={messageType}
+        setUser={setUser}
+        setMessageType={setMessageType}
+        setIsLoading={setIsLoading}
+        setAlertMessage={setAlertMessage}
+      />
+      {/*
+      <EditPassword
+        t={t}
+        user={user}
+        isLoading={isLoading}
+        alertMessage={alertMessage}
+        messageType={messageType}
+        setUser={setUser}
+        setMessageType={setMessageType}
+        setIsLoading={setIsLoading}
+        setAlertMessage={setAlertMessage}
+      />
+      */}
     </>
   );
 };
