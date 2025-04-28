@@ -89,7 +89,6 @@ const EditExperiment = () => {
       <Stepper
         activeStep={activeStep}
         alternativeLabel
-        connector={<CustomConnector />}
       >
         {steps.map((step, index) => (
           <Step
