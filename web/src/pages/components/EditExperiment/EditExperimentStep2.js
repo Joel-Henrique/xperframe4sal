@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useState, useContext, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import 'react-quill/dist/quill.snow.css';
 import StepContext from './context/StepContext';
 import {
@@ -22,9 +23,12 @@ import {
     DialogContent,
     Checkbox,
     FormControlLabel,
-    Grid
+    Grid,
+    Switch,
+    Menu,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Add, CancelOutlined, Done, Remove } from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { api } from '../../../config/axios';
@@ -64,6 +68,9 @@ const EditExperimentStep2 = () => {
     const [SurveyToDeleteId, setSurveyToDeleteId] = useState(null);
     const [editedSurvey, setEditedSurvey] = useState(null);
     const [IndexId, setIndexId] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedOptId, setSelectedOptId] = useState(null);
+    const [selectedQId, setSelectedQId] = useState(null);
 
     const generateRandomId = () => `id-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
@@ -78,11 +85,22 @@ const EditExperimentStep2 = () => {
         } catch (error) {
             console.error(t('Error in Search'), error);
         }
-    },[user.accessToken, t]);
+    }, [user.accessToken, t]);
 
     useEffect(() => {
         fetchSurvey();
-    },[fetchSurvey]);
+    }, [fetchSurvey]);
+
+    const handleMenuOpen = (event, qId, optId) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedQId(qId);
+        setSelectedOptId(optId);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedOptId(null);
+    };
 
     const handleOpenDeleteDialog = (index) => {
         setSurveyToDeleteId(ExperimentSurveys[index])
@@ -138,19 +156,21 @@ const EditExperimentStep2 = () => {
                             score: score ? score : 0,
                         })),
                     }
-                    : {options: [
-                        {
-                            statement: '',
-                            score: 0
-                        }
-                    ]}),
+                    : {
+                        options: [
+                            {
+                                statement: '',
+                                score: 0
+                            }
+                        ]
+                    }),
             })),
         };
 
         try {
             questions.forEach(question => {
-                if(question.type === 'multiple-selection' || question.type === 'multiple-choices'){
-                    if(question.options.length === 0)
+                if (question.type === 'multiple-selection' || question.type === 'multiple-choices') {
+                    if (question.options.length === 0)
                         throw new Error("Need to create options");
                 }
             })
@@ -360,29 +380,10 @@ const EditExperimentStep2 = () => {
         }
     };
 
-    const addIdOnSurvey = (questions) => {
-        if (!questions || !Array.isArray(questions)) return;
-    
-        questions.forEach((question) => {
-            question.id = generateRandomId();
-    
-            if (question.options && Array.isArray(question.options)) {
-                question.options.forEach((option) => {
-                    option.id = generateRandomId(); 
-    
-                    if (option.subquestion && option.subquestion.options) {
-                        addIdOnSurvey(option.subquestion.options);
-                    }
-                });
-            }
-        });
-    };
-
     const handleEditSurvey = (index) => {
         setIndexId(index);
         let surveyToEdit = ExperimentSurveys[index];
         if (surveyToEdit) {
-            addIdOnSurvey(surveyToEdit.questions);
             setEditedSurvey(surveyToEdit);
             setIsEditDialogOpen(true);
         }
@@ -423,7 +424,7 @@ const EditExperimentStep2 = () => {
             >
                 <Box
                     sx={{
-                        width: {xs: '100%',sm:'60%'},
+                        width: { xs: '100%', sm: '60%' },
                         padding: 3,
                         display: 'flex',
                         flexDirection: 'column',
@@ -607,11 +608,12 @@ const EditExperimentStep2 = () => {
                     open={isCreateQuestOpen}
                     onClose={toggleCreateQuest}
                     fullWidth
-                    sx={{'& .MuiDialog-paper': {
-                        margin: {xs: 0, sm: 32},
-                        height: {xs: '100vh', sm:'100%'},
-                        maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
-                        width: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                    sx={{
+                        '& .MuiDialog-paper': {
+                            margin: { xs: 0, sm: 32 },
+                            height: { xs: '100vh', sm: '100%' },
+                            maxWidth: { xs: '100vw', sm: 'calc(100% - 64px)' },
+                            width: { xs: '100vw', sm: 'calc(100% - 64px)' },
                         }
                     }}
                 >
@@ -665,8 +667,21 @@ const EditExperimentStep2 = () => {
                                     </Typography>
                                     {questions.map((q, index) => (
                                         <Paper key={q.id} sx={{ padding: 2, mb: 2, backgroundColor: '#f9f9f9' }}>
-                                            <Grid container spacing={2} alignItems="center">
-                                                <Grid item xs={11}>
+                                            <Grid container spacing={2} sx={{
+                                                flexDirection: {
+                                                    xs: 'column', sm: 'row'
+                                                },
+                                                alignItems: {
+                                                    xs: 'flex-start', sm: 'center'
+                                                },
+                                            }}>
+                                                <Grid
+                                                    item
+                                                    xs={6}
+                                                    sx={{
+                                                        width: '100%',
+                                                        maxWidth: { xs: '100%', sm: '50%' }
+                                                    }}>
                                                     <TextField
                                                         label={t('questionStatement', { index: index + 1 })}
                                                         value={q.statement}
@@ -675,12 +690,13 @@ const EditExperimentStep2 = () => {
                                                         required
                                                     />
                                                 </Grid>
-                                                <Grid item xs={1}>
-                                                    <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
-                                                        <Remove />
-                                                    </IconButton>
-                                                </Grid>
-                                                <Grid item xs={6}>
+                                                <Grid
+                                                    item
+                                                    xs={6}
+                                                    sx={{
+                                                        width: '100%',
+                                                        maxWidth: { xs: '100%', sm: '50%' }
+                                                    }}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>{t('questionType')}</InputLabel>
                                                         <Select
@@ -696,28 +712,55 @@ const EditExperimentStep2 = () => {
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
-                                                <Grid item xs={6}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel>{t('required')}</InputLabel>
-                                                        <Select
-                                                            value={q.required}
-                                                            onChange={(e) => handleQuestionChange(q.id, 'required', e.target.value)}
-                                                            label={t('required')}
-                                                        >
-                                                            <MenuItem value={false}>{t('no')}</MenuItem>
-                                                            <MenuItem value={true}>{t('yes')}</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
+
+                                                <Grid item xs={7}>
                                                 </Grid>
+                                                {(q.type === 'open') && (
+                                                    <Grid item xs={2}>
+                                                    </Grid>
+                                                )}
+                                                {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
+                                                    <Grid item xs={2}>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Switch
+                                                                    checked={Boolean(q.hasscore)}
+                                                                    onChange={(e) => handleQuestionChange(q.id, 'hasscore', e.target.checked)}
+                                                                    color="primary"
+                                                                />
+                                                            }
+                                                            label={t('score')}
+                                                        />
+                                                    </Grid>
+                                                )}
+
+                                                <Grid item xs={2}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={q.required}
+                                                                onChange={(e) => handleQuestionChange(q.id, 'required', e.target.checked)}
+                                                                color="primary"
+                                                            />
+                                                        }
+                                                        label={t('required')}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={1}>
+                                                    <IconButton color="error" onClick={() => handleRemoveQuestion(q.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Grid>
+
 
                                                 {(q.type === 'multiple-selection' || q.type === 'multiple-choices') && (
                                                     <Grid item xs={12}>
                                                         <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
                                                             {t('options')}
                                                         </Typography>
+
                                                         {q.options.map((opt, optIndex) => (
                                                             <Box key={opt.id} sx={{ mb: 2 }}>
-
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                                                     <TextField
                                                                         label={t('option', { index: optIndex + 1 })}
@@ -729,7 +772,7 @@ const EditExperimentStep2 = () => {
                                                                         required
                                                                     />
 
-                                                                    {q.type === 'multiple-choices' && (
+                                                                    {q.hasscore && (
                                                                         <TextField
                                                                             label={t('weight')}
                                                                             type="number"
@@ -742,118 +785,130 @@ const EditExperimentStep2 = () => {
                                                                         />
                                                                     )}
 
-                                                                    <IconButton
-                                                                        color="error"
-                                                                        onClick={() => handleRemoveOption(q.id, opt.id)}
-                                                                        sx={{ ml: 2 }}
-                                                                    >
-                                                                        <Remove />
+                                                                    <IconButton onClick={(event) => handleMenuOpen(event, opt.id)}>
+                                                                        <MoreVertIcon />
                                                                     </IconButton>
+
+                                                                    <Menu
+                                                                        anchorEl={anchorEl}
+                                                                        open={Boolean(anchorEl)}
+                                                                        onClose={handleMenuClose}
+                                                                    >
+                                                                        <MenuItem
+                                                                            onClick={() => {
+                                                                                handleRemoveOption(q.id, selectedOptId);
+                                                                                handleMenuClose();
+                                                                            }}
+                                                                        >
+                                                                            {t("excluiopt")}
+                                                                        </MenuItem>
+
+                                                                        <MenuItem
+                                                                            onClick={() => {
+                                                                                const currentOpt = q.options.find(o => o.id === selectedOptId);
+                                                                                const newValue = currentOpt?.subquestion ? null : {
+                                                                                    statement: "",
+                                                                                    type: "open",
+                                                                                    options: [],
+                                                                                    hasscore: false,
+                                                                                    required: false,
+                                                                                    hassub: false,
+                                                                                };
+                                                                                handleOptionChange(q.id, selectedOptId, "subquestion", newValue);
+                                                                                handleMenuClose();
+                                                                            }}
+                                                                        >
+                                                                            {t(q.options.find(o => o.id === selectedOptId)?.subquestion ? "Removesubq" : "AddSubq")}
+                                                                        </MenuItem>
+                                                                    </Menu>
                                                                 </Box>
 
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                    <FormControlLabel
-                                                                        control={
-                                                                            <Checkbox
-                                                                                checked={opt.subquestion !== null}
-                                                                                onChange={(e) =>
-                                                                                    handleOptionChange(q.id, opt.id, 'subquestion', e.target.checked ? { statement: '', type: 'open', required: false } : null)
-                                                                                }
-                                                                            />
-                                                                        }
-                                                                        label={t('hasSubquestion')}
-                                                                    />
 
                                                                     {opt.subquestion !== null && (
-                                                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, ml: 2, marginTop: 2 }}>
-                                                                            <Box>
-                                                                                <TextField
-                                                                                    label={t('subquestion_E')}
-                                                                                    value={opt.subquestion.statement}
-                                                                                    onChange={(e) =>
-                                                                                        handleOptionChange(q.id, opt.id, 'subquestion', {
-                                                                                            ...opt.subquestion,
-                                                                                            statement: e.target.value
-                                                                                        })
-                                                                                    }
-                                                                                    fullWidth
-                                                                                    required
-                                                                                />
-                                                                            </Box>
+                                                                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, ml: 8, marginTop: 2 }}>
+                                                                            <Grid container spacing={2} alignItems="center">
+                                                                                <Grid item xs={6}>
+                                                                                    <TextField
+                                                                                        label={t('subquestion_E')}
+                                                                                        value={opt.subquestion.statement}
+                                                                                        onChange={(e) =>
+                                                                                            handleOptionChange(q.id, opt.id, 'subquestion', {
+                                                                                                ...opt.subquestion,
+                                                                                                statement: e.target.value
+                                                                                            })
+                                                                                        }
+                                                                                        fullWidth
+                                                                                        required
+                                                                                    />
+                                                                                </Grid>
+                                                                                <Grid item xs={6}>
+                                                                                    <FormControl fullWidth>
+                                                                                        <InputLabel>{t('subquestionType')}</InputLabel>
+                                                                                        <Select
+                                                                                            value={opt.subquestion.type}
+                                                                                            onChange={(e) =>
+                                                                                                handleOptionChange(q.id, opt.id, 'subquestion', { ...opt.subquestion, type: e.target.value })
+                                                                                            }
+                                                                                            label={t('subquestionType')}
+                                                                                        >
+                                                                                            {questionTypes.map((qt) => (
+                                                                                                <MenuItem key={qt.value} value={qt.value}>
+                                                                                                    {qt.label}
+                                                                                                </MenuItem>
+                                                                                            ))}
+                                                                                        </Select>
+                                                                                    </FormControl>
+                                                                                </Grid>
+                                                                                <Grid item xs={7}>
+                                                                                </Grid>
+                                                                                {(opt.subquestion.type === 'multiple-selection' || opt.subquestion.type === 'multiple-choices') && (
+                                                                                    <Grid item xs={2}>
+                                                                                        <FormControlLabel
+                                                                                            control={
+                                                                                                <Switch
+                                                                                                    checked={Boolean(opt.subquestion.hasscore)}
+                                                                                                    onChange={(e) =>
+                                                                                                        handleOptionChange(q.id, opt.id, "subquestion", {
+                                                                                                            ...opt.subquestion,
+                                                                                                            hasscore: e.target.checked,
+                                                                                                        })
+                                                                                                    }
+                                                                                                    color="primary"
+                                                                                                />
+                                                                                            }
+                                                                                            label={t("score")}
+                                                                                        />
+                                                                                    </Grid>
+                                                                                )}
 
-                                                                            <FormControl fullWidth>
-                                                                                <InputLabel>{t('subquestionType')}</InputLabel>
-                                                                                <Select
-                                                                                    value={opt.subquestion.type}
-                                                                                    onChange={(e) =>
-                                                                                        handleOptionChange(q.id, opt.id, 'subquestion', { ...opt.subquestion, type: e.target.value })
-                                                                                    }
-                                                                                    label={t('subquestionType')}
-                                                                                >
-                                                                                    {questionTypes.map((qt) => (
-                                                                                        <MenuItem key={qt.value} value={qt.value}>
-                                                                                            {qt.label}
-                                                                                        </MenuItem>
-                                                                                    ))}
-                                                                                </Select>
-                                                                            </FormControl>
+                                                                                <Grid item xs={2}>
+                                                                                    <FormControlLabel
+                                                                                        control={
+                                                                                            <Switch
+                                                                                                checked={opt.subquestion.required}
+                                                                                                onChange={(e) =>
+                                                                                                    handleOptionChange(q.id, opt.id, "subquestion", {
+                                                                                                        ...opt.subquestion,
+                                                                                                        required: e.target.checked,
+                                                                                                    })
+                                                                                                }
+                                                                                                color="primary"
+                                                                                            />
+                                                                                        }
+                                                                                        label={t('required')}
+                                                                                    />
+                                                                                </Grid>
 
-                                                                            {opt.subquestion.type === 'multiple-selection' && (
+                                                                            </Grid>
 
+                                                                            {(opt.subquestion.type === 'multiple-selection' || opt.subquestion.type === 'multiple-choices') && (
                                                                                 <Box>
                                                                                     <Typography variant="subtitle1" sx={{ marginBottom: 2 }}>
                                                                                         {t('options')}
                                                                                     </Typography>
                                                                                     {opt.subquestion.options?.map((subOpt, subOptIndex) => (
-                                                                                        <Box key={subOpt.id} sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                                                                                            <TextField
-                                                                                                label={t('option', { index: subOptIndex + 1 })}
-                                                                                                value={subOpt.statement}
-                                                                                                onChange={(e) =>
-                                                                                                    handleOptionChange(q.id, opt.id, 'subquestion', {
-                                                                                                        ...opt.subquestion,
-                                                                                                        options: opt.subquestion.options.map((o, i) =>
-                                                                                                            i === subOptIndex ? { ...o, statement: e.target.value } : o
-                                                                                                        ),
-                                                                                                    })
-                                                                                                }
-                                                                                                fullWidth
-                                                                                                required
-                                                                                            />
-                                                                                            <IconButton
-                                                                                                color="error"
-                                                                                                onClick={() =>
-                                                                                                    handleOptionChange(q.id, opt.id, 'subquestion', {
-                                                                                                        ...opt.subquestion,
-                                                                                                        options: opt.subquestion.options.filter((_, i) => i !== subOptIndex),
-                                                                                                    })
-                                                                                                }
-                                                                                            >
-                                                                                                <Remove />
-                                                                                            </IconButton>
-                                                                                        </Box>
-                                                                                    ))}
-                                                                                    <Button
-                                                                                        variant="outlined"
-                                                                                        startIcon={<Add />}
-                                                                                        onClick={() =>
-                                                                                            handleOptionChange(q.id, opt.id, 'subquestion', {
-                                                                                                ...opt.subquestion,
-                                                                                                options: [
-                                                                                                    ...(opt.subquestion.options || []),
-                                                                                                    { id: generateRandomId(), statement: '' },
-                                                                                                ],
-                                                                                            })
-                                                                                        }
-                                                                                    >
-                                                                                        {t('addOption')}
-                                                                                    </Button>
-                                                                                </Box>
-                                                                            )}
 
-                                                                            {opt.subquestion.type === 'multiple-choices' && (
-                                                                                <Box>
-                                                                                    {opt.subquestion.options?.map((subOpt, subOptIndex) => (
                                                                                         <Box key={subOpt.id} sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                                                                                             <TextField
                                                                                                 label={t('option', { index: subOptIndex + 1 })}
@@ -869,21 +924,24 @@ const EditExperimentStep2 = () => {
                                                                                                 fullWidth
                                                                                                 required
                                                                                             />
-                                                                                            <TextField
-                                                                                                label={t('weight')}
-                                                                                                type="number"
-                                                                                                value={subOpt.score || 0}
-                                                                                                onChange={(e) =>
-                                                                                                    handleOptionChange(q.id, opt.id, 'subquestion', {
-                                                                                                        ...opt.subquestion,
-                                                                                                        options: opt.subquestion.options.map((o, i) =>
-                                                                                                            i === subOptIndex ? { ...o, score: Number(e.target.value) } : o
-                                                                                                        ),
-                                                                                                    })
-                                                                                                }
-                                                                                                sx={{ width: 100 }}
-                                                                                                required
-                                                                                            />
+                                                                                            {opt.subquestion.hasscore && (
+                                                                                                <TextField
+                                                                                                    label={t('weight')}
+                                                                                                    type="number"
+                                                                                                    value={subOpt.score || 0}
+                                                                                                    onChange={(e) =>
+                                                                                                        handleOptionChange(q.id, opt.id, 'subquestion', {
+                                                                                                            ...opt.subquestion,
+                                                                                                            options: opt.subquestion.options.map((o, i) =>
+                                                                                                                i === subOptIndex ? { ...o, score: Number(e.target.value) } : o
+                                                                                                            ),
+                                                                                                        })
+                                                                                                    }
+                                                                                                    sx={{ width: 100, ml: 2 }}
+                                                                                                    required
+                                                                                                />
+
+                                                                                            )}
                                                                                             <IconButton
                                                                                                 color="error"
                                                                                                 onClick={() =>
@@ -893,7 +951,7 @@ const EditExperimentStep2 = () => {
                                                                                                     })
                                                                                                 }
                                                                                             >
-                                                                                                <Remove />
+                                                                                                <DeleteIcon />
                                                                                             </IconButton>
                                                                                         </Box>
                                                                                     ))}
@@ -905,7 +963,7 @@ const EditExperimentStep2 = () => {
                                                                                                 ...opt.subquestion,
                                                                                                 options: [
                                                                                                     ...(opt.subquestion.options || []),
-                                                                                                    { id: generateRandomId(), statement: '', score: 0 },
+                                                                                                    { id: uuidv4(), },
                                                                                                 ],
                                                                                             })
                                                                                         }
@@ -937,18 +995,18 @@ const EditExperimentStep2 = () => {
                                 </Box>
 
 
-                                <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
-                                        <CancelOutlined/>
+                                        <CancelOutlined />
                                     </Button>
                                     <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
-                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done/>}
+                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done />}
                                     </Button>
                                 </Box>
-                                <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
                                         {'Cancelar'}
-                                    </Button>                                
+                                    </Button>
                                     <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
                                         {isLoadingSurvey ? <CircularProgress size={24} /> : t('createSurvey')}
                                     </Button>
@@ -1093,27 +1151,45 @@ const EditExperimentStep2 = () => {
                                                                             required
                                                                         />
                                                                     )}
-                                                                    <IconButton
-                                                                        color="error"
-                                                                        onClick={() => handleRemoveOptionEdit(q.id, opt.id)}
-                                                                        sx={{ ml: 2 }}
-                                                                    >
-                                                                        <Remove />
+                                                                    <IconButton onClick={(event) => handleMenuOpen(event, q.id, opt.id)}>
+                                                                        <MoreVertIcon />
                                                                     </IconButton>
+
+                                                                    <Menu
+                                                                        anchorEl={anchorEl}
+                                                                        open={Boolean(anchorEl)}
+                                                                        onClose={handleMenuClose}
+                                                                    >
+                                                                        <MenuItem
+                                                                            onClick={() => {
+                                                                                handleRemoveOptionEdit(selectedQId, selectedOptId);
+                                                                                handleMenuClose();
+                                                                            }}
+                                                                        >
+                                                                            {t("excluiopt")}
+                                                                        </MenuItem>
+
+                                                                        <MenuItem
+                                                                            onClick={() => {
+                                                                                const currentOpt = q.options.find(o => o.id === selectedOptId);
+                                                                                const newValue = currentOpt?.subquestion ? null : {
+                                                                                    statement: "",
+                                                                                    type: "open",
+                                                                                    options: [],
+                                                                                    hasscore: false,
+                                                                                    required: false,
+                                                                                    hassub: false,
+                                                                                };
+                                                                                handleOptionChange(selectedQId, selectedOptId, "subquestion", newValue);
+                                                                                handleMenuClose();
+                                                                            }}
+                                                                        >
+                                                                            {t(q.options.find(o => o.id === selectedOptId)?.subquestion ? "Removesubq" : "AddSubq")}
+                                                                        </MenuItem>
+                                                                    </Menu>
                                                                 </Box>
 
                                                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                    <FormControlLabel
-                                                                        control={
-                                                                            <Checkbox
-                                                                                checked={opt.subquestion !== null}
-                                                                                onChange={(e) =>
-                                                                                    handleEditOption(q.id, opt.id, 'subquestion', e.target.checked ? '' : null)
-                                                                                }
-                                                                            />
-                                                                        }
-                                                                        label={t('hasSubquestion')}
-                                                                    />
                                                                     {opt.subquestion !== null && (
                                                                         <TextField
                                                                             label={t('subquestion')}
