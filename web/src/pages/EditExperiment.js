@@ -11,8 +11,8 @@ import {
   Box,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import EditExperimentStep0 from './components/EditExperiment/EditExperimentStep0';
-import EditExperimentStep1 from './components/EditExperiment/EditExperimentStep1';
+import EditExperimentStep0 from './components/EditExperiment/EditExperimentForm';
+import EditExperimentStep1 from './components/EditExperiment/EditExperimentTask';
 import EditExperimentStep2 from './components/EditExperiment/EditExperimentStep2';
 import StepContext from './components/EditExperiment/context/StepContext';
 import { useParams } from 'react-router-dom';
