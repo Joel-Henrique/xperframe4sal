@@ -305,9 +305,9 @@ const EditExperimentStep1 = () => {
                 rule_type: RulesExperiment,
                 survey_id: surveyId,
                 questionsId: questionIds,
-                minScore: ScoreThreshold,
-                maxScore: ScoreThresholdmx,
-                experimentId: ExperimentId,
+                min_score: ScoreThreshold,
+                max_score: ScoreThresholdmx,
+                experiment_id: ExperimentId,
             };
     
             await api.post(`/task2`, newTask, {
@@ -351,9 +351,9 @@ const EditExperimentStep1 = () => {
             rule_type: RulesExperiment,
             survey_id: surveyId,
             questionsId: questionIds,
-            minScore: ScoreThreshold,
-            maxScore: ScoreThresholdmx,
-            experimentId: ExperimentId,
+            min_score: ScoreThreshold,
+            max_score: ScoreThresholdmx,
+            experiment_id: ExperimentId,
         };
         console.log(newTask)
         console.log(editTaskIndex)
