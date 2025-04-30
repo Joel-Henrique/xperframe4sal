@@ -281,28 +281,39 @@ const EditExperimentStep1 = () => {
     const handleCreateTask = async () => {
         try {
             setIsLoadingTask(true);
-            const questionIds =
-                RulesExperiment === "score"
-                    ? null
-                    : Array.isArray(selectedQuestionIds)
-                        ? selectedQuestionIds.map(q => q.id).filter(id => id)
-                        : [];
-
+    
+            let questionIds = [];
+    
+            let surveyId = SelectedSurvey?._id || null;
+    
+            if (BtypeExperiment !== "rules_based") {
+                surveyId = null;
+                questionIds = null;
+            } else {
+                questionIds =
+                    RulesExperiment === "score"
+                        ? null
+                        : Array.isArray(selectedQuestionIds)
+                            ? selectedQuestionIds.map(q => q.id).filter(Boolean)
+                            : [];
+            }
+    
             const newTask = {
                 title: taskTitle,
                 summary: taskSummary,
                 description: taskDescription,
                 rule_type: RulesExperiment,
-                surveyId: SelectedSurvey._id,
+                surveyId: surveyId,
                 questionsId: questionIds,
                 minScore: ScoreThreshold,
                 maxScore: ScoreThresholdmx,
                 experimentId: ExperimentId,
             };
+    
             await api.post(`/task2`, newTask, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
-
+    
             toggleCreateTask();
             setTaskTitle("");
             setTaskSummary("");
@@ -314,6 +325,7 @@ const EditExperimentStep1 = () => {
             setIsLoadingTask(false);
         }
     };
+    
 
     const handleEditTaskSubmit = async (e) => {
         e.preventDefault();
