@@ -303,7 +303,7 @@ const EditExperimentStep1 = () => {
                 summary: taskSummary,
                 description: taskDescription,
                 rule_type: RulesExperiment,
-                surveyId: surveyId,
+                survey_id: surveyId,
                 questionsId: questionIds,
                 minScore: ScoreThreshold,
                 maxScore: ScoreThresholdmx,
@@ -329,14 +329,28 @@ const EditExperimentStep1 = () => {
 
     const handleEditTaskSubmit = async (e) => {
         e.preventDefault();
+        let questionIds = [];
+    
+        let surveyId = SelectedSurvey?._id || null;
 
+        if (BtypeExperiment !== "rules_based") {
+            surveyId = null;
+            questionIds = null;
+        } else {
+            questionIds =
+                RulesExperiment === "score"
+                    ? null
+                    : Array.isArray(selectedQuestionIds)
+                        ? selectedQuestionIds.map(q => q.id).filter(Boolean)
+                        : [];
+        }
         const newTask = {
             title: taskTitle,
             summary: taskSummary,
             description: taskDescription,
             rule_type: RulesExperiment,
-            surveyId: SelectedSurvey._id,
-            questionsId: selectedQuestionIds,
+            survey_id: surveyId,
+            questionsId: questionIds,
             minScore: ScoreThreshold,
             maxScore: ScoreThresholdmx,
             experimentId: ExperimentId,
