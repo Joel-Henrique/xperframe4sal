@@ -23,6 +23,7 @@ import ReactQuill from "react-quill";
 import StepContext from "./context/StepContext";
 import { api } from "../../../config/axios";
 import "react-quill/dist/quill.snow.css";
+import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 import {
     ExpandMore as ExpandMoreIcon,
     ExpandLess as ExpandLessIcon,
@@ -341,109 +342,83 @@ const EditExperimentStep1 = () => {
         }
     };
     
-
-
-
     return (
-        <Box>
-            <Box
+        <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+          {t('edit_task')}
+        </Typography>
+        <Box
                 sx={{
-                    alignItems: "center",
-                    justifyContent: "center",
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     marginTop: 10,
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}
             >
                 <Box
                     sx={{
                         padding: 3,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#f9f9f9",
-                        borderRadius: "8px",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#f9f9f9',
+                        borderRadius: '8px',
                         boxShadow: 4,
-                        width: "60%",
-                        marginX: "auto",
-                        wordBreak: "break-word",
+                        width: {xs:'95%',sm:'60%'},
+                        marginX: 'auto'
                     }}
                 >
-                    <TextField
-                        label={t("search_task")}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ mb: 3 }}
-                    />
 
                     {isLoadingTask ? (
                         <CircularProgress />
-                    ) : (
+                    ) : Array.isArray(tasks) && tasks.length > 0 ? (
                         <FormControl fullWidth>
                             <Box
                                 sx={{
-                                    maxHeight: "200px",
-                                    overflowY: "auto",
+                                    minHeight: 300, maxHeight: 300,
+                                    overflowY: 'auto'
                                 }}
                             >
-                                {tasks
-                                    .filter((task) =>
-                                        task.title
-                                            .toLowerCase()
-                                            .includes(searchTerm.toLowerCase())
-                                    )
-                                    .map((task) => (
+                                {Array.isArray(tasks) &&
+                                    tasks.filter((task) =>
+                                        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                    ).map((task, index) => (
                                         <Box
-                                            key={task._id}
+                                            key={index}
                                             sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
+                                                display: 'flex',
+                                                flexDirection: 'column',
                                                 mb: 1,
                                                 padding: 1,
-                                                backgroundColor: "#ffffff",
-                                                borderRadius: "4px",
+                                                backgroundColor: '#ffffff',
+                                                borderRadius: '4px',
                                                 boxShadow: 1,
-                                                "&:hover": {
-                                                    backgroundColor: "#e6f7ff",
-                                                },
+                                                wordBreak: 'break-word',
+                                                '&:hover': { backgroundColor: '#e6f7ff' }
                                             }}
                                         >
                                             <Box
                                                 sx={{
-                                                    display: "flex",
-                                                    justifyContent:
-                                                        "space-between",
-                                                    alignItems: "center",
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
                                                 }}
                                             >
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
-                                                    <ListItemText
-                                                        primary={task.title}
-                                                        sx={{ ml: 1 }}
-                                                    />
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <ListItemText primary={task.title} sx={{ ml: 1 }} />
                                                 </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <IconButton
                                                         color="error"
-                                                        onClick={() =>
-                                                            handleOpenDeleteDialog(
-                                                                task._id
-                                                            )
-                                                        }
+                                                        onClick={() => handleOpenDeleteDialog(task._id)}
                                                         sx={{ ml: 1 }}
                                                     >
                                                         <DeleteIcon />
@@ -451,9 +426,7 @@ const EditExperimentStep1 = () => {
                                                     <IconButton
                                                         color="primary"
                                                         onClick={() =>
-                                                            handleEditTask(
-                                                                task._id
-                                                            )
+                                                            handleEditTask(task._id)
                                                         }
                                                         sx={{ ml: 2 }}
                                                     >
@@ -461,20 +434,10 @@ const EditExperimentStep1 = () => {
                                                     </IconButton>
                                                     <IconButton
                                                         color="primary"
-                                                        onClick={() =>
-                                                            toggleTaskDescription(
-                                                                task._id
-                                                            )
-                                                        }
+                                                        onClick={() => toggleTaskDescription(task._id)}
                                                         sx={{ ml: 1 }}
                                                     >
-                                                        {openTaskIds.includes(
-                                                            task._id
-                                                        ) ? (
-                                                            <ExpandLessIcon />
-                                                        ) : (
-                                                            <ExpandMoreIcon />
-                                                        )}
+                                                        {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                                     </IconButton>
                                                 </Box>
                                             </Box>
@@ -484,22 +447,30 @@ const EditExperimentStep1 = () => {
                                                     sx={{
                                                         marginTop: 0,
                                                         padding: 1,
-                                                        backgroundColor:
-                                                            "#E8E8E8",
-                                                        borderRadius: "4px",
-                                                        maxHeight: "150px",
-                                                        overflowY: "auto",
-                                                        wordBreak: "break-word",
+                                                        backgroundColor: '#E8E8E8',
+                                                        borderRadius: '4px',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                        wordBreak: 'break-word',
                                                     }}
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: task.description,
-                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: task.description }}
                                                 />
                                             )}
                                         </Box>
                                     ))}
+
                             </Box>
                         </FormControl>
+                    ) : (
+                        <Box sx={{ textAlign: 'center', padding: 5, minHeight: 300, maxHeight: 300, overflowY: 'auto' }}>
+                            <EmojiObjectsOutlined sx={{ fontSize: 60, color: '#f5a623' }} />
+                            <Typography variant="h6" sx={{ mt: 2 }}>
+                                {t('NTaskFound')}
+                            </Typography>
+                            <Typography variant="body1" sx={{ mt: 1 }}>
+                                {t('NoTaskcreated')}
+                            </Typography>
+                        </Box>
                     )}
 
                     <Box

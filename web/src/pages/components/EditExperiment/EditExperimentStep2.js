@@ -22,7 +22,7 @@ import {
     DialogContent,
     Checkbox,
     FormControlLabel,
-    Grid
+    Grid,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Add, CancelOutlined, Done, Remove } from '@mui/icons-material';
@@ -78,11 +78,11 @@ const EditExperimentStep2 = () => {
         } catch (error) {
             console.error(t('Error in Search'), error);
         }
-    },[user.accessToken, t]);
+    }, [user.accessToken, t]);
 
     useEffect(() => {
         fetchSurvey();
-    },[fetchSurvey]);
+    }, [fetchSurvey]);
 
     const handleOpenDeleteDialog = (index) => {
         setSurveyToDeleteId(ExperimentSurveys[index])
@@ -138,19 +138,21 @@ const EditExperimentStep2 = () => {
                             score: score ? score : 0,
                         })),
                     }
-                    : {options: [
-                        {
-                            statement: '',
-                            score: 0
-                        }
-                    ]}),
+                    : {
+                        options: [
+                            {
+                                statement: '',
+                                score: 0
+                            }
+                        ]
+                    }),
             })),
         };
 
         try {
             questions.forEach(question => {
-                if(question.type === 'multiple-selection' || question.type === 'multiple-choices'){
-                    if(question.options.length === 0)
+                if (question.type === 'multiple-selection' || question.type === 'multiple-choices') {
+                    if (question.options.length === 0)
                         throw new Error("Need to create options");
                 }
             })
@@ -362,14 +364,14 @@ const EditExperimentStep2 = () => {
 
     const addIdOnSurvey = (questions) => {
         if (!questions || !Array.isArray(questions)) return;
-    
+
         questions.forEach((question) => {
             question.id = generateRandomId();
-    
+
             if (question.options && Array.isArray(question.options)) {
                 question.options.forEach((option) => {
-                    option.id = generateRandomId(); 
-    
+                    option.id = generateRandomId();
+
                     if (option.subquestion && option.subquestion.options) {
                         addIdOnSurvey(option.subquestion.options);
                     }
@@ -411,7 +413,18 @@ const EditExperimentStep2 = () => {
     ];
 
     return (
-        <Box>
+
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+            }}
+        >
+            <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+                {t('edit_survey')}
+            </Typography>
+
             <Box
                 sx={{
                     display: 'flex',
@@ -423,7 +436,7 @@ const EditExperimentStep2 = () => {
             >
                 <Box
                     sx={{
-                        width: {xs: '100%',sm:'60%'},
+                        width: { xs: '100%', sm: '60%' },
                         padding: 3,
                         display: 'flex',
                         flexDirection: 'column',
@@ -607,11 +620,12 @@ const EditExperimentStep2 = () => {
                     open={isCreateQuestOpen}
                     onClose={toggleCreateQuest}
                     fullWidth
-                    sx={{'& .MuiDialog-paper': {
-                        margin: {xs: 0, sm: 32},
-                        height: {xs: '100vh', sm:'100%'},
-                        maxWidth: {xs: '100vw', sm: 'calc(100% - 64px)'},
-                        width: {xs: '100vw', sm: 'calc(100% - 64px)'},
+                    sx={{
+                        '& .MuiDialog-paper': {
+                            margin: { xs: 0, sm: 32 },
+                            height: { xs: '100vh', sm: '100%' },
+                            maxWidth: { xs: '100vw', sm: 'calc(100% - 64px)' },
+                            width: { xs: '100vw', sm: 'calc(100% - 64px)' },
                         }
                     }}
                 >
@@ -937,18 +951,18 @@ const EditExperimentStep2 = () => {
                                 </Box>
 
 
-                                <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
-                                        <CancelOutlined/>
+                                        <CancelOutlined />
                                     </Button>
                                     <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
-                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done/>}
+                                        {isLoadingSurvey ? <CircularProgress size={24} /> : <Done />}
                                     </Button>
                                 </Box>
-                                <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                                <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                                     <Button variant="contained" onClick={toggleCreateQuest} color="primary">
                                         {'Cancelar'}
-                                    </Button>                                
+                                    </Button>
                                     <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
                                         {isLoadingSurvey ? <CircularProgress size={24} /> : t('createSurvey')}
                                     </Button>

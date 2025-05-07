@@ -7,6 +7,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
   styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ import { Messages } from 'primereact/messages';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import { red } from '@mui/material/colors';
 
 const CustomContainer = styled('div')(({ theme }) => ({
   backgroundColor: '#fafafa',
@@ -111,6 +113,15 @@ const EditExperimentStep0 = () => {
   };
   return (
     <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+        {t('edit_form')}
+      </Typography>
+      <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -231,7 +242,7 @@ const EditExperimentStep0 = () => {
         <Messages ref={msgs} />
       </Box>
     </Box>
-
+    </Box>
   );
 };
 
