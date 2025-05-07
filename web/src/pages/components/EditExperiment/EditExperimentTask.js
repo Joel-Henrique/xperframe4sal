@@ -127,19 +127,8 @@ const EditExperimentStep1 = () => {
         }
     };
 
-
-    //const [editTaskIndex, setEditTaskIndex] = useState(null);
-    const [taskTitleEdit, setTaskTitleEdit] = useState("");
-    const [taskSummaryEdit, setTaskSummaryEdit] = useState("");
-    const [taskDescriptionEdit, setTaskDescriptionEdit] = useState("");
-
     const [isValidTitleTask, setIsValidTitleTask] = React.useState(true);
     const [isValidSumaryTask, setIsValidSumaryTask] = React.useState(true);
-
-    const [isValidTitleTaskEdit, setIsValidTitleTaskEdit] =
-        React.useState(true);
-    const [isValidSumaryTaskEdit, setIsValidSumaryTaskEdit] =
-        React.useState(true);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [taskToDeleteIndex, setTaskToDeleteIndex] = useState(null);
 
@@ -186,45 +175,30 @@ const EditExperimentStep1 = () => {
         setIsValidSumaryTask(value.trim().length > 0);
     };
 
-    const handleNameChangeTitleTaskEdit = (e) => {
-        const value = e.target.value;
-        setTaskTitleEdit(value);
-        setIsValidTitleTaskEdit(value.trim().length > 0);
-    };
-
-    const handleNameChangeSummaryTaskEdit = (e) => {
-        const value = e.target.value;
-        setTaskSummaryEdit(value);
-        setIsValidSumaryTaskEdit(value.trim().length > 0);
-    };
-
     const isValidFormTask =
         isValidTitleTask && taskTitle && isValidSumaryTask && taskSummary;
 
-    /*    const isValidFormTaskEdit =
-        isValidTitleTaskEdit &&
-        taskTitleEdit &&
-        isValidSumaryTaskEdit &&
-        taskSummaryEdit;
-*/
     const handleCancelEditTask = () => {
-        /*
-        setTaskTitleEdit("");
-        setTaskSummaryEdit("");
-        setTaskDescriptionEdit("");
-        setIsValidTitleTaskEdit(true);
-        setIsValidSumaryTaskEdit(true);
-        */
+        resetTask();
         toggleEditTask();
-
     };
     const handleCancelTask = () => {
+        resetTask();
+        toggleCreateTask();
+    };
+
+    const resetTask = () => {
         setTaskTitle("");
         setTaskSummary("");
         setTaskDescription("");
         setIsValidTitleTask(true);
         setIsValidSumaryTask(true);
-        toggleCreateTask();
+        setRulesExperiment("score");
+        setScoreThreshold("");
+        setScoreThresholdmx("");
+        setSelectedSurvey(null);
+        setSelectedQuestionIds([]); 
+        setSelectedQuestion(null);
     };
 
     const handleSurveyChange = (event) => {
@@ -234,22 +208,21 @@ const EditExperimentStep1 = () => {
     };
 
     const handleQuestionChange = (event) => {
-        const selectedIds = event.target.value; // valores selecionados (id das questões)
+        const selectedIds = event.target.value;
 
         const selectedQuestions = SelectedSurvey.questions.filter((q) =>
             selectedIds.includes(q._id)
         );
-
         setSelectedQuestionIds(selectedIds);
         setSelectedQuestion(selectedQuestions);
     };
 
 
-    const toggleCreateTask = () =>
-
-        setIsCreateTaskOpen(
-            (prev) => !prev)
-        ;
+    const toggleCreateTask = () => {
+        resetTask(); 
+        setIsCreateTaskOpen((prev) => !prev); 
+    };
+    
     const toggleEditTask = () => setIsEditTaskOpen((prev) => !prev);
 
     const toggleTaskDescription = (index) => {
@@ -309,15 +282,14 @@ const EditExperimentStep1 = () => {
                 max_score: ScoreThresholdmx,
                 experiment_id: ExperimentId,
             };
+            console.log(newTask)
     
             await api.post(`/task2`, newTask, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
     
             toggleCreateTask();
-            setTaskTitle("");
-            setTaskSummary("");
-            setTaskDescription("");
+            resetTask();
             fetchTasks();
         } catch (error) {
             console.error(t("Error creating task"), error);
@@ -329,20 +301,15 @@ const EditExperimentStep1 = () => {
 
     const handleEditTaskSubmit = async (e) => {
         e.preventDefault();
-        let questionIds = [];
-    
-        let surveyId = SelectedSurvey?._id || null;
 
+        let surveyId = SelectedSurvey?._id || null;
+        let questionsId = selectedQuestionIds || [];
+    
         if (BtypeExperiment !== "rules_based") {
             surveyId = null;
-            questionIds = null;
-        } else {
-            questionIds =
-                RulesExperiment === "score"
-                    ? null
-                    : Array.isArray(selectedQuestionIds)
-                        ? selectedQuestionIds.map(q => q.id).filter(Boolean)
-                        : [];
+            questionsId = [];
+        } else if (RulesExperiment === "score") {
+            questionsId = [];
         }
         const newTask = {
             title: taskTitle,
@@ -350,13 +317,13 @@ const EditExperimentStep1 = () => {
             description: taskDescription,
             rule_type: RulesExperiment,
             survey_id: surveyId,
-            questionsId: questionIds,
+            questionsId: questionsId,
             min_score: ScoreThreshold,
             max_score: ScoreThresholdmx,
             experiment_id: ExperimentId,
         };
         console.log(newTask)
-        console.log(editTaskIndex)
+    
         try {
             const response = await api.patch(
                 `/task2/${editTaskIndex}`,
@@ -365,13 +332,15 @@ const EditExperimentStep1 = () => {
                     headers: { Authorization: `Bearer ${user.accessToken}` },
                 }
             );
-
+    
             toggleEditTask();
+            resetTask();
             fetchTasks();
         } catch (error) {
             console.error("Erro na atualização da tarefa:", error);
         }
     };
+    
 
 
 
