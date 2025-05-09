@@ -17,9 +17,9 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import EditExperimentStep0 from './components/EditExperiment/EditExperimentForm';
-import EditExperimentStep1 from './components/EditExperiment/EditExperimentTask';
-import EditExperimentStep2 from './components/EditExperiment/EditExperimentSurvey';
+import EditExperimentForm from './components/EditExperiment/EditExperimentForm';
+import EditExperimentTask from './components/EditExperiment/EditExperimentTask';
+import EditExperimentSurvey from './components/EditExperiment/EditExperimentSurvey';
 import EditExperimentICF from './components/EditExperiment/EditExperimentICF';
 import StepContext from './components/EditExperiment/context/StepContext';
 
@@ -142,10 +142,10 @@ const EditExperiment = () => {
             ExperimentSurveys, setExperimentSurveys,
           ]}
         >
-          {activeStep === 0 && <EditExperimentStep0 />}
+          {activeStep === 0 && <EditExperimentForm />}
           {activeStep === 1 && <EditExperimentICF />}
-          {activeStep === 2 && <EditExperimentStep1 />}
-          {activeStep === 3 && <EditExperimentStep2 />}
+          {activeStep === 2 && <EditExperimentTask />}
+          {activeStep === 3 && <EditExperimentSurvey />}
         </StepContext.Provider>
       </Box>
     </Box>

@@ -50,7 +50,7 @@ const CustomContainer = styled("div")(({ theme }) => ({
         color: "#444",
     },
 }));
-const EditExperimentStep1 = () => {
+const EditExperimentTask = () => {
     const [
         ExperimentTitle,
         setExperimentTitle,
@@ -1766,4 +1766,4 @@ const EditExperimentStep1 = () => {
     );
 };
 
-export default EditExperimentStep1;
+export default EditExperimentTask;

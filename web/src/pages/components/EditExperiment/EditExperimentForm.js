@@ -41,7 +41,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
 }));
 
 
-const EditExperimentStep0 = () => {
+const EditExperimentForm = () => {
   const msgs = useRef(null);
   const { t } = useTranslation();
   const [isValidTitleExp, setIsValidTitleExp] = useState(true);
@@ -248,4 +248,4 @@ const EditExperimentStep0 = () => {
   );
 };
 
-export default EditExperimentStep0;
+export default EditExperimentForm;

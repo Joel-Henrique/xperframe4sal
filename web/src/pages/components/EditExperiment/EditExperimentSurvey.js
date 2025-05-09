@@ -32,7 +32,7 @@ import { api } from '../../../config/axios';
 import CreateSurvey from '../../../components/Modals/CreateSurvey';
 import NotFound from '../../../components/NotFound';
 
-const EditExperimentStep2 = () => {
+const EditExperimentSurvey = () => {
     const [
         ExperimentSurveys,
         setExperimentSurveys,
@@ -861,4 +861,4 @@ const EditExperimentStep2 = () => {
     )
 }
 
-export default EditExperimentStep2;
+export default EditExperimentSurvey;
