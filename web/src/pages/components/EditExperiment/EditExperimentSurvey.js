@@ -286,6 +286,7 @@ const EditExperimentStep2 = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 columnGap: 2.5,
+                marginTop: { xs: 6.5, sm: 0 }
             }}
         >
             <Typography fontSize={40} variant="h6" align="center" gutterBottom>
@@ -302,7 +303,7 @@ const EditExperimentStep2 = () => {
             >
                 <Box
                     sx={{
-                        width: { xs: '100%', sm: '60%' },
+                        width: '100%',
                         padding: 3,
                         display: 'flex',
                         flexDirection: 'column',

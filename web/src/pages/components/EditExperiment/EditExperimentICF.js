@@ -74,7 +74,7 @@ const EditExperimentICF = () => {
             console.log(data)
             setExperimentTitleICF(data.title || '');
             setExperimentDescICF(data.description || '');
-            setIcfid(data._id || '' )
+            setIcfid(data._id || '')
         } catch (err) {
             console.error('Error fetching experiment data:', err);
         }
@@ -122,108 +122,110 @@ const EditExperimentICF = () => {
 
     return (
         <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography fontSize={40} variant="h6" align="center" gutterBottom>
-          {t('edit_icf')}
-        </Typography>
-        <Box
             sx={{
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 flexDirection: 'column',
-                marginTop: 5,
+                justifyContent: 'center',
+                columnGap: 2.5,
+                marginTop: { xs: 6.5, sm: 0 }
             }}
         >
+            <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+                {t('edit_icf')}
+            </Typography>
             <Box
                 sx={{
-                    width: '60%',
-                    padding: 2,
                     display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#f9f9f9',
-                    borderRadius: '8px',
-                    boxShadow: 4,
-                    mx: 'auto',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    marginTop: 5,
                 }}
             >
                 <Box
                     sx={{
                         width: '100%',
-                        margin: 0,
-                        padding: 1,
+                        padding: 2,
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        '& > *': {
-                            marginBottom: 2,
-                            width: '100%',
-                        },
+                        backgroundColor: '#f9f9f9',
+                        borderRadius: '8px',
+                        boxShadow: 4,
+                        mx: 'auto',
                     }}
                 >
-                    <TextField
-                        label={t('Experiment_title_ICF')}
-                        error={!isValidTitleExp}
-                        helperText={!isValidTitleExp ? t('invalid_name_message') : ''}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={ExperimentTitleICF}
-                        onChange={handleNameChangeTitle}
-                        required
-                    />
-
-                    <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-                        <CustomContainer>
-                            <ReactQuill
-                                theme="snow"
-                                value={ExperimentDescICF}
-                                onChange={setExperimentDescICF}
-                                placeholder={t('ICF_desc')}
-                            />
-                        </CustomContainer>
-                    </div>
-
                     <Box
                         sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            marginTop: 2,
                             width: '100%',
+                            margin: 0,
+                            padding: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            '& > *': {
+                                marginBottom: 2,
+                                width: '100%',
+                            },
                         }}
                     >
+                        <TextField
+                            label={t('Experiment_title_ICF')}
+                            error={!isValidTitleExp}
+                            helperText={!isValidTitleExp ? t('invalid_name_message') : ''}
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={ExperimentTitleICF}
+                            onChange={handleNameChangeTitle}
+                            required
+                        />
 
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleEditExperimentSubmit}
-                            sx={{ maxWidth: '150px' }}
-                            disabled={!isValidFormExperiment}
+                        <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+                            <CustomContainer>
+                                <ReactQuill
+                                    theme="snow"
+                                    value={ExperimentDescICF}
+                                    onChange={setExperimentDescICF}
+                                    placeholder={t('ICF_desc')}
+                                />
+                            </CustomContainer>
+                        </div>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                marginTop: 2,
+                                width: '100%',
+                            }}
                         >
-                            {t('save')}
-                        </Button>
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleEditExperimentSubmit}
+                                sx={{ maxWidth: '150px' }}
+                                disabled={!isValidFormExperiment}
+                            >
+                                {t('save')}
+                            </Button>
+                        </Box>
+                    </Box>
+                    <Box
+                        sx={{
+                            position: 'fixed',
+                            bottom: 16,
+                            right: 16,
+                            zIndex: 1000,
+                        }}
+                    >
+                        <Messages ref={msgs} />
                     </Box>
                 </Box>
-                      <Box
-                        sx={{
-                          position: 'fixed',
-                          bottom: 16,
-                          right: 16,
-                          zIndex: 1000,
-                        }}
-                      >
-                    <Messages ref={msgs} />
-                    </Box>
             </Box>
-        </Box>
         </Box>
     );
 };

@@ -348,6 +348,8 @@ const EditExperimentStep1 = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                columnGap: 2.5,
+                marginTop: { xs: 6.5, sm: 0 }
             }}
         >
             <Typography fontSize={40} variant="h6" align="center" gutterBottom>
@@ -372,7 +374,7 @@ const EditExperimentStep1 = () => {
                         backgroundColor: '#f9f9f9',
                         borderRadius: '8px',
                         boxShadow: 4,
-                        width: { xs: '95%', sm: '60%' },
+                        width: '100%',
                         marginX: 'auto'
                     }}
                 >

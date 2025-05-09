@@ -86,27 +86,23 @@ const EditExperiment = () => {
       <Drawer
         variant="permanent"
         sx={{
-          width: drawerWidth,
+          width: { sx: '100vw', sm: drawerWidth },
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
-            width: drawerWidth,
+            width: { sx: '100%', sm: drawerWidth },
             boxSizing: 'border-box',
             top: appBarHeight,
-            height: `calc(100% - ${appBarHeight}px)`,
+            height: { xs: appBarHeight, sm: `calc(100% - ${appBarHeight}px)` },
             boxShadow: 3,
             backgroundColor: '#f9f9f9',
             borderRight: '1px solid #e0e0e0',
           },
         }}
       >
-        <List>
-
-          <Typography
-            sx={{ ml: 3, mt: 0, mb: 2, fontSize: 14, color: '#666' }}
-          >
-            {t('')}
-          </Typography>
-
+        <List sx={{
+          display: 'flex',
+          flexDirection: { xs: 'row', sm: 'column' },
+        }}>
           {steps.map((step, index) => (
             <ListItemButton
               key={step.label}
@@ -122,8 +118,8 @@ const EditExperiment = () => {
                 },
               }}
             >
-              <ListItemIcon sx={{ color: '#333' }}>{step.icon}</ListItemIcon>
-              <ListItemText primary={step.label} />
+              <ListItemIcon sx={{ color: '#333', justifyContent: 'center' }}>{step.icon}</ListItemIcon>
+              <ListItemText sx={{ display: { xs: 'none', sm: 'block' } }} primary={step.label} />
             </ListItemButton>
           ))}
         </List>

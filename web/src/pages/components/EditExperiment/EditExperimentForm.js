@@ -116,132 +116,134 @@ const EditExperimentStep0 = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        columnGap: 2.5,
+        marginTop: { xs: 6.5, sm: 0 }
       }}
     >
       <Typography fontSize={40} variant="h6" align="center" gutterBottom>
         {t('edit_form')}
       </Typography>
       <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        margin: 0,
-        marginTop: 2,
-      }}
-    >
-      <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
+          alignItems: 'center',
           width: '100%',
-          marginTop: 3,
+          margin: 0,
+          marginTop: 2,
         }}
       >
-
         <Box
           sx={{
-            width: {xs: '100%',sm:'60%'},
-            padding: 2,
             display: 'flex',
-            margin: 2,
-            flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            boxShadow: 4,
+            width: '100%',
+            marginTop: 3,
           }}
         >
-          <TextField
-            label={t('Experiment_title')}
-            error={!isValidTitleExp}
-            helperText={!isValidTitleExp ? t('invalid_name_message') : ''}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={ExperimentTitle}
-            onChange={handleTitleChange}
-            required
-          />
 
-          <FormControl fullWidth margin="normal">
-            <InputLabel>{t('Experiment_Type')}</InputLabel>
-            <Select
-              value={ExperimentType}
-              onChange={(e) => setExperimentType(e.target.value)}
-              label={t('ExperimentTypes')}
-            >
-              {ExperimentTypes.map((stype) => (
-                <MenuItem key={stype.value} value={stype.value}>
-                  {stype.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Box
+            sx={{
+              width: '100%',
+              padding: 2,
+              display: 'flex',
+              margin: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#f9f9f9',
+              borderRadius: '8px',
+              boxShadow: 4,
+            }}
+          >
+            <TextField
+              label={t('Experiment_title')}
+              error={!isValidTitleExp}
+              helperText={!isValidTitleExp ? t('invalid_name_message') : ''}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={ExperimentTitle}
+              onChange={handleTitleChange}
+              required
+            />
 
-          {ExperimentType === 'between-subject' && (
             <FormControl fullWidth margin="normal">
-              <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+              <InputLabel>{t('Experiment_Type')}</InputLabel>
               <Select
-                value={BtypeExperiment}
-                onChange={(e) => setBtypeExperiment(e.target.value)}
-                label={t('ExperimentTypesbetween')}
+                value={ExperimentType}
+                onChange={(e) => setExperimentType(e.target.value)}
+                label={t('ExperimentTypes')}
               >
-                {betweenExperimentTypes.map((stype) => (
+                {ExperimentTypes.map((stype) => (
                   <MenuItem key={stype.value} value={stype.value}>
                     {stype.label}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          )}
+
+            {ExperimentType === 'between-subject' && (
+              <FormControl fullWidth margin="normal">
+                <InputLabel>{t('Group_Separation_Method')}</InputLabel>
+                <Select
+                  value={BtypeExperiment}
+                  onChange={(e) => setBtypeExperiment(e.target.value)}
+                  label={t('ExperimentTypesbetween')}
+                >
+                  {betweenExperimentTypes.map((stype) => (
+                    <MenuItem key={stype.value} value={stype.value}>
+                      {stype.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
 
 
-          <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
-            <CustomContainer>
-              <ReactQuill
-                theme="snow"
-                value={ExperimentDesc}
-                onChange={setExperimentDesc}
-                placeholder={t('Experiment_Desc1')}
-              />
-            </CustomContainer>
-          </div>
+            <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
+              <CustomContainer>
+                <ReactQuill
+                  theme="snow"
+                  value={ExperimentDesc}
+                  onChange={setExperimentDesc}
+                  placeholder={t('Experiment_Desc1')}
+                />
+              </CustomContainer>
+            </div>
 
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: 'auto',
-              width: '100%',
-            }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleEditExperimentSubmit}
-              sx={{ maxWidth: '150px' }}
-              disabled={!isValidFormTask}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: 'auto',
+                width: '100%',
+              }}
             >
-              {t('save')}
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEditExperimentSubmit}
+                sx={{ maxWidth: '150px' }}
+                disabled={!isValidFormTask}
+              >
+                {t('save')}
+              </Button>
+            </Box>
           </Box>
         </Box>
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <Messages ref={msgs} />
+        </Box>
       </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          zIndex: 1000,
-        }}
-      >
-        <Messages ref={msgs} />
-      </Box>
-    </Box>
     </Box>
   );
 };
