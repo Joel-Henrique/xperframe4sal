@@ -105,6 +105,7 @@ const EditExperimentStep2 = () => {
         }
     };
 
+
     const toggleSurveyDescription = (surveyId) => {
         if (openSurveyIds.includes(surveyId)) {
             setOpenSurveyIds(openSurveyIds.filter((id) => id !== surveyId));
@@ -238,6 +239,24 @@ const EditExperimentStep2 = () => {
         }
     };
 
+    const addIdOnSurvey = (questions) => {
+        if (!questions || !Array.isArray(questions)) return;
+
+        questions.forEach((question) => {
+            question.id = generateRandomId();
+
+            if (question.options && Array.isArray(question.options)) {
+                question.options.forEach((option) => {
+                    option.id = generateRandomId();
+
+                    if (option.subquestion && option.subquestion.options) {
+                        addIdOnSurvey(option.subquestion.options);
+                    }
+                });
+            }
+        });
+    };
+
     const handleEditSurvey = (index) => {
         setIndexId(index);
         let surveyToEdit = ExperimentSurveys[index];
@@ -259,7 +278,18 @@ const EditExperimentStep2 = () => {
     ];
 
     return (
-        <Box>
+
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+            }}
+        >
+            <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+                {t('edit_survey')}
+            </Typography>
+
             <Box
                 sx={{
                     display: 'flex',

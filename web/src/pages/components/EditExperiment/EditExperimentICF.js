@@ -3,6 +3,7 @@ import {
     Box,
     TextField,
     Button,
+    Typography,
     styled,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -121,6 +122,16 @@ const EditExperimentICF = () => {
 
     return (
         <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+          {t('edit_icf')}
+        </Typography>
+        <Box
             sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -212,6 +223,7 @@ const EditExperimentICF = () => {
                     <Messages ref={msgs} />
                     </Box>
             </Box>
+        </Box>
         </Box>
     );
 };

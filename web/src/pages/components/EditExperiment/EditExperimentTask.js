@@ -23,6 +23,7 @@ import ReactQuill from "react-quill";
 import StepContext from "./context/StepContext";
 import { api } from "../../../config/axios";
 import "react-quill/dist/quill.snow.css";
+import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 import {
     ExpandMore as ExpandMoreIcon,
     ExpandLess as ExpandLessIcon,
@@ -77,6 +78,7 @@ const EditExperimentStep1 = () => {
     const [isEditTaskOpen, setIsEditTaskOpen] = useState(false);
 
     const [taskTitle, setTaskTitle] = useState("");
+    const [taskid, settaskid] = useState("");
     const [taskSummary, setTaskSummary] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [RulesExperiment, setRulesExperiment] = useState("score");
@@ -84,21 +86,50 @@ const EditExperimentStep1 = () => {
     const [ScoreThreshold, setScoreThreshold] = useState("");
     const [scoreType, setscoreType] = useState("");
     const [SelectedSurvey, setSelectedSurvey] = useState("");
+    const [SelectedSurveyids, setSelectedSurveyids] = useState("");
     const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
-    const [selectedQuestion, setSelectedQuestion] = useState(null);
-
+    const [SelectedQuestion, setSelectedQuestion] = useState(null);
     const [editTaskIndex, setEditTaskIndex] = useState(null);
-    const [taskTitleEdit, setTaskTitleEdit] = useState("");
-    const [taskSummaryEdit, setTaskSummaryEdit] = useState("");
-    const [taskDescriptionEdit, setTaskDescriptionEdit] = useState("");
+
+
+    const handleEditTask = async (index) => {
+        setEditTaskIndex(index);
+        const task = tasks.find((t) => t._id === index);
+
+        if (task) {
+            settaskid(task._id);
+
+            const response = await api.get(`task-question-map/task/${task._id}`, {
+                headers: { Authorization: `Bearer ${user.accessToken}` },
+            });
+            const filteredTasks = response.data;
+            setSelectedQuestionIds(filteredTasks);
+
+            setTaskTitle(task.title);
+            setTaskSummary(task.summary);
+            setTaskDescription(task.description);
+            setRulesExperiment(task.rule_type);
+            setScoreThresholdmx(task.max_score);
+            setScoreThreshold(task.min_score);
+            setscoreType("min_max");
+
+            const selectedSurvey2 = ExperimentSurveys.find(s => s._id === task.survey_id);
+            setSelectedSurvey(selectedSurvey2);
+            setSelectedSurveyids(selectedSurvey2);
+
+            if (selectedSurvey2?.questions) {
+                const selectedQs = selectedSurvey2.questions.filter(q =>
+                    filteredTasks.includes(q.id)
+                );
+                setSelectedQuestion(selectedQs);
+            }
+
+            toggleEditTask();
+        }
+    };
 
     const [isValidTitleTask, setIsValidTitleTask] = React.useState(true);
     const [isValidSumaryTask, setIsValidSumaryTask] = React.useState(true);
-
-    const [isValidTitleTaskEdit, setIsValidTitleTaskEdit] =
-        React.useState(true);
-    const [isValidSumaryTaskEdit, setIsValidSumaryTaskEdit] =
-        React.useState(true);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [taskToDeleteIndex, setTaskToDeleteIndex] = useState(null);
 
@@ -145,41 +176,30 @@ const EditExperimentStep1 = () => {
         setIsValidSumaryTask(value.trim().length > 0);
     };
 
-    const handleNameChangeTitleTaskEdit = (e) => {
-        const value = e.target.value;
-        setTaskTitleEdit(value);
-        setIsValidTitleTaskEdit(value.trim().length > 0);
-    };
-
-    const handleNameChangeSummaryTaskEdit = (e) => {
-        const value = e.target.value;
-        setTaskSummaryEdit(value);
-        setIsValidSumaryTaskEdit(value.trim().length > 0);
-    };
-
     const isValidFormTask =
         isValidTitleTask && taskTitle && isValidSumaryTask && taskSummary;
-    const isValidFormTaskEdit =
-        isValidTitleTaskEdit &&
-        taskTitleEdit &&
-        isValidSumaryTaskEdit &&
-        taskSummaryEdit;
 
     const handleCancelEditTask = () => {
-        setTaskTitleEdit("");
-        setTaskSummaryEdit("");
-        setTaskDescriptionEdit("");
-        setIsValidTitleTaskEdit(true);
-        setIsValidSumaryTaskEdit(true);
+        resetTask();
         toggleEditTask();
     };
     const handleCancelTask = () => {
+        resetTask();
+        toggleCreateTask();
+    };
+
+    const resetTask = () => {
         setTaskTitle("");
         setTaskSummary("");
         setTaskDescription("");
         setIsValidTitleTask(true);
         setIsValidSumaryTask(true);
-        toggleCreateTask();
+        setRulesExperiment("score");
+        setScoreThreshold("");
+        setScoreThresholdmx("");
+        setSelectedSurvey(null);
+        setSelectedQuestionIds([]); 
+        setSelectedQuestion(null);
     };
 
     const handleSurveyChange = (event) => {
@@ -190,14 +210,20 @@ const EditExperimentStep1 = () => {
 
     const handleQuestionChange = (event) => {
         const selectedIds = event.target.value;
-        setSelectedQuestionIds(selectedIds);
+
         const selectedQuestions = SelectedSurvey.questions.filter((q) =>
-            selectedIds.includes(q.statement)
+            selectedIds.includes(q._id)
         );
+        setSelectedQuestionIds(selectedIds);
         setSelectedQuestion(selectedQuestions);
     };
 
-    const toggleCreateTask = () => setIsCreateTaskOpen((prev) => !prev);
+
+    const toggleCreateTask = () => {
+        resetTask(); 
+        setIsCreateTaskOpen((prev) => !prev); 
+    };
+    
     const toggleEditTask = () => setIsEditTaskOpen((prev) => !prev);
 
     const toggleTaskDescription = (index) => {
@@ -229,34 +255,42 @@ const EditExperimentStep1 = () => {
     const handleCreateTask = async () => {
         try {
             setIsLoadingTask(true);
-
-            const questionIds =
-                RulesExperiment === "score"
-                    ? null
-                    : selectedQuestionIds?.map((q) => q.uuid) || [];
-
+    
+            let questionIds = [];
+    
+            let surveyId = SelectedSurvey?._id || null;
+    
+            if (BtypeExperiment !== "rules_based") {
+                surveyId = null;
+                questionIds = null;
+            } else {
+                questionIds =
+                    RulesExperiment === "score"
+                        ? null
+                        : Array.isArray(selectedQuestionIds)
+                            ? selectedQuestionIds.map(q => q.id).filter(Boolean)
+                            : [];
+            }
+    
             const newTask = {
                 title: taskTitle,
                 summary: taskSummary,
                 description: taskDescription,
                 rule_type: RulesExperiment,
-                surveyId: SelectedSurvey._id,
+                survey_id: surveyId,
                 questionsId: questionIds,
-                minScore: ScoreThreshold,
-                maxScore: ScoreThresholdmx,
-                experimentId: ExperimentId,
+                min_score: ScoreThreshold,
+                max_score: ScoreThresholdmx,
+                experiment_id: ExperimentId,
             };
-            
             console.log(newTask)
-
+    
             await api.post(`/task2`, newTask, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
-
+    
             toggleCreateTask();
-            setTaskTitle("");
-            setTaskSummary("");
-            setTaskDescription("");
+            resetTask();
             fetchTasks();
         } catch (error) {
             console.error(t("Error creating task"), error);
@@ -264,146 +298,127 @@ const EditExperimentStep1 = () => {
             setIsLoadingTask(false);
         }
     };
+    
 
     const handleEditTaskSubmit = async (e) => {
         e.preventDefault();
 
-        const updatedTask = {
-            title: taskTitleEdit,
-            summary: taskSummaryEdit,
-            description: taskDescriptionEdit,
-            // Enviar somente os dados que irao sofrer alteracao
-            //experimentId: ExperimentId,
+        let surveyId = SelectedSurvey?._id || null;
+        let questionsId = selectedQuestionIds || [];
+    
+        if (BtypeExperiment !== "rules_based") {
+            surveyId = null;
+            questionsId = [];
+        } else if (RulesExperiment === "score") {
+            questionsId = [];
+        }
+        const newTask = {
+            title: taskTitle,
+            summary: taskSummary,
+            description: taskDescription,
+            rule_type: RulesExperiment,
+            survey_id: surveyId,
+            questionsId: questionsId,
+            min_score: ScoreThreshold,
+            max_score: ScoreThresholdmx,
+            experiment_id: ExperimentId,
         };
-
+        console.log(newTask)
+    
         try {
             const response = await api.patch(
                 `/task2/${editTaskIndex}`,
-                updatedTask,
+                newTask,
                 {
                     headers: { Authorization: `Bearer ${user.accessToken}` },
                 }
             );
-
+    
             toggleEditTask();
+            resetTask();
             fetchTasks();
         } catch (error) {
             console.error("Erro na atualização da tarefa:", error);
         }
     };
-
-    const handleEditTask = (index) => {
-        setEditTaskIndex(index);
-        const task = tasks.find((t) => t._id === index);
-        console.log(task)
-        if (task) {
-            setTaskTitleEdit(task.title);
-            setTaskSummaryEdit(task.summary);
-            setTaskDescriptionEdit(task.description);
-            toggleEditTask();
-        }
-    };
-
+    
     return (
-        <Box>
-            <Box
+        <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+          {t('edit_task')}
+        </Typography>
+        <Box
                 sx={{
-                    alignItems: "center",
-                    justifyContent: "center",
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     marginTop: 10,
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}
             >
                 <Box
                     sx={{
                         padding: 3,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#f9f9f9",
-                        borderRadius: "8px",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#f9f9f9',
+                        borderRadius: '8px',
                         boxShadow: 4,
-                        width: "60%",
-                        marginX: "auto",
-                        wordBreak: "break-word",
+                        width: {xs:'95%',sm:'60%'},
+                        marginX: 'auto'
                     }}
                 >
-                    <TextField
-                        label={t("search_task")}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ mb: 3 }}
-                    />
 
                     {isLoadingTask ? (
                         <CircularProgress />
-                    ) : (
+                    ) : Array.isArray(tasks) && tasks.length > 0 ? (
                         <FormControl fullWidth>
                             <Box
                                 sx={{
-                                    maxHeight: "200px",
-                                    overflowY: "auto",
+                                    minHeight: 300, maxHeight: 300,
+                                    overflowY: 'auto'
                                 }}
                             >
-                                {tasks
-                                    .filter((task) =>
-                                        task.title
-                                            .toLowerCase()
-                                            .includes(searchTerm.toLowerCase())
-                                    )
-                                    .map((task) => (
+                                {Array.isArray(tasks) &&
+                                    tasks.filter((task) =>
+                                        task.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                    ).map((task, index) => (
                                         <Box
-                                            key={task._id}
+                                            key={index}
                                             sx={{
-                                                display: "flex",
-                                                flexDirection: "column",
+                                                display: 'flex',
+                                                flexDirection: 'column',
                                                 mb: 1,
                                                 padding: 1,
-                                                backgroundColor: "#ffffff",
-                                                borderRadius: "4px",
+                                                backgroundColor: '#ffffff',
+                                                borderRadius: '4px',
                                                 boxShadow: 1,
-                                                "&:hover": {
-                                                    backgroundColor: "#e6f7ff",
-                                                },
+                                                wordBreak: 'break-word',
+                                                '&:hover': { backgroundColor: '#e6f7ff' }
                                             }}
                                         >
                                             <Box
                                                 sx={{
-                                                    display: "flex",
-                                                    justifyContent:
-                                                        "space-between",
-                                                    alignItems: "center",
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
                                                 }}
                                             >
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
-                                                    <ListItemText
-                                                        primary={task.title}
-                                                        sx={{ ml: 1 }}
-                                                    />
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <ListItemText primary={task.title} sx={{ ml: 1 }} />
                                                 </Box>
-                                                <Box
-                                                    sx={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <IconButton
                                                         color="error"
-                                                        onClick={() =>
-                                                            handleOpenDeleteDialog(
-                                                                task._id
-                                                            )
-                                                        }
+                                                        onClick={() => handleOpenDeleteDialog(task._id)}
                                                         sx={{ ml: 1 }}
                                                     >
                                                         <DeleteIcon />
@@ -411,9 +426,7 @@ const EditExperimentStep1 = () => {
                                                     <IconButton
                                                         color="primary"
                                                         onClick={() =>
-                                                            handleEditTask(
-                                                                task._id
-                                                            )
+                                                            handleEditTask(task._id)
                                                         }
                                                         sx={{ ml: 2 }}
                                                     >
@@ -421,20 +434,10 @@ const EditExperimentStep1 = () => {
                                                     </IconButton>
                                                     <IconButton
                                                         color="primary"
-                                                        onClick={() =>
-                                                            toggleTaskDescription(
-                                                                task._id
-                                                            )
-                                                        }
+                                                        onClick={() => toggleTaskDescription(task._id)}
                                                         sx={{ ml: 1 }}
                                                     >
-                                                        {openTaskIds.includes(
-                                                            task._id
-                                                        ) ? (
-                                                            <ExpandLessIcon />
-                                                        ) : (
-                                                            <ExpandMoreIcon />
-                                                        )}
+                                                        {openTaskIds.includes(task._id) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                                                     </IconButton>
                                                 </Box>
                                             </Box>
@@ -444,22 +447,30 @@ const EditExperimentStep1 = () => {
                                                     sx={{
                                                         marginTop: 0,
                                                         padding: 1,
-                                                        backgroundColor:
-                                                            "#E8E8E8",
-                                                        borderRadius: "4px",
-                                                        maxHeight: "150px",
-                                                        overflowY: "auto",
-                                                        wordBreak: "break-word",
+                                                        backgroundColor: '#E8E8E8',
+                                                        borderRadius: '4px',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                        wordBreak: 'break-word',
                                                     }}
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: task.description,
-                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: task.description }}
                                                 />
                                             )}
                                         </Box>
                                     ))}
+
                             </Box>
                         </FormControl>
+                    ) : (
+                        <Box sx={{ textAlign: 'center', padding: 5, minHeight: 300, maxHeight: 300, overflowY: 'auto' }}>
+                            <EmojiObjectsOutlined sx={{ fontSize: 60, color: '#f5a623' }} />
+                            <Typography variant="h6" sx={{ mt: 2 }}>
+                                {t('NTaskFound')}
+                            </Typography>
+                            <Typography variant="body1" sx={{ mt: 1 }}>
+                                {t('NoTaskcreated')}
+                            </Typography>
+                        </Box>
                     )}
 
                     <Box
@@ -571,102 +582,6 @@ const EditExperimentStep1 = () => {
                     },
                 }}
             >
-                <DialogTitle>{t("task_edit")}</DialogTitle>
-                <DialogContent>
-                    <form onSubmit={handleEditTaskSubmit}>
-                        <TextField
-                            label={t("task_title")}
-                            error={!isValidTitleTaskEdit}
-                            helperText={
-                                !isValidTitleTaskEdit
-                                    ? t("invalid_name_message")
-                                    : ""
-                            }
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={taskTitleEdit}
-                            onChange={handleNameChangeTitleTaskEdit}
-                            required
-                        />
-                        <TextField
-                            label={t("task_summary")}
-                            error={!isValidSumaryTaskEdit}
-                            helperText={
-                                !isValidSumaryTaskEdit
-                                    ? t("invalid_name_message")
-                                    : ""
-                            }
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={4}
-                            value={taskSummaryEdit}
-                            onChange={handleNameChangeSummaryTaskEdit}
-                            required
-                        />
-                        <div
-                            style={{
-                                width: "100%",
-                                marginTop: "16.5px",
-                                marginBottom: "16px",
-                            }}
-                        >
-                            <CustomContainer>
-                                <ReactQuill
-                                    value={taskDescriptionEdit}
-                                    onChange={(content) =>
-                                        setTaskDescriptionEdit(content)
-                                    }
-                                    placeholder={t("task_Desc1")}
-                                />
-                            </CustomContainer>
-                        </div>
-
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                marginTop: "auto",
-                                width: "100%",
-                                mt: 2,
-                            }}
-                        >
-                            <Button
-                                variant="contained"
-                                onClick={handleCancelEditTask}
-                                color="primary"
-                            >
-                                {t("cancel")}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                disabled={!isValidFormTaskEdit || isLoadingTask}
-                            >
-                                {t("save")}
-                            </Button>
-                        </Box>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            <Dialog
-                open={isCreateTaskOpen}
-                onClose={toggleCreateTask}
-                fullWidth
-                maxWidth="lg"
-                sx={{
-                    "& .MuiDialog-paper": {
-                        backgroundColor: "#ffffff",
-                        borderRadius: "8px",
-                        boxShadow: 3,
-                        padding: 4,
-                    },
-                }}
-            >
                 <DialogTitle>{t("task_creation")}</DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleCreateTask}>
@@ -752,7 +667,7 @@ const EditExperimentStep1 = () => {
                                                         )}
                                                     >
                                                         {ExperimentSurveys?.length >
-                                                        0 ? (
+                                                            0 ? (
                                                             ExperimentSurveys.map(
                                                                 (survey) => (
                                                                     <MenuItem
@@ -973,7 +888,584 @@ const EditExperimentStep1 = () => {
                                                         )}
                                                     >
                                                         {ExperimentSurveys?.length >
-                                                        0 ? (
+                                                            0 ? (
+                                                            ExperimentSurveys.map(
+                                                                (survey) => (
+                                                                    <MenuItem
+                                                                        key={
+                                                                            survey.id
+                                                                        }
+                                                                        value={
+                                                                            survey
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            survey.title
+                                                                        }
+                                                                    </MenuItem>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            <MenuItem disabled>
+                                                                {t(
+                                                                    "no_survey_available"
+                                                                )}
+                                                            </MenuItem>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            <Grid item xs={4}>
+                                                <FormControl fullWidth margin="normal">
+                                                    <InputLabel>{t('select_question')}</InputLabel>
+
+                                                    <Select
+                                                        value={selectedQuestionIds}
+                                                        onChange={handleQuestionChange}
+                                                        label={t('select_question')}
+                                                        multiple
+                                                        renderValue={(selected) =>
+                                                            SelectedSurvey.questions
+                                                                .filter(q => selected.includes(q.id))
+                                                                .map(q => q.statement || 'Sem enunciado')
+                                                                .join(', ')
+                                                        }
+                                                    >
+                                                        {SelectedSurvey?.questions && SelectedSurvey.questions.length > 0 ? (
+                                                            SelectedSurvey.questions
+                                                                .filter(q => q.type === 'multiple-selection' || q.type === 'multiple-choices')
+                                                                .map((question) => (
+                                                                    <MenuItem key={question.id} value={question.id}>
+                                                                        <Checkbox checked={selectedQuestionIds.includes(question.id)} />
+                                                                        {question.statement || 'Sem enunciado'}
+                                                                    </MenuItem>
+                                                                ))
+                                                        ) : (
+                                                            <MenuItem disabled>{t('no_questions_available')}</MenuItem>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+
+                                            </Grid>
+
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("select_survey_th")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={scoreType}
+                                                        onChange={(e) =>
+                                                            setscoreType(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        label={t(
+                                                            "select_survey_th"
+                                                        )}
+                                                    >
+                                                        {scoreTypes.map(
+                                                            (stype) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        stype.value
+                                                                    }
+                                                                    value={
+                                                                        stype.value
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        stype.label
+                                                                    }
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            {scoreType === "unic" ? (
+                                                <Grid item xs={2}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t(
+                                                            "score_Threshold_unic"
+                                                        )}
+                                                        value={ScoreThreshold}
+                                                        onChange={(e) => {
+                                                            const value =
+                                                                Number(
+                                                                    e.target
+                                                                        .value
+                                                                );
+                                                            setScoreThreshold(
+                                                                value
+                                                            );
+                                                            setScoreThresholdmx(
+                                                                value
+                                                            );
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            ) : (
+                                                <>
+                                                    <Grid item xs={2}>
+                                                        <TextField
+                                                            fullWidth
+                                                            margin="normal"
+                                                            type="number"
+                                                            label={t(
+                                                                "score_Threshold_min"
+                                                            )}
+                                                            value={
+                                                                ScoreThreshold
+                                                            }
+                                                            onChange={(e) => {
+                                                                const minValue =
+                                                                    Number(
+                                                                        e.target
+                                                                            .value
+                                                                    );
+                                                                if (
+                                                                    minValue <=
+                                                                    ScoreThresholdmx
+                                                                ) {
+                                                                    setScoreThreshold(
+                                                                        minValue
+                                                                    );
+                                                                }
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <TextField
+                                                            fullWidth
+                                                            margin="normal"
+                                                            type="number"
+                                                            label={t(
+                                                                "score_Threshold_max"
+                                                            )}
+                                                            value={
+                                                                ScoreThresholdmx
+                                                            }
+                                                            onChange={(e) => {
+                                                                const maxValue =
+                                                                    Number(
+                                                                        e.target
+                                                                            .value
+                                                                    );
+                                                                if (
+                                                                    maxValue >=
+                                                                    ScoreThreshold
+                                                                ) {
+                                                                    setScoreThresholdmx(
+                                                                        maxValue
+                                                                    );
+                                                                }
+                                                            }}
+                                                            inputProps={{
+                                                                min: ScoreThreshold,
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </>
+                                            )}
+                                        </Grid>
+                                    )}
+                                </>
+                            )}
+                        <TextField
+                            label={t("task_summary")}
+                            error={!isValidSumaryTask}
+                            helperText={
+                                !isValidSumaryTask
+                                    ? t("invalid_name_message")
+                                    : ""
+                            }
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            multiline
+                            rows={4}
+                            value={taskSummary}
+                            onChange={handleNameChangeSumaryTask}
+                            required
+                        />
+                        <div
+                            style={{
+                                width: "100%",
+                                marginTop: "16.5px",
+                                marginBottom: "16px",
+                            }}
+                        >
+                            <CustomContainer>
+                                <ReactQuill
+                                    value={taskDescription}
+                                    onChange={(content) =>
+                                        setTaskDescription(content)
+                                    }
+                                    placeholder={t("task_Desc1")}
+                                />
+                            </CustomContainer>
+                        </div>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                marginTop: "auto",
+                                width: "100%",
+                                mt: 2,
+                            }}
+                        >
+                            <Button
+                                variant="contained"
+                                onClick={handleCancelEditTask}
+                                color="primary"
+                            >
+                                {"Cancelar"}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                onClick={handleEditTaskSubmit}
+                                disabled={!isValidFormTask || isLoadingTask}
+                            >
+                                {"Editar"}
+                            </Button>
+                        </Box>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                open={isCreateTaskOpen}
+                onClose={toggleCreateTask}
+                fullWidth
+                maxWidth="lg"
+                sx={{
+                    "& .MuiDialog-paper": {
+                        backgroundColor: "#ffffff",
+                        borderRadius: "8px",
+                        boxShadow: 3,
+                        padding: 4,
+                    },
+                }}
+            >
+                <DialogTitle>{t("task_creation")}</DialogTitle>
+                <DialogContent>
+                    <form onSubmit={handleCreateTask}>
+                        <TextField
+                            label={t("task_title")}
+                            error={!isValidTitleTask}
+                            helperText={
+                                !isValidTitleTask
+                                    ? t("invalid_name_message")
+                                    : ""
+                            }
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={taskTitle}
+                            onChange={handleNameChangeTitleTask}
+                            required
+                        />
+
+                        {ExperimentType === "between-subject" &&
+                            BtypeExperiment === "rules_based" && (
+                                <>
+                                    {RulesExperiment === "score" && (
+                                        <Grid
+                                            container
+                                            spacing={2}
+                                            alignItems="center"
+                                        >
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("Separation_rule")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={RulesExperiment}
+                                                        onChange={(e) =>
+                                                            setRulesExperiment(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        label={t(
+                                                            "Separation_rule"
+                                                        )}
+                                                    >
+                                                        {RulesExperimentTypes.map(
+                                                            (stype) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        stype.value
+                                                                    }
+                                                                    value={
+                                                                        stype.value
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        stype.label
+                                                                    }
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("select_survey")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={SelectedSurvey}
+                                                        onChange={
+                                                            handleSurveyChange
+                                                        }
+                                                        label={t(
+                                                            "select_survey"
+                                                        )}
+                                                    >
+                                                        {ExperimentSurveys?.length >
+                                                            0 ? (
+                                                            ExperimentSurveys.map(
+                                                                (survey) => (
+                                                                    <MenuItem
+                                                                        key={
+                                                                            survey.id
+                                                                        }
+                                                                        value={
+                                                                            survey
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            survey.title
+                                                                        }
+                                                                    </MenuItem>
+                                                                )
+                                                            )
+                                                        ) : (
+                                                            <MenuItem disabled>
+                                                                {t(
+                                                                    "no_survey_available"
+                                                                )}
+                                                            </MenuItem>
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("select_survey_th")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={scoreType}
+                                                        onChange={(e) =>
+                                                            setscoreType(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        label={t(
+                                                            "select_survey_th"
+                                                        )}
+                                                    >
+                                                        {scoreTypes.map(
+                                                            (stype) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        stype.value
+                                                                    }
+                                                                    value={
+                                                                        stype.value
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        stype.label
+                                                                    }
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            {scoreType === "unic" ? (
+                                                <Grid item xs={2}>
+                                                    <TextField
+                                                        fullWidth
+                                                        margin="normal"
+                                                        type="number"
+                                                        label={t(
+                                                            "score_Threshold_unic"
+                                                        )}
+                                                        value={ScoreThreshold}
+                                                        onChange={(e) => {
+                                                            const value =
+                                                                Number(
+                                                                    e.target
+                                                                        .value
+                                                                );
+                                                            setScoreThreshold(
+                                                                value
+                                                            );
+                                                            setScoreThresholdmx(
+                                                                value
+                                                            );
+                                                        }}
+                                                    />
+                                                </Grid>
+                                            ) : (
+                                                <>
+                                                    <Grid item xs={4}>
+                                                        <TextField
+                                                            fullWidth
+                                                            margin="normal"
+                                                            type="number"
+                                                            label={t(
+                                                                "score_Threshold_min"
+                                                            )}
+                                                            value={
+                                                                ScoreThreshold
+                                                            }
+                                                            onChange={(e) => {
+                                                                const minValue =
+                                                                    Number(
+                                                                        e.target
+                                                                            .value
+                                                                    );
+                                                                if (
+                                                                    minValue <=
+                                                                    ScoreThresholdmx
+                                                                ) {
+                                                                    setScoreThreshold(
+                                                                        minValue
+                                                                    );
+                                                                }
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={4}>
+                                                        <TextField
+                                                            fullWidth
+                                                            margin="normal"
+                                                            type="number"
+                                                            label={t(
+                                                                "score_Threshold_max"
+                                                            )}
+                                                            value={
+                                                                ScoreThresholdmx
+                                                            }
+                                                            onChange={(e) => {
+                                                                const maxValue =
+                                                                    Number(
+                                                                        e.target
+                                                                            .value
+                                                                    );
+                                                                if (
+                                                                    maxValue >=
+                                                                    ScoreThreshold
+                                                                ) {
+                                                                    setScoreThresholdmx(
+                                                                        maxValue
+                                                                    );
+                                                                }
+                                                            }}
+                                                            inputProps={{
+                                                                min: ScoreThreshold,
+                                                            }}
+                                                        />
+                                                    </Grid>
+                                                </>
+                                            )}
+                                        </Grid>
+                                    )}
+
+                                    {RulesExperiment === "question" && (
+                                        <Grid
+                                            container
+                                            spacing={2}
+                                            alignItems="center"
+                                        >
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("Separation_rule")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={RulesExperiment}
+                                                        onChange={(e) =>
+                                                            setRulesExperiment(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        label={t(
+                                                            "Separation_rule"
+                                                        )}
+                                                    >
+                                                        {RulesExperimentTypes.map(
+                                                            (stype) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        stype.value
+                                                                    }
+                                                                    value={
+                                                                        stype.value
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        stype.label
+                                                                    }
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+
+                                            <Grid item xs={4}>
+                                                <FormControl
+                                                    fullWidth
+                                                    margin="normal"
+                                                >
+                                                    <InputLabel>
+                                                        {t("select_survey")}
+                                                    </InputLabel>
+                                                    <Select
+                                                        value={SelectedSurvey}
+                                                        onChange={
+                                                            handleSurveyChange
+                                                        }
+                                                        label={t(
+                                                            "select_survey"
+                                                        )}
+                                                    >
+                                                        {ExperimentSurveys?.length >
+                                                            0 ? (
                                                             ExperimentSurveys.map(
                                                                 (survey) => (
                                                                     <MenuItem
@@ -1038,15 +1530,15 @@ const EditExperimentStep1 = () => {
                                                         }
                                                     >
                                                         {SelectedSurvey?.questions &&
-                                                        SelectedSurvey.questions
-                                                            .length > 0 ? (
+                                                            SelectedSurvey.questions
+                                                                .length > 0 ? (
                                                             SelectedSurvey.questions
                                                                 .filter(
                                                                     (q) =>
                                                                         q.type ===
-                                                                            "multiple-selection" ||
+                                                                        "multiple-selection" ||
                                                                         q.type ===
-                                                                            "multiple-choices"
+                                                                        "multiple-choices"
                                                                 )
                                                                 .map(
                                                                     (
