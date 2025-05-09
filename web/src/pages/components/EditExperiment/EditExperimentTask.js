@@ -23,7 +23,7 @@ import ReactQuill from "react-quill";
 import StepContext from "./context/StepContext";
 import { api } from "../../../config/axios";
 import "react-quill/dist/quill.snow.css";
-import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
+import NotFound from '../../../components/NotFound';
 import {
     ExpandMore as ExpandMoreIcon,
     ExpandLess as ExpandLessIcon,
@@ -198,7 +198,7 @@ const EditExperimentStep1 = () => {
         setScoreThreshold("");
         setScoreThresholdmx("");
         setSelectedSurvey(null);
-        setSelectedQuestionIds([]); 
+        setSelectedQuestionIds([]);
         setSelectedQuestion(null);
     };
 
@@ -220,10 +220,10 @@ const EditExperimentStep1 = () => {
 
 
     const toggleCreateTask = () => {
-        resetTask(); 
-        setIsCreateTaskOpen((prev) => !prev); 
+        resetTask();
+        setIsCreateTaskOpen((prev) => !prev);
     };
-    
+
     const toggleEditTask = () => setIsEditTaskOpen((prev) => !prev);
 
     const toggleTaskDescription = (index) => {
@@ -255,11 +255,11 @@ const EditExperimentStep1 = () => {
     const handleCreateTask = async () => {
         try {
             setIsLoadingTask(true);
-    
+
             let questionIds = [];
-    
+
             let surveyId = SelectedSurvey?._id || null;
-    
+
             if (BtypeExperiment !== "rules_based") {
                 surveyId = null;
                 questionIds = null;
@@ -271,7 +271,7 @@ const EditExperimentStep1 = () => {
                             ? selectedQuestionIds.map(q => q.id).filter(Boolean)
                             : [];
             }
-    
+
             const newTask = {
                 title: taskTitle,
                 summary: taskSummary,
@@ -284,11 +284,11 @@ const EditExperimentStep1 = () => {
                 experiment_id: ExperimentId,
             };
             console.log(newTask)
-    
+
             await api.post(`/task2`, newTask, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
-    
+
             toggleCreateTask();
             resetTask();
             fetchTasks();
@@ -298,14 +298,14 @@ const EditExperimentStep1 = () => {
             setIsLoadingTask(false);
         }
     };
-    
+
 
     const handleEditTaskSubmit = async (e) => {
         e.preventDefault();
 
         let surveyId = SelectedSurvey?._id || null;
         let questionsId = selectedQuestionIds || [];
-    
+
         if (BtypeExperiment !== "rules_based") {
             surveyId = null;
             questionsId = [];
@@ -324,7 +324,7 @@ const EditExperimentStep1 = () => {
             experiment_id: ExperimentId,
         };
         console.log(newTask)
-    
+
         try {
             const response = await api.patch(
                 `/task2/${editTaskIndex}`,
@@ -333,7 +333,7 @@ const EditExperimentStep1 = () => {
                     headers: { Authorization: `Bearer ${user.accessToken}` },
                 }
             );
-    
+
             toggleEditTask();
             resetTask();
             fetchTasks();
@@ -341,19 +341,19 @@ const EditExperimentStep1 = () => {
             console.error("Erro na atualização da tarefa:", error);
         }
     };
-    
+
     return (
         <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography fontSize={40} variant="h6" align="center" gutterBottom>
-          {t('edit_task')}
-        </Typography>
-        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+            }}
+        >
+            <Typography fontSize={40} variant="h6" align="center" gutterBottom>
+                {t('edit_task')}
+            </Typography>
+            <Box
                 sx={{
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -372,7 +372,7 @@ const EditExperimentStep1 = () => {
                         backgroundColor: '#f9f9f9',
                         borderRadius: '8px',
                         boxShadow: 4,
-                        width: {xs:'95%',sm:'60%'},
+                        width: { xs: '95%', sm: '60%' },
                         marginX: 'auto'
                     }}
                 >
@@ -462,15 +462,7 @@ const EditExperimentStep1 = () => {
                             </Box>
                         </FormControl>
                     ) : (
-                        <Box sx={{ textAlign: 'center', padding: 5, minHeight: 300, maxHeight: 300, overflowY: 'auto' }}>
-                            <EmojiObjectsOutlined sx={{ fontSize: 60, color: '#f5a623' }} />
-                            <Typography variant="h6" sx={{ mt: 2 }}>
-                                {t('NTaskFound')}
-                            </Typography>
-                            <Typography variant="body1" sx={{ mt: 1 }}>
-                                {t('NoTaskcreated')}
-                            </Typography>
-                        </Box>
+                        <NotFound title={t('NTaskFound')} subTitle={t('NoTaskcreated')} />
                     )}
 
                     <Box

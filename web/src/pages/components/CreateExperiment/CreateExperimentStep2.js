@@ -32,6 +32,7 @@ import { Add, ArrowBack, ArrowForward, Cancel, CancelOutlined, Done } from '@mui
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 import CreateSurvey from '../../../components/Modals/CreateSurvey';
+import NotFound from '../../../components/NotFound';
 
 const CreateExperimentStep2 = () => {
     const {
@@ -478,15 +479,7 @@ const CreateExperimentStep2 = () => {
                             ))}
                         </FormControl>
                     ) : (
-                        <Box sx={{ textAlign: 'center', padding: 5, minHeight: 300, maxHeight: 300, overflowY: 'auto' }}>
-                            <EmojiObjectsOutlined sx={{ fontSize: 60, color: '#f5a623' }} />
-                            <Typography variant="h6" sx={{ mt: 2 }}>
-                                {t('NSurveysFound')}
-                            </Typography>
-                            <Typography variant="body1" sx={{ mt: 1 }}>
-                                {t('Nosurveyscreated')}
-                            </Typography>
-                        </Box>
+                        <NotFound title={t('NSurveysFound')} subTitle={t('Nosurveyscreated')} />
                     )}
 
                     <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', mt: 2, width: '100%' }}>

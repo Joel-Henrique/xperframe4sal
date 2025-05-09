@@ -16,7 +16,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Checkbox, 
+    Checkbox,
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import StepContext from './context/StepContextCreate';
 import 'react-quill/dist/quill.snow.css';
 import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon, ArrowBack, ArrowForward } from '@mui/icons-material';
+import NotFound from '../../../components/NotFound';
 
 const CustomContainer = styled('div')(({ theme }) => ({
     backgroundColor: '#fafafa',
@@ -188,8 +189,8 @@ const CreateExperimentStep1 = () => {
         e.preventDefault();
 
         const questionIds = RulesExperiment === 'score'
-        ? null
-        : selectedQuestionIds?.map((q) => q.id) || [];
+            ? null
+            : selectedQuestionIds?.map((q) => q.id) || [];
 
         const newTask = {
             title: taskTitle,
@@ -216,8 +217,8 @@ const CreateExperimentStep1 = () => {
         e.preventDefault();
 
         const questionIds = RulesExperimentEdit === 'score'
-        ? null
-        : selectedQuestionIdsEdit?.map((q) => q.id) || [];
+            ? null
+            : selectedQuestionIdsEdit?.map((q) => q.id) || [];
 
         const updatedTask = {
             title: taskTitleEdit,
@@ -246,13 +247,13 @@ const CreateExperimentStep1 = () => {
         setRulesExperimentEdit(task.RulesExperiment);
 
         const selectedSurveyObj = ExperimentSurveys.find(survey => survey.uuid === task.SelectedSurvey);
-        setSelectedSurveyEdit(selectedSurveyObj); 
+        setSelectedSurveyEdit(selectedSurveyObj);
 
         const selectedQuestionIdsObj = SelectedSurvey?.questions?.filter(quest =>
             Array.isArray(task?.selectedQuestionIds) && task.selectedQuestionIds.includes(quest.uuid)
-          ) || [];
-          
-        setSelectedQuestionIdsEdit(selectedQuestionIdsObj);   
+        ) || [];
+
+        setSelectedQuestionIdsEdit(selectedQuestionIdsObj);
         setScoreThresholdmxEdit(task.ScoreThresholdmx);
         setScoreThresholdEdit(task.ScoreThreshold);
         toggleEditTask();
@@ -280,7 +281,7 @@ const CreateExperimentStep1 = () => {
                         backgroundColor: '#f9f9f9',
                         borderRadius: '8px',
                         boxShadow: 4,
-                        width: {xs:'95%',sm:'60%'},
+                        width: { xs: '95%', sm: '60%' },
                         marginX: 'auto'
                     }}
                 >
@@ -368,18 +369,10 @@ const CreateExperimentStep1 = () => {
                             </Box>
                         </FormControl>
                     ) : (
-                        <Box sx={{ textAlign: 'center', padding: 5, minHeight: 300, maxHeight: 300, overflowY: 'auto' }}>
-                            <EmojiObjectsOutlined sx={{ fontSize: 60, color: '#f5a623' }} />
-                            <Typography variant="h6" sx={{ mt: 2 }}>
-                                {t('NTaskFound')}
-                            </Typography>
-                            <Typography variant="body1" sx={{ mt: 1 }}>
-                                {t('NoTaskcreated')}
-                            </Typography>
-                        </Box>
+                        <NotFound title={t('NTaskFound')} subTitle={t('NoTaskcreated')} />
                     )}
 
-                    <Box sx={{ display: {xs: 'none', sm: 'flex'}, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
+                    <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                         <Box>
                             <Button
                                 variant="contained"
@@ -404,30 +397,30 @@ const CreateExperimentStep1 = () => {
                         </Box>
                     </Box>
 
-                    <Box sx={{ display: {xs: 'flex',sm:'none'}, justifyContent: 'space-between', mt: 2, width: '100%' }}>
+                    <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'space-between', mt: 2, width: '100%' }}>
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={handleBack}
                             sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                         >
-                            <ArrowBack/>
+                            <ArrowBack />
                         </Button>
-                        <Button 
-                            variant="contained" 
-                            color="primary" 
+                        <Button
+                            variant="contained"
+                            color="primary"
                             onClick={toggleCreateTask}
-                            sx={{maxWidth: '170px'}}
+                            sx={{ maxWidth: '170px' }}
                         >
                             {isCreateTaskOpen ? 'Cancelar' : 'Criar Tarefa'}
-                        </Button>  
-                        <Button 
+                        </Button>
+                        <Button
                             variant="contained"
                             color="primary"
                             onClick={handleNext}
                             sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                         >
-                            <ArrowForward/>
+                            <ArrowForward />
                         </Button>
                     </Box>
                 </Box>
@@ -868,7 +861,7 @@ const CreateExperimentStep1 = () => {
                                             </FormControl>
 
                                         </Grid>
-                                        
+
                                         <Grid item xs={4}>
                                             <FormControl fullWidth margin="normal">
                                                 <InputLabel>{t('select_survey')}</InputLabel>

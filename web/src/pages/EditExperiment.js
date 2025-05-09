@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom';
 
 import EditExperimentStep0 from './components/EditExperiment/EditExperimentForm';
 import EditExperimentStep1 from './components/EditExperiment/EditExperimentTask';
-import EditExperimentStep2 from './components/EditExperiment/EditExperimentStep2';
+import EditExperimentStep2 from './components/EditExperiment/EditExperimentSurvey';
 import EditExperimentICF from './components/EditExperiment/EditExperimentICF';
 import StepContext from './components/EditExperiment/context/StepContext';
 
