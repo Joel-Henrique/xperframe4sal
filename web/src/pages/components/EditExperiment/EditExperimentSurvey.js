@@ -318,13 +318,7 @@ const EditExperimentStep2 = () => {
                     {isLoadingSurvey ? (
                         <CircularProgress />
                     ) : Array.isArray(ExperimentSurveys) && ExperimentSurveys.length > 0 ? (
-                        <FormControl fullWidth sx={{
-                            overflowY: 'auto', maxHeight: {
-                                xs: 600,
-                                md: 360,
-                                xl: 580
-                            }
-                        }}>
+                        <>
                             <TextField
                                 label={t('search_survey')}
                                 variant="outlined"
@@ -334,75 +328,83 @@ const EditExperimentStep2 = () => {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 sx={{ mb: 3 }}
                             />
-                            {Array.isArray(ExperimentSurveys) &&
-                                ExperimentSurveys.filter((survey) =>
-                                    survey.title.toLowerCase().includes(searchTerm.toLowerCase())
-                                ).map((survey, index) => (
-                                    <Box
-                                        key={index}
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            mb: 1,
-                                            padding: 1,
-                                            backgroundColor: '#ffffff',
-                                            borderRadius: '4px',
-                                            boxShadow: 1,
-                                            '&:hover': { backgroundColor: '#e6f7ff' }
-                                        }}
-                                    >
+                            <FormControl fullWidth sx={{
+                                overflowY: 'auto', maxHeight: {
+                                    xs: 400,
+                                    md: 280,
+                                    xl: 500
+                                }
+                            }}>
+                                {Array.isArray(ExperimentSurveys) &&
+                                    ExperimentSurveys.filter((survey) =>
+                                        survey.title.toLowerCase().includes(searchTerm.toLowerCase())
+                                    ).map((survey, index) => (
                                         <Box
+                                            key={index}
                                             sx={{
                                                 display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center'
+                                                flexDirection: 'column',
+                                                mb: 1,
+                                                padding: 1,
+                                                backgroundColor: '#ffffff',
+                                                borderRadius: '4px',
+                                                boxShadow: 1,
+                                                '&:hover': { backgroundColor: '#e6f7ff' }
                                             }}
                                         >
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <ListItemText primary={survey.title} sx={{ ml: 1 }} />
-                                            </Box>
-                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <IconButton
-                                                    color="error"
-                                                    onClick={() => handleOpenDeleteDialog(index)}
-                                                    sx={{ ml: 1 }}
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => handleEditSurvey(index)}
-                                                    sx={{ ml: 2 }}
-                                                >
-                                                    <EditIcon />
-                                                </IconButton>
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => toggleSurveyDescription(index)}
-                                                    sx={{ ml: 1 }}
-                                                >
-                                                    {openSurveyIds.includes(index) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                                                </IconButton>
-                                            </Box>
-                                        </Box>
-
-                                        {openSurveyIds.includes(index) && (
                                             <Box
                                                 sx={{
-                                                    marginTop: 0,
-                                                    padding: 1,
-                                                    backgroundColor: '#E8E8E8',
-                                                    borderRadius: '4px',
-                                                    maxHeight: '150px',
-                                                    overflowY: 'auto',
-                                                    wordBreak: 'break-word',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center'
                                                 }}
-                                                dangerouslySetInnerHTML={{ __html: survey.description }}
-                                            />
-                                        )}
-                                    </Box>
-                                ))}
-                        </FormControl>
+                                            >
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <ListItemText primary={survey.title} sx={{ ml: 1 }} />
+                                                </Box>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <IconButton
+                                                        color="error"
+                                                        onClick={() => handleOpenDeleteDialog(index)}
+                                                        sx={{ ml: 1 }}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => handleEditSurvey(index)}
+                                                        sx={{ ml: 2 }}
+                                                    >
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => toggleSurveyDescription(index)}
+                                                        sx={{ ml: 1 }}
+                                                    >
+                                                        {openSurveyIds.includes(index) ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
+
+                                            {openSurveyIds.includes(index) && (
+                                                <Box
+                                                    sx={{
+                                                        marginTop: 0,
+                                                        padding: 1,
+                                                        backgroundColor: '#E8E8E8',
+                                                        borderRadius: '4px',
+                                                        maxHeight: '150px',
+                                                        overflowY: 'auto',
+                                                        wordBreak: 'break-word',
+                                                    }}
+                                                    dangerouslySetInnerHTML={{ __html: survey.description }}
+                                                />
+                                            )}
+                                        </Box>
+                                    ))}
+                            </FormControl>
+                        </>
                     ) : (
                         <NotFound title={t('NSurveysFound')} subTitle={t('Nosurveyscreated')} />
                     )}
