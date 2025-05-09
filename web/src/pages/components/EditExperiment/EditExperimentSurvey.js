@@ -30,6 +30,7 @@ import { Add, Remove } from '@mui/icons-material';
 import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { api } from '../../../config/axios';
 import CreateSurvey from '../../../components/Modals/CreateSurvey';
+import NotFound from '../../../components/NotFound';
 
 const EditExperimentStep2 = () => {
     const [
@@ -284,6 +285,7 @@ const EditExperimentStep2 = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                columnGap: 2.5,
             }}
         >
             <Typography fontSize={40} variant="h6" align="center" gutterBottom>
@@ -296,7 +298,6 @@ const EditExperimentStep2 = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    marginTop: 10,
                 }}
             >
                 <Box
@@ -313,20 +314,26 @@ const EditExperimentStep2 = () => {
                         mx: 'auto',
                     }}
                 >
-                    <TextField
-                        label={t('search_survey')}
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        sx={{ mb: 3 }}
-                    />
 
                     {isLoadingSurvey ? (
                         <CircularProgress />
-                    ) : (
-                        <FormControl fullWidth sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                    ) : Array.isArray(ExperimentSurveys) && ExperimentSurveys.length > 0 ? (
+                        <FormControl fullWidth sx={{
+                            overflowY: 'auto', maxHeight: {
+                                xs: 600,
+                                md: 360,
+                                xl: 580
+                            }
+                        }}>
+                            <TextField
+                                label={t('search_survey')}
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                sx={{ mb: 3 }}
+                            />
                             {Array.isArray(ExperimentSurveys) &&
                                 ExperimentSurveys.filter((survey) =>
                                     survey.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -396,6 +403,8 @@ const EditExperimentStep2 = () => {
                                     </Box>
                                 ))}
                         </FormControl>
+                    ) : (
+                        <NotFound title={t('NSurveysFound')} subTitle={t('Nosurveyscreated')} />
                     )}
 
                     <Box
@@ -845,7 +854,7 @@ const EditExperimentStep2 = () => {
                     </Dialog>
                 }
             </Box>
-        </Box>
+        </Box >
     )
 }
 
