@@ -235,7 +235,7 @@ const EditExperimentStep2 = () => {
             toggleEditQuest();
             fetchSurvey();
         } catch (error) {
-            console.error('Erro na atualização da tarefa:', error);
+            console.error('Erro na atualização do questionario:', error);
         }
     };
 

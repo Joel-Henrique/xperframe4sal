@@ -106,10 +106,10 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
             const body = { ...payload, experimentId: experimentId }
             try {
                 await api.post('/survey2', body)
-                console.log("Tarefa criada com sucesso: ", body)
+                console.log("Questionario criada com sucesso: ", body)
             } catch (error) {
 
-                console.error("Erro ao criar tarefa: ", body)
+                console.error("Erro ao criar Questionario: ", body)
                 console.error("Erro: ", error)
             }
         }
