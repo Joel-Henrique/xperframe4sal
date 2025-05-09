@@ -36,7 +36,7 @@ const CustomContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const CreateExperimentStep0 = () => {
+const CreateExperimentForm = () => {
     const {
         step,
         setStep,
@@ -64,7 +64,7 @@ const CreateExperimentStep0 = () => {
         { value: 'rules_based', label: t('rules_based') },
         { value: 'manual', label: t('manual') },
     ];
-    
+
     const isValidFormExperiment = isValidTitleExp && ExperimentTitle;
     const handleNameChangeTitle = (e) => {
         const value = e.target.value;
@@ -93,7 +93,7 @@ const CreateExperimentStep0 = () => {
         >
             <Box
                 sx={{
-                    width: {xs:'100%',sm:'60%'},
+                    width: { xs: '100%', sm: '60%' },
                     padding: 2,
                     display: 'flex',
                     flexDirection: 'column',
@@ -164,11 +164,11 @@ const CreateExperimentStep0 = () => {
                                 </Select>
                             </FormControl>
                             {BtypeExperiment === "manual" && (
-                                <small style={{color: 'red'}}>{t('manual_group_warning')}</small>
+                                <small style={{ color: 'red' }}>{t('manual_group_warning')}</small>
                             )}
                         </>
                     )}
-                    
+
                     <div style={{ width: '100%', marginTop: '16.5px', marginBottom: '16px' }}>
                         <CustomContainer >
                             <ReactQuill
@@ -182,7 +182,7 @@ const CreateExperimentStep0 = () => {
 
                     <Box
                         sx={{
-                            display: {xs: 'none',sm:'flex'},
+                            display: { xs: 'none', sm: 'flex' },
                             justifyContent: 'space-between',
                             marginTop: 2,
                             width: '100%',
@@ -209,7 +209,7 @@ const CreateExperimentStep0 = () => {
                     </Box>
                     <Box
                         sx={{
-                            display: {xs: 'flex', sm: 'none'},
+                            display: { xs: 'flex', sm: 'none' },
                             justifyContent: 'space-between',
                             marginTop: 2,
                             width: '100%',
@@ -221,7 +221,7 @@ const CreateExperimentStep0 = () => {
                             onClick={handleBackResearcher}
                             sx={{ maxWidth: '150px' }}
                         >
-                            <ArrowBack/>
+                            <ArrowBack />
                         </Button>
 
                         <Button
@@ -231,7 +231,7 @@ const CreateExperimentStep0 = () => {
                             sx={{ maxWidth: '150px' }}
                             disabled={!isValidFormExperiment || isLoading}
                         >
-                            <ArrowForward/>
+                            <ArrowForward />
                         </Button>
                     </Box>
                 </Box>
@@ -240,4 +240,4 @@ const CreateExperimentStep0 = () => {
     );
 };
 
-export default CreateExperimentStep0;
+export default CreateExperimentForm;

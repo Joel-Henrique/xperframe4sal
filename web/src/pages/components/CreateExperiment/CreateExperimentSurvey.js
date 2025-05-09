@@ -34,7 +34,7 @@ import EmojiObjectsOutlined from '@mui/icons-material/EmojiObjectsOutlined';
 import CreateSurvey from '../../../components/Modals/CreateSurvey';
 import NotFound from '../../../components/NotFound';
 
-const CreateExperimentStep2 = () => {
+const CreateExperimentSurvey = () => {
     const {
         step,
         setStep,
@@ -1010,4 +1010,4 @@ const CreateExperimentStep2 = () => {
     )
 }
 
-export default CreateExperimentStep2;
+export default CreateExperimentSurvey;

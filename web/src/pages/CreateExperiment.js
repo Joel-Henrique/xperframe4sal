@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Toast } from "primereact/toast";
 import { ProgressBar } from "primereact/progressbar";
 
-import CreateExperimentStep0 from "./components/CreateExperiment/CreateExperimentStep0";
-import CreateExperimentStep1 from "./components/CreateExperiment/CreateExperimentStep1";
-import CreateExperimentStep2 from "./components/CreateExperiment/CreateExperimentStep2";
+import CreateExperimentForm from "./components/CreateExperiment/CreateExperimentForm";
+import CreateExperimentTask from "./components/CreateExperiment/CreateExperimentTask";
+import CreateExperimentSurvey from "./components/CreateExperiment/CreateExperimentSurvey";
 import StepContext from "./components/CreateExperiment/context/StepContextCreate";
-import CreateExperimentStep4 from "./components/CreateExperiment/CreateExperimentStep4";
+import ConfirmCreateExperiment from "./components/CreateExperiment/ConfirmCreateExperiment";
 import CreateExperimentICF from "./components/CreateExperiment/CreateExperimentICF";
 
 const CreateExperiment = () => {
@@ -146,11 +146,11 @@ const CreateExperiment = () => {
                     setExperimentDescICF,
                 }}
             >
-                {step === 0 && <CreateExperimentStep0 />}
+                {step === 0 && <CreateExperimentForm />}
                 {step === 1 && <CreateExperimentICF />}
-                {step === 2 && <CreateExperimentStep2 />}
-                {step === 3 && <CreateExperimentStep1 />}
-                {step === 4 && <CreateExperimentStep4 />}
+                {step === 2 && <CreateExperimentSurvey />}
+                {step === 3 && <CreateExperimentTask />}
+                {step === 4 && <ConfirmCreateExperiment />}
             </StepContext.Provider>
         </>
     );

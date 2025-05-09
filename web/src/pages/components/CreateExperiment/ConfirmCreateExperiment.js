@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import StepContext from './context/StepContextCreate';
 import { Add, ArrowBack } from '@mui/icons-material';
-const CreateExperimentStep4 = () => {
+const ConfirmCreateExperiment = () => {
     const { t } = useTranslation();
     const {
         step,
@@ -29,12 +29,12 @@ const CreateExperimentStep4 = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                marginTop: {xs: 3,sm: 10},
+                marginTop: { xs: 3, sm: 10 },
             }}
         >
             <Box
                 sx={{
-                    width: {xs:'100%',sm:'60%'},
+                    width: { xs: '100%', sm: '60%' },
                     padding: 3,
                     display: 'flex',
                     flexDirection: 'column',
@@ -85,7 +85,7 @@ const CreateExperimentStep4 = () => {
 
                 </Grid>
 
-                <Box sx={{ display: {xs: 'none',sm: 'flex'}, justifyContent: 'space-between', mt: 4, width: '100%' }}>
+                <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', mt: 4, width: '100%' }}>
                     <Button
                         variant="contained"
                         color="primary"
@@ -104,14 +104,14 @@ const CreateExperimentStep4 = () => {
                         {t('create')}
                     </Button>
                 </Box>
-                <Box sx={{ display: {xs: 'flex', sm: 'none'}, justifyContent: 'space-between', mt: 4, width: '100%' }}>
+                <Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'space-between', mt: 4, width: '100%' }}>
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleBack}
                         sx={{ maxWidth: 150, fontWeight: 'bold', boxShadow: 2 }}
                     >
-                        <ArrowBack/>
+                        <ArrowBack />
                     </Button>
 
                     <Button
@@ -120,7 +120,7 @@ const CreateExperimentStep4 = () => {
                         onClick={handleCreate}
                         sx={{ maxWidth: 200, fontWeight: 'bold', boxShadow: 2 }}
                     >
-                        <Add/>
+                        <Add />
                     </Button>
 
                 </Box>
@@ -129,4 +129,4 @@ const CreateExperimentStep4 = () => {
     );
 };
 
-export default CreateExperimentStep4;
+export default ConfirmCreateExperiment;
