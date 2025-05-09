@@ -27,6 +27,14 @@ const CreateExperiment = () => {
     const [step, setStep] = useState(0);
     const toast = useRef(null);
 
+    const STEPS = [
+        { index: 0, title: t("step_1") },
+        { index: 1, title: t("ICF") },
+        { index: 2, title: t("step_3") },
+        { index: 3, title: t("step_2") },
+        { index: 4, title: t("step_5") },
+    ]
+
     const handleCreateExperiment = async () => {
         try {
             if (toast.current) {
@@ -103,6 +111,33 @@ const CreateExperiment = () => {
         }
     }, [step]);
 
+    const CustomStepIcon = (props) => {
+        let icon = props.icon - 1;
+        if (icon == 1 && step != 0)
+            icon = step
+        else if (icon == 2)
+            icon = step + 1
+        else if (icon == 0)
+            if (icon != step)
+                icon = step - 1
+
+        return (
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                backgroundColor: '#1976d2',
+                color: '#fff',
+                fontSize: 12,
+            }}>
+                {icon + 1}
+            </div>
+        );
+    }
+
     return (
         <>
             <Toast ref={toast} position="bottom-right" />
@@ -111,18 +146,23 @@ const CreateExperiment = () => {
                 {t("Experiment_create")}
             </Typography>
 
-            <Stepper activeStep={step} alternativeLabel>
-                {[
-                    t("step_1"),
-                    t("ICF"),
-                    t("step_3"),
-                    t("step_2"),
-                    t("step_5"),
-                ].map((label, index) => (
-                    <Step key={index}>
-                        <StepLabel>{label}</StepLabel>
+            <Stepper sx={{ display: { xs: 'none', sm: 'flex' } }} activeStep={step} alternativeLabel>
+                {STEPS.map((step) => (
+                    <Step key={step.index}>
+                        <StepLabel>{step.title}</StepLabel>
                     </Step>
                 ))}
+            </Stepper>
+            <Stepper sx={{ display: { xs: 'flex', sm: 'none' } }} activeStep={step == 0 ? 0 : 1} alternativeLabel nonLinear>
+                {STEPS.map((s) => {
+                    if (s.index >= (step - 1) && s.index <= (step + 1)) {
+                        return (
+                            <Step key={s.index}>
+                                <StepLabel StepIconComponent={CustomStepIcon} >{s.title}</StepLabel>
+                            </Step>
+                        )
+                    }
+                })}
             </Stepper>
             <StepContext.Provider
                 value={{
