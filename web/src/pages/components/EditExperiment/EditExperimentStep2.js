@@ -36,7 +36,6 @@ const EditExperimentStep2 = () => {
         ExperimentSurveys,
         setExperimentSurveys,
     ] = useContext(StepContext);
-
     const [searchTerm, setSearchTerm] = useState('');
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [user] = useState(JSON.parse(localStorage.getItem('user')));
@@ -457,6 +456,7 @@ const EditExperimentStep2 = () => {
                     toggleCreateQuest={toggleCreateQuest}
                     t={t}
                     setExperimentSurveys={setExperimentSurveys}
+                    fetch={true}
                 />
 
                 {isEditDialogOpen &&

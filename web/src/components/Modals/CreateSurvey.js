@@ -26,8 +26,10 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Add, CancelOutlined, Done } from '@mui/icons-material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
+import { api } from '../../config/axios';
+import { useParams } from 'react-router-dom';
 
-const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSurveys }) => {
+const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSurveys, fetch = false }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('pre');
@@ -40,6 +42,8 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedOptId, setSelectedOptId] = useState(null);
+
+    const { experimentId } = useParams();
 
     const handleMenuOpen = (event, optId) => {
         setAnchorEl(event.currentTarget);
@@ -98,6 +102,17 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
         setQuestions([]);
         setType('pre');
         toggleCreateQuest();
+        if (fetch) {
+            const body = { ...payload, experimentId: experimentId }
+            try {
+                await api.post('/survey2', body)
+                console.log("Tarefa criada com sucesso: ", body)
+            } catch (error) {
+
+                console.error("Erro ao criar tarefa: ", body)
+                console.error("Erro: ", error)
+            }
+        }
     };
 
     const handleAddQuestion = () => {
