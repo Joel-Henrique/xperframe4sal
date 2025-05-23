@@ -31,6 +31,7 @@ import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon, Edit as Edi
 import { api } from '../../../config/axios';
 import CreateSurvey from '../../../components/Modals/CreateSurvey';
 import NotFound from '../../../components/NotFound';
+import { useParams } from 'react-router-dom';
 
 const EditExperimentSurvey = () => {
     const [
@@ -51,6 +52,8 @@ const EditExperimentSurvey = () => {
     const [selectedOptId, setSelectedOptId] = useState(null);
     const [selectedQId, setSelectedQId] = useState(null);
     const [isCreateQuestOpen, setIsCreateQuestOpen] = useState(false);
+    const { experimentId } = useParams();
+
 
     const toggleCreateQuest = () => {
         setIsCreateQuestOpen((prev) => !prev);
@@ -60,7 +63,7 @@ const EditExperimentSurvey = () => {
 
     const fetchSurvey = useCallback(async () => {
         try {
-            const response = await api.get(`survey2`, {
+            const response = await api.get(`survey2/experiment/${experimentId}`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` },
             });
             const filteredsurveys = response.data
