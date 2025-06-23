@@ -64,7 +64,8 @@ const ConfirmCreateExperiment = () => {
                     )}
 
                     <Grid item xs={12}>
-                        <strong>{t('Experiment_Desc')}:</strong> {ExperimentDesc.replace(/<[^>]+>/g, '')}
+                        <strong>{t('Experiment_Desc')}:</strong>
+                        <p dangerouslySetInnerHTML={{ __html: ExperimentDesc }} />
                     </Grid>
 
                     <Grid item xs={12}>

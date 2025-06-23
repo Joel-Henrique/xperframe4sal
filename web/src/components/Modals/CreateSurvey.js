@@ -248,6 +248,16 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
                         {t('title')}
                     </Typography>
                     <form onSubmit={handleCreateSurvey}>
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>{t('surveyType')}</InputLabel>
+                            <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
+                                {surveyTypes.map((stype) => (
+                                    <MenuItem key={stype.value} value={stype.value}>
+                                        {stype.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <TextField
                             label={t('surveyTitle')}
                             value={title}
@@ -266,16 +276,7 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
                             rows={4}
                             margin="normal"
                         />
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>{t('surveyType')}</InputLabel>
-                            <Select value={type} onChange={(e) => setType(e.target.value)} label={t('surveyType')}>
-                                {surveyTypes.map((stype) => (
-                                    <MenuItem key={stype.value} value={stype.value}>
-                                        {stype.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+
                         <Box sx={{ mt: 4 }}>
                             <Typography variant="h5" gutterBottom>
                                 {t('questions')}
@@ -621,7 +622,7 @@ const CreateSurvey = ({ isCreateQuestOpen, toggleCreateQuest, t, setExperimentSu
                         </Box>
                         <Box sx={{ display: { xs: 'none', sm: 'flex' }, justifyContent: 'space-between', marginTop: 'auto', width: '100%', mt: 2 }}>
                             <Button variant="contained" onClick={toggleCreateQuest} color="primary">
-                                {'Cancelar'}
+                                {t('cancel')}
                             </Button>
 
                             <Button type="submit" variant="contained" color="primary" disabled={!isValidFormSurvey || isLoadingSurvey}>
